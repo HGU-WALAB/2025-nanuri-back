@@ -26,6 +26,17 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+
+### .env ###
+.env
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
