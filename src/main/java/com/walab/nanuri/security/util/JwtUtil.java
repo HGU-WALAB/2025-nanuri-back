@@ -1,4 +1,4 @@
-package com.walab.nanuri.commons.util;
+package com.walab.nanuri.security.util;
 
 import com.walab.nanuri.commons.exception.WrongTokenException;
 import io.jsonwebtoken.Claims;

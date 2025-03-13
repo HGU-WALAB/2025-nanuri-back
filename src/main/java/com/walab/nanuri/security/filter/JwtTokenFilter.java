@@ -1,9 +1,9 @@
-package com.walab.nanuri.commons.filter;
+package com.walab.nanuri.security.filter;
 
 import com.walab.nanuri.auth.service.AuthService;
 import com.walab.nanuri.commons.exception.DoNotLoginException;
 import com.walab.nanuri.commons.exception.WrongTokenException;
-import com.walab.nanuri.commons.util.JwtUtil;
+import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
