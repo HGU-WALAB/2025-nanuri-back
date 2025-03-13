@@ -1,8 +1,8 @@
-package com.walab.nanuri.commons.config;
+package com.walab.nanuri.security.config;
 
 import com.walab.nanuri.auth.service.AuthService;
 import com.walab.nanuri.commons.filter.ExceptionHandlerFilter;
-import com.walab.nanuri.commons.filter.JwtTokenFilter;
+import com.walab.nanuri.security.filter.JwtTokenFilter;
 import com.walab.nanuri.user.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

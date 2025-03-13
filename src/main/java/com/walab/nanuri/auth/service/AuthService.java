@@ -3,7 +3,7 @@ package com.walab.nanuri.auth.service;
 import com.walab.nanuri.auth.dto.AuthDto;
 import com.walab.nanuri.auth.dto.request.SignupRequestDto;
 import com.walab.nanuri.commons.exception.DoNotExistException;
-import com.walab.nanuri.commons.util.JwtUtil;
+import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
