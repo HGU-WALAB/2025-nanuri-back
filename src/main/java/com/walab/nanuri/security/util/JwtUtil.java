@@ -17,7 +17,8 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtUtil {
-    private static final long EXPIRE_TIME_MS = 1000 * 60 * 60 * 2; // 2 hours
+//    private static final long EXPIRE_TIME_MS = 1000 * 60 * 60 * 2; // 2 hours
+    private static final long EXPIRE_TIME_MS = 1000 * 60 * 60 * 24 * 7;  // 7 days - 개발 환경 편의성을 위해 임시로 수정
     private static final long REFRESH_EXPIRE_TIME_MS = 1000 * 60 * 60 * 24 * 7;  // 7 days
 
     public static Key getSigningKey(String secretKey) {
