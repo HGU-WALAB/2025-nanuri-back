@@ -1,5 +1,6 @@
 package com.walab.nanuri.security.util;
 
+import com.walab.nanuri.commons.exception.DoNotLoginException;
 import com.walab.nanuri.commons.exception.WrongTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -7,6 +8,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -69,5 +72,15 @@ public class JwtUtil {
         } catch (Exception e) {
             throw new WrongTokenException("유효하지 않은 토큰입니다.");
         }
+    }
+
+    //User의 UniqueId 반환
+    public static String getUserUniqueId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null || authentication.getPrincipal().equals("anonymousUser")){
+            throw new DoNotLoginException();
+        }
+        return authentication.getName();
     }
 }
