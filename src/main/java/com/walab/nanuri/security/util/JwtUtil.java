@@ -60,11 +60,11 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String getUserId(String token, String secretKey) {
+    public static String getUserId(String token, Key secretKey) {
         return extractClaims(token, secretKey).get("uniqueId", String.class);
     }
 
-    private static Claims extractClaims(String token, String secretKey) {
+    private static Claims extractClaims(String token, Key secretKey) {
         try {
             return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
