@@ -18,6 +18,5 @@ public class UserController {
     @PatchMapping()
     public ResponseEntity<String> editNickname(){
         //auth에서 로그인 한 hisnet 계정 정보 가져옴
-//        userService.editNickname(uniqueId, );
     }
 }
