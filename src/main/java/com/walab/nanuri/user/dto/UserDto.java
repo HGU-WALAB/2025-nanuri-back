@@ -25,6 +25,8 @@ public class UserDto {
 
   private String major2;
 
+  private String nickname;
+
   public static UserDto from(User user) {
     return UserDto.builder()
         .uniqueId(user.getUniqueId())
@@ -36,6 +38,7 @@ public class UserDto {
         .department(user.getDepartment())
         .major1(user.getMajor1())
         .major2(user.getMajor2())
+        .nickname(user.getNickname())
         .build();
   }
 }
