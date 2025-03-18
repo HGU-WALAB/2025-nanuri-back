@@ -1,5 +1,6 @@
 package com.walab.nanuri.user.service;
 
+import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.dto.UserDto;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
@@ -22,11 +23,10 @@ public class UserService {
     }
 
     //닉네임 수정
-    public void editNickname(String uniqueId, String newNickname) {
+    public void editNickname(String newNickname) {
+        String uniqueId = JwtUtil.getUserUniqueId();
         User user = userRepository.findById(uniqueId).orElseThrow(()->new IllegalArgumentException("해당 사용자가 없습니다."));
         user.setNickname(newNickname);
         userRepository.save(user);
     }
-
-
 }
