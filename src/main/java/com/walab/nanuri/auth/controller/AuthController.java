@@ -6,13 +6,12 @@ import com.walab.nanuri.auth.dto.response.LoginResponse;
 import com.walab.nanuri.auth.service.AuthService;
 import com.walab.nanuri.auth.dto.AuthDto;
 import com.walab.nanuri.auth.service.HisnetLoginService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/nanuri/auth")
@@ -50,5 +49,24 @@ public class AuthController {
     @PostMapping("/signup")
     public void SignUp(@RequestBody SignupRequestDto signupRequestDto) {
         authService.SetUserNickname(signupRequestDto);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie accessCookie = new Cookie("accessToken", "");
+        accessCookie.setHttpOnly(true);
+        accessCookie.setSecure(false);
+        accessCookie.setPath("/");
+        accessCookie.setMaxAge(0); // 쿠키 삭제
+
+        Cookie refreshCookie = new Cookie("refreshToken", "");
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(false);
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge(0); // 쿠키 삭제
+
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+        return ResponseEntity.ok().build();
     }
 }
