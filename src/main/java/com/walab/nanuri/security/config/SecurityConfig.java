@@ -55,7 +55,6 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
-                        .requestMatchers("/api/nanuri/admin/**").hasAuthority(UserStatus.ADMIN.name())
                         .requestMatchers("/api/nanuri/**", "/api/**").authenticated()
                 )
         ;
@@ -69,7 +68,7 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of("http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("POST", "GET", "PATCH", "DELETE", "PUT"));
-        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

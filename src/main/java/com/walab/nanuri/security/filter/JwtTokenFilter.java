@@ -7,22 +7,21 @@ import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,53 +30,100 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final AuthService authService;
     private final Key SECRET_KEY;
 
+    private static final List<String> EXCLUDED_PATHS = Arrays.asList(
+            "/api/nanuri/auth/login$",
+            "/api/nanuri/auth/signup$",
+            "/api/nanuri/auth/logout$"
+    );
+
+    private boolean isExcludedPath(String requestURI) {
+        return EXCLUDED_PATHS.stream().anyMatch(requestURI::matches);
+    }
+
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
+    protected void doFilterInternal(HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        String pattern1 = ".*/error.*";
-        String pattern2 = ".*/api/nanuri/auth/.*";
-        String pattern3 = ".*/api/nanuri/all/.*";
-        String pattern4 = ".*/file/.*";
 
-        // 정규 표현식 패턴을 컴파일하여 패턴 객체 생성
-        Pattern regex1 = Pattern.compile(pattern1);
-        Pattern regex2 = Pattern.compile(pattern2);
-        if (regex1.matcher(request.getRequestURI()).matches()
-                || regex2.matcher(request.getRequestURI()).matches()
-                || request.getRequestURI().matches(pattern3)
-                || request.getRequestURI().matches(pattern4)) {
+        String requestURI = request.getRequestURI();
+        log.debug("🚀 JwtTokenFilter: 요청 URI: {}", requestURI);
+
+        if (isExcludedPath(requestURI)) {
+            log.debug("🔸 JwtTokenFilter: 제외된 경로입니다. 필터 체인 계속 진행.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("authorizationHeader={}", authorizationHeader);
+        Cookie[] cookies = request.getCookies();
+        String accessToken = null;
+        String refreshToken = null;
 
-        // Header의 Authorization 값이 비어있으면 => Jwt Token을 전송하지 않음 => 로그인 하지 않음
-        if (authorizationHeader == null) throw new DoNotLoginException();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("accessToken".equals(cookie.getName())) {
+                    accessToken = cookie.getValue();
+                }
+                if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
+            }
+        }
 
-        // Header의 Authorization 값이 'Bearer '로 시작하지 않으면 => 잘못된 토큰
-        if (!authorizationHeader.startsWith("Bearer "))
-            throw new WrongTokenException("Bearer 로 시작하지 않는 토큰입니다.");
+        log.info("accessToken={}", accessToken);
+        log.info("refreshToken={}", refreshToken);
 
-        // 전송받은 값에서 'Bearer ' 뒷부분(Jwt Token) 추출
-        String token = authorizationHeader.split(" ")[1];
+        try {
+            String userId = JwtUtil.getUserId(accessToken, SECRET_KEY);
+            User loginUser = authService.getLoginUser(userId);
 
-        User loginUser = authService.getLoginUser(JwtUtil.getUserId(token, SECRET_KEY));
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginUser.getUniqueId(), null, null);
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        } catch (WrongTokenException e) {
+            log.info("❗ {}", e.getMessage());
 
-        // loginUser 정보로 UsernamePasswordAuthenticationToken 발급
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                        loginUser.getUniqueId(),
-                        null,
-                        List.of(new SimpleGrantedAuthority(loginUser.getStatus().name())));
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            // accessToken이 만료된 경우, refreshToken으로 재발급 시도
+            // JwtTokenFilter.java에서 리프레시 토큰 처리 부분 수정:
+            if (refreshToken != null) {
+                try {
+                    String userId = JwtUtil.getUserId(refreshToken, SECRET_KEY);
+                    User loginUser = authService.getLoginUser(userId);
 
-        // 권한 부여
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    // 새로운 만료 시간으로 액세스 토큰 생성
+                    String newAccessToken = authService.createAccessToken(
+                            loginUser.getUniqueId(),
+                            loginUser.getName(),
+                            loginUser.getEmail()
+                    );
+
+                    // 새 액세스 토큰을 쿠키로 설정
+                    Cookie newAccessTokenCookie = new Cookie("accessToken", newAccessToken);
+                    newAccessTokenCookie.setHttpOnly(true);
+                    newAccessTokenCookie.setPath("/");
+                    newAccessTokenCookie.setMaxAge(7200); // 토큰 만료 시간과 일치 (2시간)
+                    response.addCookie(newAccessTokenCookie);
+
+                    // 토큰 리프레시 확인용 로깅 추가
+                    log.info("🔄 사용자 {} 액세스 토큰 리프레시 성공", loginUser.getName());
+
+                    // 인증 설정
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(loginUser.getUniqueId(), null, null);
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                } catch (Exception refreshEx) {
+                    // 더 상세한 로깅을 포함한 개선된 예외 처리
+                    log.error("❌ 토큰 리프레시 실패: {}", refreshEx.getMessage());
+                    throw new DoNotLoginException();
+                }
+            } else {
+                log.error("❌ refreshToken이 존재하지 않습니다. 로그인이 필요합니다.");
+                throw new DoNotLoginException();
+            }
+        }
+
         filterChain.doFilter(request, response);
     }
 }

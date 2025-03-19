@@ -47,7 +47,7 @@ public class AuthController {
                 .body(loginResponse);
     }
 
-    @PostMapping("signup")
+    @PostMapping("/signup")
     public void SignUp(@RequestBody SignupRequestDto signupRequestDto) {
         authService.SetUserNickname(signupRequestDto);
     }
