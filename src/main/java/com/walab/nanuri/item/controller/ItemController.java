@@ -6,7 +6,6 @@ import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +18,10 @@ public class ItemController {
     private final ItemService itemService;
     private final ItemRepository itemRepository;
 
+    //Item 추가
     @PostMapping("/api/item")
     public ItemResponseDto createItem(@RequestBody ItemRequestDto request){
         itemService.createItem(request);
-
         return new ItemResponseDto(
                 request.ToEntity().getTitle(),
                 request.ToEntity().getDescription(),

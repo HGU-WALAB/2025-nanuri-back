@@ -16,7 +16,7 @@ import java.util.Optional;
 public class ItemService {
     private final ItemRepository itemRepository;
 
-    //Item 생성
+    //Item 추가
     @Transactional
     public void createItem(ItemRequestDto itemDto){
         itemRepository.save(itemDto.ToEntity());
