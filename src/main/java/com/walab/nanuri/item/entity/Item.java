@@ -1,26 +1,28 @@
 package com.walab.nanuri.item.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class Item {
-    @Id
-    @Column(name = "id", nullable=false, length=50)
-    private long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable=false)
+    private Long id;
 
-    @Column(nullable = false, length=100)
+    @Column(nullable = false, length=30)
     private String title;
 
-    @Column(length = 255)
+    @Column(length =200)
     private String description;
 
     @Column(length = 50)
@@ -33,7 +35,7 @@ public class Item {
     private String category;
 
     @Column(name="user_id", nullable=false)
-    private long userId;
+    private Long userId;
 
     @Column(name="is_finished")
     private Boolean isFinished;
