@@ -59,5 +59,23 @@ public class ItemService {
                 .build();
     }
 
+    //Item 수정하기(Update)
+    @Transactional
+    public void updateItem(Long id, ItemRequestDto itemDto) {
+        Optional<Item> findItem = itemRepository.findById(id);
+        Item item = findItem.get();
+
+
+
+    }
+
+    //Item 삭제하기(Delete)
+    @Transactional
+    public void deleteItem(Long id){
+        itemRepository.deleteById(id);
+    }
+
+
+
 
 }

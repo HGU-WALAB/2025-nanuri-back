@@ -2,6 +2,7 @@ package com.walab.nanuri.item.controller;
 
 import com.walab.nanuri.item.dto.ItemRequestDto;
 import com.walab.nanuri.item.dto.ItemResponseDto;
+import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 public class ItemController {
 
-    private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
 
     @PostMapping("/api/item")
     public ItemResponseDto createItem(@RequestBody ItemRequestDto request){
@@ -33,14 +35,14 @@ public class ItemController {
         );
     }
 
-    //아이템 전체 조회
+    //Item 전체 조회
     @GetMapping("/api/items")
     public List<ItemRequestDto> getAllItems(){
         return itemService.getAllItems();
     }
 
 
-    //아이템 단건 조회
+    //Item 단건 조회
     @GetMapping("/api/item/{itemId}")
     public ItemResponseDto getItem(@PathVariable Long itemId){
         ItemRequestDto item = itemService.getItemById(itemId);
@@ -55,5 +57,31 @@ public class ItemController {
                 item.ToEntity().getIsFinished(),
                 item.ToEntity().getCreatedAt()
         );
+    }
+
+    //Item 수정
+    @PatchMapping("/api/item/{itemId}")
+    public ItemResponseDto updateItem(@PathVariable Long itemId, @RequestBody ItemRequestDto request){
+        itemService.updateItem(itemId, request);
+        Optional<Item> findItem = itemRepository.findById(itemId);
+        Item item = findItem.get();
+
+        return new ItemResponseDto(
+                item.getTitle(),
+                item.getDescription(),
+                item.getPlace(),
+                item.getViewCount(),
+                item.getCategory(),
+                item.getUserId(),
+                item.getIsFinished(),
+                item.getCreatedAt()
+        );
+    }
+
+
+    //Item 삭제
+    @DeleteMapping("/api/item/{itemId}")
+    public void delteItem(@PathVariable Long itemId){
+        itemService.deleteItem(itemId);
     }
 }
