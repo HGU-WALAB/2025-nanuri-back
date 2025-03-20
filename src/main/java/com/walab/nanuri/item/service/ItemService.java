@@ -30,6 +30,7 @@ public class ItemService {
 
         for(Item item : items){
             ItemRequestDto itemDto = ItemRequestDto.builder()
+                    .id(item.getId())
                     .title(item.getTitle())
                     .description(item.getDescription())
                     .place(item.getPlace())
