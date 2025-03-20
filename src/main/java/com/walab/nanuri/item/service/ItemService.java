@@ -16,7 +16,7 @@ import java.util.Optional;
 public class ItemService {
     private final ItemRepository itemRepository;
 
-    //Item 생성
+    //Item 추가
     @Transactional
     public void createItem(ItemRequestDto itemDto){
         itemRepository.save(itemDto.ToEntity());
@@ -30,6 +30,7 @@ public class ItemService {
 
         for(Item item : items){
             ItemRequestDto itemDto = ItemRequestDto.builder()
+                    .id(item.getId())
                     .title(item.getTitle())
                     .description(item.getDescription())
                     .place(item.getPlace())
@@ -57,6 +58,24 @@ public class ItemService {
                 .userId(item.getUserId())
                 .build();
     }
+
+    //Item 수정하기(Update)
+    @Transactional
+    public void updateItem(Long id, ItemRequestDto itemDto) {
+        Optional<Item> findItem = itemRepository.findById(id);
+        Item item = findItem.get();
+
+
+
+    }
+
+    //Item 삭제하기(Delete)
+    @Transactional
+    public void deleteItem(Long id){
+        itemRepository.deleteById(id);
+    }
+
+
 
 
 }
