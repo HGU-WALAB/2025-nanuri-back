@@ -16,13 +16,10 @@ import java.util.Optional;
 public class ItemService {
     private final ItemRepository itemRepository;
 
+    //Item 생성
     @Transactional
-    public void saveItem(ItemRequestDto itemDto){
-        itemRepository.save(itemDto.ToEntity());
-    }
-
     public void createItem(ItemRequestDto itemDto){
-
+        itemRepository.save(itemDto.ToEntity());
     }
 
     //전체 Item 가져오기
