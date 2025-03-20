@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ItemController {
@@ -33,7 +35,7 @@ public class ItemController {
 
     //아이템 전체 조회
     @GetMapping("/api/items")
-    public ItemResponseDto getAllItems(){
+    public List<ItemRequestDto> getAllItems(){
         return itemService.getAllItems();
     }
 
