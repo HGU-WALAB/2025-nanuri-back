@@ -1,15 +1,19 @@
 package com.walab.nanuri.item.entity;
 
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@MappedSuperclass
 @Getter
+@Setter
 public abstract class BaseEntity {
 
     @CreatedDate
