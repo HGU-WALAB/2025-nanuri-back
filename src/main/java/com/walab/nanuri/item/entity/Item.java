@@ -1,28 +1,23 @@
 package com.walab.nanuri.item.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
 @Builder
-public class Item {
+@Getter
+public class Item extends BaseEntity {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable=false)
+    @Column
     private Long id;
 
     @Column(nullable = false, length=30)
     private String title;
 
-    @Column(length =200)
+    @Column(length =150)
     private String description;
 
     @Column(length = 50)
@@ -40,6 +35,22 @@ public class Item {
     @Column(name="is_finished")
     private Boolean isFinished;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    public Item(String title, String description, String place, Integer viewCount, String category, Long userId, Boolean isFinished) {
+        this.title = title;
+        this.description = description;
+        this.place = place;
+        this.viewCount = viewCount;
+        this.category = category;
+        this.userId = userId;
+        this.isFinished = isFinished;
+    }
+
+    public void update(String title, String description, String place, Integer viewCount, String category, Boolean isFinished) {
+        this.title = title;
+        this.description = description;
+        this.place = place;
+        this.viewCount = viewCount;
+        this.category = category;
+        this.isFinished = isFinished;
+    }
 }

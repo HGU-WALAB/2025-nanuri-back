@@ -6,6 +6,7 @@ import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,67 +21,43 @@ public class ItemController {
 
     //Item 추가
     @PostMapping("/api/item")
-    public ItemResponseDto createItem(@RequestBody ItemRequestDto request){
-        itemService.createItem(request);
-        return new ItemResponseDto(
-                request.ToEntity().getTitle(),
-                request.ToEntity().getDescription(),
-                request.ToEntity().getPlace(),
-                request.ToEntity().getViewCount(),
-                request.ToEntity().getCategory(),
-                request.ToEntity().getUserId(),
-                request.ToEntity().getIsFinished(),
-                request.ToEntity().getCreatedAt()
-        );
+    public ResponseEntity<Boolean> createItem(@RequestBody ItemRequestDto request){
+        try{
+            itemService.createItem(request);
+        }catch (Exception e){
+            return ResponseEntity.ok(false);
+        }
+        return ResponseEntity.ok(true);
     }
 
     //Item 전체 조회
     @GetMapping("/api/items")
-    public List<ItemRequestDto> getAllItems(){
+    public List<ItemResponseDto> getAllItems(){
         return itemService.getAllItems();
     }
 
 
     //Item 단건 조회
     @GetMapping("/api/item/{itemId}")
-    public ItemResponseDto getItem(@PathVariable Long itemId){
-        ItemRequestDto item = itemService.getItemById(itemId);
-
-        return new ItemResponseDto(
-                item.ToEntity().getTitle(),
-                item.ToEntity().getDescription(),
-                item.ToEntity().getPlace(),
-                item.ToEntity().getViewCount(),
-                item.ToEntity().getCategory(),
-                item.ToEntity().getUserId(),
-                item.ToEntity().getIsFinished(),
-                item.ToEntity().getCreatedAt()
-        );
+    public ResponseEntity<ItemResponseDto> getItem(@PathVariable Long itemId){
+        return ResponseEntity.ok(itemService.getItemById(itemId));
     }
 
     //Item 수정
     @PatchMapping("/api/item/{itemId}")
-    public ItemResponseDto updateItem(@PathVariable Long itemId, @RequestBody ItemRequestDto request){
-        itemService.updateItem(itemId, request);
-        Optional<Item> findItem = itemRepository.findById(itemId);
-        Item item = findItem.get();
-
-        return new ItemResponseDto(
-                item.getTitle(),
-                item.getDescription(),
-                item.getPlace(),
-                item.getViewCount(),
-                item.getCategory(),
-                item.getUserId(),
-                item.getIsFinished(),
-                item.getCreatedAt()
-        );
+    public ResponseEntity<Boolean> updateItem(@PathVariable Long itemId, @RequestBody ItemRequestDto request){
+        try{
+            itemService.updateItem(itemId, request);
+        } catch (Exception e){
+            return ResponseEntity.ok(false);
+        }
+        return ResponseEntity.ok(true);
     }
 
 
     //Item 삭제
     @DeleteMapping("/api/item/{itemId}")
-    public void delteItem(@PathVariable Long itemId){
-        itemService.deleteItem(itemId);
+    public ResponseEntity<Boolean> deleteItem(@PathVariable Long itemId){
+        return ResponseEntity.ok(itemService.deleteItem(itemId));
     }
 }

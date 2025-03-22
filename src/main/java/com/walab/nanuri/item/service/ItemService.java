@@ -1,6 +1,7 @@
 package com.walab.nanuri.item.service;
 
 import com.walab.nanuri.item.dto.ItemRequestDto;
+import com.walab.nanuri.item.dto.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import jakarta.transaction.Transactional;
@@ -19,17 +20,17 @@ public class ItemService {
     //Item 추가
     @Transactional
     public void createItem(ItemRequestDto itemDto){
-        itemRepository.save(itemDto.ToEntity());
+        itemRepository.save(itemDto.toEntity());
     }
 
     //전체 Item 가져오기
     @Transactional
-    public List<ItemRequestDto> getAllItems(){
+    public List<ItemResponseDto> getAllItems(){
         List<Item> items = itemRepository.findAll();
-        List<ItemRequestDto> itemDtoList = new ArrayList<>();
+        List<ItemResponseDto> itemDtoList = new ArrayList<>();
 
         for(Item item : items){
-            ItemRequestDto itemDto = ItemRequestDto.builder()
+            ItemResponseDto itemDto = ItemResponseDto.builder()
                     .id(item.getId())
                     .title(item.getTitle())
                     .description(item.getDescription())
@@ -37,7 +38,10 @@ public class ItemService {
                     .viewCount(item.getViewCount())
                     .category(item.getCategory())
                     .userId(item.getUserId())
+                    .isFinished(item.getIsFinished())
+                    .postTime(item.getCreatedDate())
                     .build();
+
             itemDtoList.add(itemDto);
         }
         return itemDtoList;
@@ -45,34 +49,43 @@ public class ItemService {
 
     //Item 하나 가져오기(View)
     @Transactional
-    public ItemRequestDto getItemById(Long id){
-        Optional<Item> itemWrapper = itemRepository.findById(id);
-        Item item = itemWrapper.get();
+    public ItemResponseDto getItemById(Long id){
+        Item item = itemRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
 
-        return ItemRequestDto.builder()
+        return ItemResponseDto.builder()
+                .id(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .place(item.getPlace())
                 .viewCount(item.getViewCount())
                 .category(item.getCategory())
                 .userId(item.getUserId())
+                .isFinished(item.getIsFinished())
+                .postTime(item.getCreatedDate())
                 .build();
     }
 
+
     //Item 수정하기(Update)
     @Transactional
-    public void updateItem(Long id, ItemRequestDto itemDto) {
-        Optional<Item> findItem = itemRepository.findById(id);
-        Item item = findItem.get();
-
-
-
+    public boolean updateItem(Long updateId, ItemRequestDto itemDto) {
+        Item findItem = itemRepository.findById(updateId).orElseThrow(()->new IllegalArgumentException("게시글을 찾을 수 없습니다"));
+        findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getViewCount(), itemDto.getCategory(), itemDto.getIsFinished());
+        try{
+            itemRepository.save(findItem);
+        } catch (Exception e){
+            return false;
+        }
+        return true;
     }
+
 
     //Item 삭제하기(Delete)
     @Transactional
-    public void deleteItem(Long id){
+    public boolean deleteItem(Long id){
         itemRepository.deleteById(id);
+        return true;
     }
 
 

@@ -7,9 +7,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 public class ItemRequestDto {
-    private Long id;
     private String title;
     private String description;
     private String place;
@@ -17,23 +15,20 @@ public class ItemRequestDto {
     private String category;
     private Long userId;
     private Boolean isFinished;
-    private LocalDateTime createdAt;
 
-    @Builder
-    public ItemRequestDto(Long id, String title, String description, String place, Integer viewCount, String category, Long userId) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.place = place;
-        this.viewCount = viewCount;
-        this.category = category;
-        this.userId = userId;
-        this.isFinished = false;
-        this.createdAt = LocalDateTime.now();
-    }
+//    @Builder
+//    public ItemRequestDto(String title, String description, String place, Integer viewCount, String category, Long userId) {
+//        this.title = title;
+//        this.description = description;
+//        this.place = place;
+//        this.viewCount = viewCount;
+//        this.category = category;
+//        this.userId = userId;
+//        this.isFinished = false;
+//    }
 
     //DTO -> ENTITY로 변환
-    public Item ToEntity(){
+    public Item toEntity(){
         return Item.builder()
                 .title(this.title)
                 .description(this.description)
@@ -42,7 +37,6 @@ public class ItemRequestDto {
                 .category(this.category)
                 .userId(this.userId)
                 .isFinished(this.isFinished)
-                .createdAt(this.createdAt)
                 .build();
     }
 }
