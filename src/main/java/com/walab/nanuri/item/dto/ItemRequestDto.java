@@ -11,7 +11,6 @@ public class ItemRequestDto {
     private String title;
     private String description;
     private String place;
-    private Integer viewCount;
     private String category;
 
 
@@ -21,7 +20,6 @@ public class ItemRequestDto {
                 .title(this.title)
                 .description(this.description)
                 .place(this.place)
-                .viewCount(this.viewCount)
                 .category(this.category)
                 .build();
     }

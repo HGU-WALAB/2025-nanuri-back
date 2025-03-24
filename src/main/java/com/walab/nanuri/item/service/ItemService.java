@@ -71,7 +71,7 @@ public class ItemService {
     @Transactional
     public boolean updateItem(Long updateId, ItemRequestDto itemDto) {
         Item findItem = itemRepository.findById(updateId).orElseThrow(()->new IllegalArgumentException("게시글을 찾을 수 없습니다"));
-        findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getViewCount(), itemDto.getCategory(), itemDto.getIsFinished());
+        findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory());
         try{
             itemRepository.save(findItem);
         } catch (Exception e){
