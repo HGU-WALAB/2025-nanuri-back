@@ -2,28 +2,25 @@ package com.walab.nanuri.item.controller;
 
 import com.walab.nanuri.item.dto.ItemRequestDto;
 import com.walab.nanuri.item.dto.ItemResponseDto;
-import com.walab.nanuri.item.entity.Item;
-import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
-    private final ItemRepository itemRepository;
 
     //Item 추가
     @PostMapping("/api/item")
-    public ResponseEntity<Boolean> createItem(@RequestBody ItemRequestDto request){
+    public ResponseEntity<Boolean> createItem(@RequestBody ItemRequestDto request, @AuthenticationPrincipal String uniqueId){
         try{
-            itemService.createItem(request);
+            itemService.createItem(uniqueId, request);
         }catch (Exception e){
             return ResponseEntity.ok(false);
         }

@@ -4,13 +4,12 @@ import com.walab.nanuri.item.dto.ItemRequestDto;
 import com.walab.nanuri.item.dto.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +18,19 @@ public class ItemService {
 
     //Item 추가
     @Transactional
-    public void createItem(ItemRequestDto itemDto){
-        itemRepository.save(itemDto.toEntity());
+    public void createItem(String userId, ItemRequestDto itemDto){
+//        itemRepository.save(itemDto.toEntity());
+        Item item = Item.builder()
+                .title(itemDto.getTitle())
+                .description(itemDto.getDescription())
+                .place(itemDto.getPlace())
+                .viewCount(0)
+                .category("test")
+                .userId(Long.parseLong(userId))
+                .isFinished(false)
+                .build();
+
+        itemRepository.save(item);
     }
 
     //전체 Item 가져오기
