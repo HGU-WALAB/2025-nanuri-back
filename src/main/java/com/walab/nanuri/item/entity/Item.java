@@ -45,12 +45,10 @@ public class Item extends BaseEntity {
         this.isFinished = isFinished;
     }
 
-    public void update(String title, String description, String place, Integer viewCount, String category, Boolean isFinished) {
+    public void update(String title, String description, String place, String category) {
         this.title = title;
         this.description = description;
         this.place = place;
-        this.viewCount = viewCount;
         this.category = category;
-        this.isFinished = isFinished;
     }
 }

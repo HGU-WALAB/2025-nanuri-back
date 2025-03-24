@@ -11,21 +11,8 @@ public class ItemRequestDto {
     private String title;
     private String description;
     private String place;
-    private Integer viewCount;
     private String category;
-    private Long userId;
-    private Boolean isFinished;
 
-//    @Builder
-//    public ItemRequestDto(String title, String description, String place, Integer viewCount, String category, Long userId) {
-//        this.title = title;
-//        this.description = description;
-//        this.place = place;
-//        this.viewCount = viewCount;
-//        this.category = category;
-//        this.userId = userId;
-//        this.isFinished = false;
-//    }
 
     //DTO -> ENTITY로 변환
     public Item toEntity(){
@@ -33,10 +20,7 @@ public class ItemRequestDto {
                 .title(this.title)
                 .description(this.description)
                 .place(this.place)
-                .viewCount(this.viewCount)
                 .category(this.category)
-                .userId(this.userId)
-                .isFinished(this.isFinished)
                 .build();
     }
 }
