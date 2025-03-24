@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/nanuri/image")
+@RequestMapping("api/image")
 public class ImageController {
     private final ImageService imageService;
 
@@ -22,8 +22,8 @@ public class ImageController {
         imageService.uploadImage(files);
     }
 
-    @GetMapping("/view")
-    public ResponseEntity<Resource> viewImages(@RequestParam Long id) throws IOException {
+    @GetMapping("/view/{id}")
+    public ResponseEntity<Resource> viewImages(@PathVariable Long id) throws IOException {
         return imageService.viewImages(id);
     }
 }
