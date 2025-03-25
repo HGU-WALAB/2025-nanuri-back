@@ -35,10 +35,13 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    //Item 전체 조회
+    //Item 전체 조회(일반 전체 조회, 카테고리 선택 후 전체 조회)
     @Transactional
-    public List<ItemListResponseDto> getAllItems(){
-        List<Item> items = itemRepository.findAll();
+    public List<ItemListResponseDto> getAllItems(String category) {
+        List<Item> items;
+        if(category == null) items = itemRepository.findAll();
+        else items = itemRepository.findByCategory(category);
+
         List<ItemListResponseDto> itemDtoList = new ArrayList<>();
 
         for(Item item : items){

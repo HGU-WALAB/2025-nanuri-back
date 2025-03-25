@@ -32,8 +32,8 @@ public class ItemController {
 
     //Item 전체 조회
     @GetMapping("/api/items")
-    public List<ItemListResponseDto> getAllItems(){
-        return itemService.getAllItems();
+    public List<ItemListResponseDto> getAllItems(@PathVariable String category){
+        return itemService.getAllItems(category);
     }
 
 
