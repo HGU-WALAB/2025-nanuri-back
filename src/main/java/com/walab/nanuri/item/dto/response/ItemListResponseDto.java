@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class ItemResponseDto {
+public class ItemListResponseDto {
     private Long id;
     private String title;
     private Integer viewCount;

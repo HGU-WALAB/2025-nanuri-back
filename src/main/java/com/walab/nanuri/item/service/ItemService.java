@@ -1,7 +1,7 @@
 package com.walab.nanuri.item.service;
 
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
-import com.walab.nanuri.item.dto.response.ItemResponseDto;
+import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +35,12 @@ public class ItemService {
 
     //전체 Item 가져오기
     @Transactional
-    public List<ItemResponseDto> getAllItems(){
+    public List<ItemListResponseDto> getAllItems(){
         List<Item> items = itemRepository.findAll();
-        List<ItemResponseDto> itemDtoList = new ArrayList<>();
+        List<ItemListResponseDto> itemDtoList = new ArrayList<>();
 
         for(Item item : items){
-            ItemResponseDto itemDto = ItemResponseDto.builder()
+            ItemListResponseDto itemDto = ItemListResponseDto.builder()
                     .id(item.getId())
                     .title(item.getTitle())
                     .viewCount(item.getViewCount())
@@ -56,11 +56,11 @@ public class ItemService {
 
     //Item 하나 가져오기(View)
     @Transactional
-    public ItemResponseDto getItemById(Long id){
+    public ItemListResponseDto getItemById(Long id){
         Item item = itemRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
 
-        return ItemResponseDto.builder()
+        return ItemListResponseDto.builder()
                 .id(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())
