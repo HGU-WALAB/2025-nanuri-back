@@ -47,9 +47,9 @@ public class ItemController {
 
     //Item 수정
     @PatchMapping("/api/item/{itemId}")
-    public ResponseEntity<Boolean> updateItem(@PathVariable Long itemId, @RequestBody ItemRequestDto request){
+    public ResponseEntity<Boolean> updateItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId, @RequestBody ItemRequestDto request){
         try{
-            itemService.updateItem(itemId, request);
+            itemService.updateItem(uniqueId, itemId, request);
         } catch (Exception e){
             return ResponseEntity.ok(false);
         }

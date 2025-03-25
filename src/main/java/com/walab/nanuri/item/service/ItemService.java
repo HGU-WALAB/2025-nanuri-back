@@ -95,7 +95,7 @@ public class ItemService {
 
     //Item 수정
     @Transactional
-    public boolean updateItem(Long updateId, ItemRequestDto itemDto) {
+    public boolean updateItem(String uniqueId, Long updateId, ItemRequestDto itemDto) {
         Item findItem = itemRepository.findById(updateId).orElseThrow(()->new IllegalArgumentException("게시글을 찾을 수 없습니다"));
         findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory());
         try{
@@ -109,8 +109,8 @@ public class ItemService {
 
     //Item 삭제하기(Delete)
     @Transactional
-    public boolean deleteItem(Long id){
-        itemRepository.deleteById(id);
+    public boolean deleteItem(Long itemId){
+        itemRepository.deleteById(itemId);
         return true;
     }
 
