@@ -14,7 +14,7 @@ public class ItemResponseDto {
     private Integer viewCount;
     private String category;
     private Boolean isFinished;
-    private String postTime;
+    private LocalDateTime createdTime;
 
 //    @Builder
 //    public ItemResponseDto(Long id, String title, String description, String place, Integer viewCount,
@@ -34,12 +34,10 @@ public class ItemResponseDto {
     public Item toEntity(){
         return Item.builder()
                 .title(this.title)
-                .description(this.description)
-                .place(this.place)
                 .viewCount(this.viewCount)
                 .category(this.category)
-                .userId(this.userId)
                 .isFinished(this.isFinished)
+                .createdTime(this.createdTime)
                 .build();
     }
 }
