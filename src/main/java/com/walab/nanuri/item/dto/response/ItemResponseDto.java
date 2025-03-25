@@ -1,4 +1,4 @@
-package com.walab.nanuri.item.dto;
+package com.walab.nanuri.item.dto.response;
 
 import com.walab.nanuri.item.entity.Item;
 import lombok.*;
@@ -11,13 +11,10 @@ import java.time.LocalDateTime;
 public class ItemResponseDto {
     private Long id;
     private String title;
-    private String description;
-    private String place;
     private Integer viewCount;
     private String category;
-    private Long userId;
     private Boolean isFinished;
-    private String postTime;
+    private LocalDateTime createdTime;
 
 //    @Builder
 //    public ItemResponseDto(Long id, String title, String description, String place, Integer viewCount,
@@ -37,12 +34,10 @@ public class ItemResponseDto {
     public Item toEntity(){
         return Item.builder()
                 .title(this.title)
-                .description(this.description)
-                .place(this.place)
                 .viewCount(this.viewCount)
                 .category(this.category)
-                .userId(this.userId)
                 .isFinished(this.isFinished)
+                .createdTime(this.createdTime)
                 .build();
     }
 }

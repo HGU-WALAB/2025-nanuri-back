@@ -1,7 +1,7 @@
 package com.walab.nanuri.item.controller;
 
-import com.walab.nanuri.item.dto.ItemRequestDto;
-import com.walab.nanuri.item.dto.ItemResponseDto;
+import com.walab.nanuri.item.dto.request.ItemRequestDto;
+import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

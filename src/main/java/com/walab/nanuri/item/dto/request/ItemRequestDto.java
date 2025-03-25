@@ -1,9 +1,7 @@
-package com.walab.nanuri.item.dto;
+package com.walab.nanuri.item.dto.request;
 
 import com.walab.nanuri.item.entity.Item;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
