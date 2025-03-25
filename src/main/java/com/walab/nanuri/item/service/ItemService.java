@@ -2,6 +2,7 @@ package com.walab.nanuri.item.service;
 
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
+import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,15 +49,34 @@ public class ItemService {
                     .isFinished(item.getIsFinished())
                     .createdTime(item.getCreatedTime())
                     .build();
-
             itemDtoList.add(itemDto);
         }
         return itemDtoList;
     }
 
-    //Item 하나 가져오기(View)
+
+    //Item 하나 가져오기(판매자 관점)
     @Transactional
-    public ItemListResponseDto getItemById(Long id){
+    public ItemResponseDto getItemBySeller(Long itemId){
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(RuntimeException::new);
+
+        return ItemResponseDto.builder()
+                .id(item.getId())
+                .title(item.getTitle())
+                .description(item.getDescription())
+                .viewCount(item.getViewCount())
+                .category(item.getCategory())
+                .isFinished(item.getIsFinished())
+                .createdTime(item.getCreatedTime())
+                .wishCount(item.get)
+                .isOwner()
+                .build();
+    }
+
+    //Item 하나 가져오기(판매자 아닌 관점 -> 구매자 관점)
+    @Transactional
+    public ItemListResponseDto getItemByBuyer(Long id){
         Item item = itemRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
 

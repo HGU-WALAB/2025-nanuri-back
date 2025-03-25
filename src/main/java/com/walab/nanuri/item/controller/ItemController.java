@@ -2,6 +2,7 @@ package com.walab.nanuri.item.controller;
 
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
+import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,20 @@ public class ItemController {
     }
 
 
-    //Item 단건 조회
+    //Item 단건 조회(판매자 관점)
     @GetMapping("/api/item/{itemId}")
-    public ResponseEntity<ItemListResponseDto> getItem(@PathVariable Long itemId){
-        return ResponseEntity.ok(itemService.getItemById(itemId));
+    public ResponseEntity<ItemResponseDto> getItemBySeller(@PathVariable Long itemId){
+        //item의 userId와 uniqueId가 같다면 -> 판매자임
+
+        return ResponseEntity.ok(itemService.getItemBySeller(itemId));
     }
+
+    //Item 단건 조회(판매자 아닌 관점 -> 구매자 관점)
+    @GetMapping("/api/item/{itemId}")
+    public ResponseEntity<ItemResponseDto> getItemByBuyer(@PathVariable Long itemId){
+        return ResponseEntity.ok(itemService.getItemByBuyer(itemId));
+    }
+
 
     //Item 수정
     @PatchMapping("/api/item/{itemId}")
