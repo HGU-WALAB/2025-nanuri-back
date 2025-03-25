@@ -35,7 +35,7 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    //전체 Item 가져오기
+    //Item 전체 조회
     @Transactional
     public List<ItemListResponseDto> getAllItems(){
         List<Item> items = itemRepository.findAll();
@@ -45,9 +45,6 @@ public class ItemService {
             ItemListResponseDto itemDto = ItemListResponseDto.builder()
                     .id(item.getId())
                     .title(item.getTitle())
-                    .viewCount(item.getViewCount())
-                    .category(item.getCategory())
-                    .isFinished(item.getIsFinished())
                     .createdTime(item.getCreatedTime())
                     .build();
             itemDtoList.add(itemDto);
@@ -56,13 +53,18 @@ public class ItemService {
     }
 
 
-    //Item 하나 가져오기
+    //나눔 중인 나의 Item 조회
     @Transactional
-    public ItemResponseDto getItemById(Long itemId, String uniqueId){
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(RuntimeException::new);
+    public List<ItemListResponseDto> getMySharingItem(){
+        List<Item> items =
+    }
 
-        if(item.getUserId().equals(uniqueId)){ //판매자라면
+    //Item 단건 조회
+    @Transactional
+    public ItemResponseDto getItemById(String uniqueId, Long itemId){
+        Item item = itemRepository.findById(itemId).orElseThrow(RuntimeException::new);
+
+        if(item.getUserId().equals(uniqueId)){ //자신의 학번과 물건의 판매자 아이디가 같음 -> 판매자임
             return ItemResponseDto.builder()
                     .id(item.getId())
                     .title(item.getTitle())
@@ -88,11 +90,10 @@ public class ItemService {
                     .isOwner(false)
                     .build();
         }
-
     }
 
 
-    //Item 수정하기(Update)
+    //Item 수정
     @Transactional
     public boolean updateItem(Long updateId, ItemRequestDto itemDto) {
         Item findItem = itemRepository.findById(updateId).orElseThrow(()->new IllegalArgumentException("게시글을 찾을 수 없습니다"));

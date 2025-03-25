@@ -29,6 +29,7 @@ public class ItemController {
         return ResponseEntity.ok(true);
     }
 
+
     //Item 전체 조회
     @GetMapping("/api/items")
     public List<ItemListResponseDto> getAllItems(){
@@ -36,10 +37,11 @@ public class ItemController {
     }
 
 
-    //Item 단건 조회(판매자 관점)
+    //Item 단건 조회
     @GetMapping("/api/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long itemId, @AuthenticationPrincipal String uniqueId){
-        return ResponseEntity.ok(itemService.getItemById(itemId, uniqueId));
+    public ResponseEntity<ItemResponseDto> getItemById(@AuthenticationPrincipal String uniqueId,
+                                                         @PathVariable Long itemId){
+        return ResponseEntity.ok(itemService.getItemById(uniqueId, itemId));
     }
 
 
