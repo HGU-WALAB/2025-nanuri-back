@@ -1,7 +1,7 @@
 package com.walab.nanuri.item.service;
 
-import com.walab.nanuri.item.dto.ItemRequestDto;
-import com.walab.nanuri.item.dto.ItemResponseDto;
+import com.walab.nanuri.item.dto.request.ItemRequestDto;
+import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +43,10 @@ public class ItemService {
             ItemResponseDto itemDto = ItemResponseDto.builder()
                     .id(item.getId())
                     .title(item.getTitle())
-                    .description(item.getDescription())
-                    .place(item.getPlace())
                     .viewCount(item.getViewCount())
                     .category(item.getCategory())
-                    .userId(item.getUserId())
                     .isFinished(item.getIsFinished())
-                    .postTime(item.getCreatedDate())
+                    .createdTime(item.getCreatedTime())
                     .build();
 
             itemDtoList.add(itemDto);

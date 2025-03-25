@@ -1,4 +1,4 @@
-package com.walab.nanuri.item.dto;
+package com.walab.nanuri.item.dto.response;
 
 import com.walab.nanuri.item.entity.Item;
 import lombok.*;
