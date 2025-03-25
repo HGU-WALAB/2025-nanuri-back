@@ -11,11 +11,8 @@ import java.time.LocalDateTime;
 public class ItemResponseDto {
     private Long id;
     private String title;
-    private String description;
-    private String place;
     private Integer viewCount;
     private String category;
-    private Long userId;
     private Boolean isFinished;
     private String postTime;
 
