@@ -37,16 +37,8 @@ public class ItemController {
 
     //Item 단건 조회(판매자 관점)
     @GetMapping("/api/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemBySeller(@PathVariable Long itemId){
-        //item의 userId와 uniqueId가 같다면 -> 판매자임
-
-        return ResponseEntity.ok(itemService.getItemBySeller(itemId));
-    }
-
-    //Item 단건 조회(판매자 아닌 관점 -> 구매자 관점)
-    @GetMapping("/api/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemByBuyer(@PathVariable Long itemId){
-        return ResponseEntity.ok(itemService.getItemByBuyer(itemId));
+    public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long itemId, @AuthenticationPrincipal String uniqueId){
+        return ResponseEntity.ok(itemService.getItemById(itemId, uniqueId));
     }
 
 

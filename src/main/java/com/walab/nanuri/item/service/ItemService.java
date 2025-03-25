@@ -6,6 +6,7 @@ import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,42 +56,39 @@ public class ItemService {
     }
 
 
-    //Item 하나 가져오기(판매자 관점)
+    //Item 하나 가져오기
     @Transactional
-    public ItemResponseDto getItemBySeller(Long itemId){
+    public ItemResponseDto getItemById(Long itemId, String uniqueId){
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(RuntimeException::new);
 
-        return ItemResponseDto.builder()
-                .id(item.getId())
-                .title(item.getTitle())
-                .description(item.getDescription())
-                .viewCount(item.getViewCount())
-                .category(item.getCategory())
-                .isFinished(item.getIsFinished())
-                .createdTime(item.getCreatedTime())
-                .wishCount(item.get)
-                .isOwner()
-                .build();
-    }
+        if(item.getUserId().equals(uniqueId)){ //판매자라면
+            return ItemResponseDto.builder()
+                    .id(item.getId())
+                    .title(item.getTitle())
+                    .description(item.getDescription())
+                    .viewCount(item.getViewCount())
+                    .category(item.getCategory())
+                    .isFinished(item.getIsFinished())
+                    .createdTime(item.getCreatedTime())
+                    .wishCount(item.getWishCount())
+                    .isOwner(true)
+                    .build();
+        }
+        else{ //구매자라면
+            return ItemResponseDto.builder()
+                    .id(item.getId())
+                    .title(item.getTitle())
+                    .description(item.getDescription())
+                    .viewCount(item.getViewCount())
+                    .category(item.getCategory())
+                    .isFinished(item.getIsFinished())
+                    .createdTime(item.getCreatedTime())
+                    .wishCount(item.getWishCount())
+                    .isOwner(false)
+                    .build();
+        }
 
-    //Item 하나 가져오기(판매자 아닌 관점 -> 구매자 관점)
-    @Transactional
-    public ItemListResponseDto getItemByBuyer(Long id){
-        Item item = itemRepository.findById(id)
-                .orElseThrow(RuntimeException::new);
-
-        return ItemListResponseDto.builder()
-                .id(item.getId())
-                .title(item.getTitle())
-                .description(item.getDescription())
-                .place(item.getPlace())
-                .viewCount(item.getViewCount())
-                .category(item.getCategory())
-                .userId(item.getUserId())
-                .isFinished(item.getIsFinished())
-                .postTime(item.getCreatedDate())
-                .build();
     }
 
 
