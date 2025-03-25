@@ -29,25 +29,27 @@ public class ItemController {
         return ResponseEntity.ok(true);
     }
 
+
     //Item 전체 조회
     @GetMapping("/api/items")
-    public List<ItemListResponseDto> getAllItems(){
-        return itemService.getAllItems();
+    public List<ItemListResponseDto> getAllItems(@PathVariable String category){
+        return itemService.getAllItems(category);
     }
 
 
-    //Item 단건 조회(판매자 관점)
+    //Item 단건 조회
     @GetMapping("/api/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long itemId, @AuthenticationPrincipal String uniqueId){
-        return ResponseEntity.ok(itemService.getItemById(itemId, uniqueId));
+    public ResponseEntity<ItemResponseDto> getItemById(@AuthenticationPrincipal String uniqueId,
+                                                         @PathVariable Long itemId){
+        return ResponseEntity.ok(itemService.getItemById(uniqueId, itemId));
     }
 
 
     //Item 수정
     @PatchMapping("/api/item/{itemId}")
-    public ResponseEntity<Boolean> updateItem(@PathVariable Long itemId, @RequestBody ItemRequestDto request){
+    public ResponseEntity<Boolean> updateItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId, @RequestBody ItemRequestDto request){
         try{
-            itemService.updateItem(itemId, request);
+            itemService.updateItem(uniqueId, itemId, request);
         } catch (Exception e){
             return ResponseEntity.ok(false);
         }
