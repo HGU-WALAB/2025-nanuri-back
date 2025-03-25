@@ -36,7 +36,7 @@ public class Item {
     private String category;
 
     @Column(name="user_id", nullable=false)
-    private Long userId;
+    private String userId;
 
     @Column(name="is_finished")
     private Boolean isFinished;
