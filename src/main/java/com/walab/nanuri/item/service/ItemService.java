@@ -26,6 +26,7 @@ public class ItemService {
                 .title(itemDto.getTitle())
                 .description(itemDto.getDescription())
                 .place(itemDto.getPlace())
+                .viewCount(0)
                 .category(itemDto.getCategory())
                 .userId(uniqueId)
                 .isFinished(false)
