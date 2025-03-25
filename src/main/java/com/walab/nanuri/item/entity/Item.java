@@ -45,6 +45,13 @@ public class Item {
     @LastModifiedDate
     private LocalDateTime updatedTime;
 
+    @Column(name="wish_count")
+    private Integer wishCount;
+
+    @Column(name="is_owner")
+    private Boolean isOwner;
+
+
     public void update(String title, String description, String place, String category) {
         this.title = title;
         this.description = description;
