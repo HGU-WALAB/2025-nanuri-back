@@ -19,7 +19,8 @@ public class ItemController {
 
     //Item 추가
     @PostMapping("/api/item")
-    public ResponseEntity<Boolean> createItem(@RequestBody ItemRequestDto request, @AuthenticationPrincipal String uniqueId){
+    public ResponseEntity<Boolean> createItem(@AuthenticationPrincipal String uniqueId,
+                                              @RequestBody ItemRequestDto request){
         try{
             itemService.createItem(uniqueId, request);
         }catch (Exception e){

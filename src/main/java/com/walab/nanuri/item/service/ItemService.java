@@ -20,15 +20,14 @@ public class ItemService {
 
     //Item 추가
     @Transactional
-    public void createItem(String userId, ItemRequestDto itemDto){
+    public void createItem(String uniqueId, ItemRequestDto itemDto){
 //        itemRepository.save(itemDto.toEntity());
         Item item = Item.builder()
                 .title(itemDto.getTitle())
                 .description(itemDto.getDescription())
                 .place(itemDto.getPlace())
-                .viewCount(0)
-                .category("test")
-                .userId(Long.parseLong(userId))
+                .category(itemDto.getCategory())
+                .userId(uniqueId)
                 .isFinished(false)
                 .build();
 
