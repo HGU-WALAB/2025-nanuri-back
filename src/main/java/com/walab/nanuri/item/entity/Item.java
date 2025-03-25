@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Item extends BaseEntity {
+public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
