@@ -21,7 +21,6 @@ public class ItemService {
     //Item 추가
     @Transactional
     public void createItem(String uniqueId, ItemRequestDto itemDto){
-//        itemRepository.save(itemDto.toEntity());
         Item item = Item.builder()
                 .title(itemDto.getTitle())
                 .description(itemDto.getDescription())
@@ -57,10 +56,6 @@ public class ItemService {
 
 
     //나눔 중인 나의 Item 조회
-    @Transactional
-    public List<ItemListResponseDto> getMySharingItem(){
-        List<Item> items =
-    }
 
     //Item 단건 조회
     @Transactional
