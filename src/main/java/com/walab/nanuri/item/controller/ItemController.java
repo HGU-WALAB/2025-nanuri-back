@@ -2,6 +2,7 @@ package com.walab.nanuri.item.controller;
 
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
+import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,12 @@ public class ItemController {
     }
 
 
-    //Item 단건 조회
+    //Item 단건 조회(판매자 관점)
     @GetMapping("/api/item/{itemId}")
-    public ResponseEntity<ItemListResponseDto> getItem(@PathVariable Long itemId){
-        return ResponseEntity.ok(itemService.getItemById(itemId));
+    public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long itemId, @AuthenticationPrincipal String uniqueId){
+        return ResponseEntity.ok(itemService.getItemById(itemId, uniqueId));
     }
+
 
     //Item 수정
     @PatchMapping("/api/item/{itemId}")

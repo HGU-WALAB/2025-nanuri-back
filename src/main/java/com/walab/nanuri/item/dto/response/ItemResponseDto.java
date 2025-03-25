@@ -1,6 +1,5 @@
 package com.walab.nanuri.item.dto.response;
 
-import com.walab.nanuri.item.entity.Item;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class itemResponseDto {
+public class ItemResponseDto {
     private Long id;
     private String title;
     private String description;
