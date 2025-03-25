@@ -2,13 +2,17 @@ package com.walab.nanuri.item.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Getter
-public class Item extends BaseEntity {
+public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -34,6 +38,12 @@ public class Item extends BaseEntity {
 
     @Column(name="is_finished")
     private Boolean isFinished;
+
+    @CreatedDate
+    private LocalDateTime createdTime;
+
+    @LastModifiedDate
+    private LocalDateTime updatedTime;
 
     public void update(String title, String description, String place, String category) {
         this.title = title;
