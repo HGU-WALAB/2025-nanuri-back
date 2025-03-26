@@ -2,6 +2,7 @@ package com.walab.nanuri.item.service;
 
 import com.walab.nanuri.commons.exception.ItemAccessDeniedException;
 import com.walab.nanuri.commons.exception.ItemNotExistException;
+import com.walab.nanuri.commons.util.Time;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -45,11 +47,7 @@ public class ItemService {
         }
 
         return items.stream()
-                .map(item -> ItemListResponseDto.builder()
-                        .itemId(item.getId())
-                        .title(item.getTitle())
-                        .createdTime(item.getCreatedTime())
-                        .build())
+                .map(ItemListResponseDto::from)
                 .toList();
     }
 
@@ -68,7 +66,7 @@ public class ItemService {
                     .viewCount(item.getViewCount())
                     .category(item.getCategory())
                     .isFinished(item.getIsFinished())
-                    .createdTime(item.getCreatedTime())
+                    .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
                     .wishCount(item.getWishCount())
                     .isOwner(true)
                     .build();
@@ -80,7 +78,7 @@ public class ItemService {
                     .viewCount(item.getViewCount())
                     .category(item.getCategory())
                     .isFinished(item.getIsFinished())
-                    .createdTime(item.getCreatedTime())
+                    .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
                     .wishCount(item.getWishCount())
                     .isOwner(false)
                     .build();
