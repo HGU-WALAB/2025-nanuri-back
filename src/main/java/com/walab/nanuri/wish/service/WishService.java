@@ -23,7 +23,6 @@ public class WishService {
     private final WishRepository wishRepository;
     private final ItemRepository itemRepository;
 
-    @Transactional
     public void createWish(String uniqueId, Long itemId) {
         if(!itemRepository.existsById(itemId)) {
             throw new ItemNotExistException();
@@ -37,8 +36,7 @@ public class WishService {
         wishRepository.save(wish);
     }
 
-    @Transactional
-    public void deleteWish(String uniqueId, Long itemId) {
+    public void deleteWish(String uniqueId, Long itemId) { // TODO
         wishRepository.delete(
                 wishRepository.findWishByUniqueIdAndItemId(uniqueId, itemId)
                         .orElseThrow(WishNotExistException::new)
