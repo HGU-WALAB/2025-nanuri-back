@@ -3,16 +3,18 @@ package com.walab.nanuri.image.service;
 
 import com.walab.nanuri.commons.exception.FileCommonException;
 import com.walab.nanuri.commons.exception.FileExceptionCode;
+import com.walab.nanuri.commons.exception.ItemNotExistException;
 import com.walab.nanuri.image.common.ImageExtension;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
+import com.walab.nanuri.item.entity.Item;
+import com.walab.nanuri.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,23 +27,26 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ImageService {
     private final ImageRepository imageRepository;
+    private final ItemRepository itemRepository;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    public void uploadImage(List<MultipartFile> files) throws IOException {
+    public void uploadImage(List<MultipartFile> files, Long itemId) throws IOException {
         if (files.size() > 5){
             throw new FileCommonException(FileExceptionCode.FILE_COUNT_UPPER);
         }
+
+        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
 
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
@@ -68,13 +73,16 @@ public class ImageService {
                     .filePath(uniqueFilename)
                     .fileType(ImageExtension.valueOf(extension))
                     .fileSize(file.getSize())
+                    .item(item)
                     .build();
 
             imageRepository.save(image);
         }
     }
 
-    public ResponseEntity<Resource> viewImages(Long imageId) throws IOException {
+    public ResponseEntity<Resource> viewImages(Long itemId) throws IOException {
+        Long imageId = imageRepository.findTopByItemIdOrderByIdAsc(itemId).getId();
+
         log.info("imageIds: " + imageId);
 
         Image image = imageRepository.findById(imageId)
