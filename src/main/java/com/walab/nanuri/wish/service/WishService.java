@@ -1,5 +1,6 @@
 package com.walab.nanuri.wish.service;
 
+import com.walab.nanuri.commons.exception.ItemNotExistException;
 import com.walab.nanuri.commons.exception.WishNotExistException;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
@@ -24,6 +25,10 @@ public class WishService {
 
     @Transactional
     public void createWish(String uniqueId, Long itemId) {
+        if(!itemRepository.existsById(itemId)) {
+            throw new ItemNotExistException();
+        }
+
         Wish wish = Wish.builder()
                 .uniqueId(uniqueId)
                 .itemId(itemId)
@@ -40,7 +45,7 @@ public class WishService {
         );
     }
 
-    public List<WishResponseDto> getAllWish(String uniqueId) {
+    public List<WishResponseDto> getWishList(String uniqueId) {
         List<Wish> wishes = wishRepository.findAllByUniqueId(uniqueId);
         List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
         List<Item> items = itemRepository.findAllById(itemIds);
