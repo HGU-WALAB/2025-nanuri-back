@@ -7,6 +7,5 @@ import java.util.List;
 import java.util.Locale;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-
-    List<Item> findByCategory(String category);
+    List<Item> findAllByCategory(String category);
 }

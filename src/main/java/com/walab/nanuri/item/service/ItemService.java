@@ -1,26 +1,27 @@
 package com.walab.nanuri.item.service;
 
+import com.walab.nanuri.commons.exception.ItemAccessDeniedException;
+import com.walab.nanuri.commons.exception.ItemNotExistException;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
 
     //Item 추가
     @Transactional
-    public void createItem(String uniqueId, ItemRequestDto itemDto){
+    public void createItem(String uniqueId, ItemRequestDto itemDto) {
         Item item = Item.builder()
                 .title(itemDto.getTitle())
                 .description(itemDto.getDescription())
@@ -35,34 +36,31 @@ public class ItemService {
     }
 
     //Item 전체 조회(일반 전체 조회, 카테고리 선택 후 전체 조회)
-    @Transactional
     public List<ItemListResponseDto> getAllItems(String category) {
         List<Item> items;
-        if(category == null) items = itemRepository.findAll();
-        else items = itemRepository.findByCategory(category);
-
-        List<ItemListResponseDto> itemDtoList = new ArrayList<>();
-
-        for(Item item : items){
-            ItemListResponseDto itemDto = ItemListResponseDto.builder()
-                    .id(item.getId())
-                    .title(item.getTitle())
-                    .createdTime(item.getCreatedTime())
-                    .build();
-            itemDtoList.add(itemDto);
+        if (category.isEmpty()) {
+            items = itemRepository.findAll();
+        } else {
+            items = itemRepository.findAllByCategory(category);
         }
-        return itemDtoList;
+
+        return items.stream()
+                .map(item -> ItemListResponseDto.builder()
+                        .itemId(item.getId())
+                        .title(item.getTitle())
+                        .createdTime(item.getCreatedTime())
+                        .build())
+                .toList();
     }
 
 
     //나눔 중인 나의 Item 조회
 
     //Item 단건 조회
-    @Transactional
-    public ItemResponseDto getItemById(String uniqueId, Long itemId){
+    public ItemResponseDto getItemById(String uniqueId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(RuntimeException::new);
 
-        if(item.getUserId().equals(uniqueId)){ //자신의 학번과 물건의 판매자 아이디가 같음 -> 판매자임
+        if (item.getUserId().equals(uniqueId)) { //자신의 학번과 물건의 판매자 아이디가 같음 -> 판매자임
             return ItemResponseDto.builder()
                     .id(item.getId())
                     .title(item.getTitle())
@@ -74,8 +72,7 @@ public class ItemService {
                     .wishCount(item.getWishCount())
                     .isOwner(true)
                     .build();
-        }
-        else{ //구매자라면
+        } else { //구매자라면
             return ItemResponseDto.builder()
                     .id(item.getId())
                     .title(item.getTitle())
@@ -93,23 +90,26 @@ public class ItemService {
 
     //Item 수정
     @Transactional
-    public boolean updateItem(String uniqueId, Long updateId, ItemRequestDto itemDto) {
-        Item findItem = itemRepository.findById(updateId).orElseThrow(()->new IllegalArgumentException("게시글을 찾을 수 없습니다"));
-        findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory());
-        try{
-            itemRepository.save(findItem);
-        } catch (Exception e){
-            return false;
+    public void updateItem(String uniqueId, Long updateId, ItemRequestDto itemDto) {
+        Item findItem = itemRepository.findById(updateId).orElseThrow(ItemNotExistException::new);
+
+        if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
+            findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory());
+        } else {
+            throw new ItemAccessDeniedException("아이템에 대한 권한이 없는 사용자입니다.");
         }
-        return true;
     }
 
 
-    //Item 삭제하기(Delete)
+    //Item 삭제하기
     @Transactional
-    public boolean deleteItem(Long itemId){
-        itemRepository.deleteById(itemId);
-        return true;
+    public void deleteItem(String uniqueId, Long itemId) {
+        Item findItem = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
+        if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
+            itemRepository.delete(findItem);
+        } else {
+            throw new ItemAccessDeniedException("아이템에 대한 권한이 없는 사용자입니다.");
+        }
     }
 
 }
