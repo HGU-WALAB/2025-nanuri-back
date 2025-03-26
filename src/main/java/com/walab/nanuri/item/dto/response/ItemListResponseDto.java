@@ -5,19 +5,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 public class ItemListResponseDto {
-    private Long id;
+    private Long itemId;
     private String title;
     private LocalDateTime createdTime;
-
-    //DTO -> ENTITY로 변환
-    public Item toEntity(){
-        return Item.builder()
-                .title(this.title)
-                .createdTime(this.createdTime)
-                .build();
-    }
 }
