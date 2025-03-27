@@ -22,6 +22,9 @@ public class HisnetLoginService {
     @Value("${hisnet.access_key}")
     private String ACCESS_KEY;
 
+    @Value("${hisnet.urt}")
+    private String HISNET_URT;
+
     // 받아온 히즈넷 토큰을 서버로 요청해서 사용자 정보를 받아옴
     public AuthDto callHisnetLoginApi(AuthDto dto) {
         Map<String, Object> requestBody = new HashMap<>();
@@ -35,8 +38,7 @@ public class HisnetLoginService {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        String url = "https://walab.info:8443/HisnetLogin/api/hisnet/login/validate";
-        UriComponents uri = UriComponentsBuilder.fromUriString(url).build();
+        UriComponents uri = UriComponentsBuilder.fromUriString(HISNET_URT).build();
 
         try {
             ParameterizedTypeReference<Map<String, Object>> typeRef = new ParameterizedTypeReference<>() {
