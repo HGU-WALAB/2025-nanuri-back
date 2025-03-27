@@ -22,7 +22,7 @@ public class ItemController {
     private final ItemService itemService;
 
     //Item 추가
-    @PostMapping()
+    @PostMapping("/item")
     public ResponseEntity<ItemCreateResponseDto> createItem(@AuthenticationPrincipal String uniqueId,
                                               @RequestBody ItemRequestDto request) {
         Long itemId = itemService.createItem(uniqueId, request);
@@ -34,14 +34,14 @@ public class ItemController {
 
 
     //Item 전체 조회
-    @GetMapping()
+    @GetMapping("/items")
     public List<ItemListResponseDto> getAllItems(@RequestParam(required = false, defaultValue = "") String category) {
         return itemService.getAllItems(category);
     }
 
 
     //Item 단건 조회
-    @GetMapping("/{itemId}")
+    @GetMapping("/item/{itemId}")
     public ResponseEntity<ItemResponseDto> getItemById(@AuthenticationPrincipal String uniqueId,
                                                        @PathVariable Long itemId) {
         return ResponseEntity.ok(itemService.getItemById(uniqueId, itemId));
@@ -49,7 +49,7 @@ public class ItemController {
 
 
     //Item 수정
-    @PatchMapping("/{itemId}")
+    @PatchMapping("/item/{itemId}")
     public ResponseEntity<Void> updateItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId, @RequestBody ItemRequestDto request) {
         itemService.updateItem(uniqueId, itemId, request);
         return ResponseEntity.ok().body(null);
@@ -57,7 +57,7 @@ public class ItemController {
 
 
     //Item 삭제
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/item/{itemId}")
     public ResponseEntity<Void> deleteItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId) {
         itemService.deleteItem(uniqueId, itemId);
         return ResponseEntity.ok().body(null);
