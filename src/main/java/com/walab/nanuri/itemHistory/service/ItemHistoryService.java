@@ -12,7 +12,7 @@ public class ItemHistoryService {
 
     //Item 거래 신청
     @Transactional
-    public void applicateItem(Long itemId){
+    public void applicateItem(Long itemId, String uniqueId){
         Item
         itemHistoryRepository.save(item);
     }
