@@ -17,9 +17,9 @@ import java.util.List;
 public class ImageController {
     private final ImageService imageService;
 
-    @PostMapping()
-    public void upload(@RequestParam("files") List<MultipartFile> files) throws IOException {
-        imageService.uploadImage(files);
+    @PostMapping("/{itemId}")
+    public void upload(@RequestParam("files") List<MultipartFile> files, @PathVariable Long itemId) throws IOException {
+        imageService.uploadImage(files, itemId);
     }
 
     @GetMapping("/view/{id}")

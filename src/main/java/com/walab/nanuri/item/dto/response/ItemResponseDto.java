@@ -17,7 +17,7 @@ public class ItemResponseDto {
     private Integer viewCount;
     private String category;
     private Boolean isFinished;
-    private LocalDateTime createdTime;
+    private String createdTime;
     private Integer wishCount;
     private Boolean isOwner;
 

@@ -1,5 +1,6 @@
 package com.walab.nanuri.wish.dto.response;
 
+import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.wish.entity.Wish;
 import lombok.AllArgsConstructor;
@@ -14,15 +15,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WishResponseDto {
-    private Long id;
-    private String title;
-    private LocalDateTime createdTime;
+    private Long wishId;
+    private ItemListResponseDto itemListResponseDto;
 
     public static WishResponseDto createDefaultDto(Wish wish, Item item) {
         return WishResponseDto.builder()
-                .id(wish.getId())
-                .title(item.getTitle())
-                .createdTime(item.getCreatedTime())
+                .wishId(wish.getId())
+                .itemListResponseDto(ItemListResponseDto.from(item))
                 .build();
     }
 }
