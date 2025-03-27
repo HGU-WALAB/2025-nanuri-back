@@ -21,17 +21,15 @@ public class ImageResponseDto {
         private Long id;
         private String filePath;
         private String fileName;
-        private ImageExtension fileType;
+        private String fileUrl;
         private Long fileSize;
-        private LocalDateTime regDate;
 
-        public static ImageReadResponse createDefaultDto(Image request) {
+        public static ImageReadResponse createDefaultDto(Image image) {
             return ImageReadResponse.builder()
-                    .fileName(request.getFileName())
-                    .fileSize(request.getFileSize())
-                    .fileType(request.getFileType())
-                    .regDate(request.getRegDate())
-                    .filePath(request.getFilePath())
+                    .fileName(image.getFileName())
+                    .fileSize(image.getFileSize())
+                    .fileUrl(image.getFileUrl())
+                    .filePath(image.getFilePath())
                     .build();
         }
 
@@ -40,12 +38,32 @@ public class ImageResponseDto {
                     .map(l -> ImageReadResponse.builder()
                             .fileName(l.getFileName())
                             .fileSize(l.getFileSize())
-                            .fileType(l.getFileType())
-                            .regDate(l.getRegDate())
+                            .fileUrl(l.getFileUrl())
                             .filePath(l.getFilePath())
                             .build())
                     .collect(Collectors.toList());
         }
+    }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ImageUrlReadResponseDto {
+        private String fileUrl;
+
+        public static ImageUrlReadResponseDto createDefaultDto(Image image) {
+            return ImageUrlReadResponseDto.builder()
+                    .fileUrl(image.getFileUrl())
+                    .build();
+        }
+
+        public static List<ImageUrlReadResponseDto> fromList(List<Image> images) {
+            return images.stream()
+                    .map(l -> ImageUrlReadResponseDto.builder()
+                            .fileUrl(l.getFileUrl())
+                            .build())
+                    .collect(Collectors.toList());
+        }
     }
 }

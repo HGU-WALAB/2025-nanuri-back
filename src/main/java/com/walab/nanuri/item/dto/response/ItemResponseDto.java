@@ -1,10 +1,12 @@
 package com.walab.nanuri.item.dto.response;
 
+import com.walab.nanuri.image.dto.response.ImageResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -19,6 +21,7 @@ public class ItemResponseDto {
     private Boolean isFinished;
     private String createdTime;
     private Integer wishCount;
+    private List<String> images;
     private Boolean isOwner;
 
 //    public Item toEntity(){
