@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -24,7 +23,7 @@ public class ItemHistory {
     private Long itemId;
 
     @Column(name="get_user_id")
-    private Long getUserId;
+    private String getUserId;
 
     @Column(name="is_finished")
     private Boolean isFinished;

@@ -1,5 +1,6 @@
 package com.walab.nanuri.itemHistory.service;
 
+import com.walab.nanuri.itemHistory.entity.ItemHistory;
 import com.walab.nanuri.itemHistory.repository.ItemHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,15 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ItemHistoryService {
     private final ItemHistoryRepository itemHistoryRepository;
 
-    //Item 거래 신청
+    //Item 신청 (아이템 나눔을 신청)
     @Transactional
-    public void applicateItem(Long itemId, String uniqueId){
-        Item
-        itemHistoryRepository.save(item);
+    public void applicateItem(String uniqueId, Long itemId){
+        ItemHistory itemHistory = ItemHistory.builder()
+                .itemId(itemId)
+                .getUserId(uniqueId)
+                .isFinished(false)
+                .build();
+        itemHistoryRepository.save(itemHistory);
     }
 
 
-    //Item 거래 신청 취소
+    //Item 나눔 신청 취소
 
 
     //Item-신청자 리스트 조회
