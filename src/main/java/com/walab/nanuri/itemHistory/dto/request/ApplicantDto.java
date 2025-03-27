@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ApplicantDto {
-    private Long studentId;
+    private String studentId;
     private String name;
     private String rank;
 }
