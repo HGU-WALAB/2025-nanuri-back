@@ -57,7 +57,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Column
-    private String rate;
+    private String rank;
 
     public void update(AuthDto dto) {
         this.name = dto.getName();
