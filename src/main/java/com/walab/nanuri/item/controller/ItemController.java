@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/item")
+@RequestMapping("/api")
 public class ItemController {
 
     private final ItemService itemService;
