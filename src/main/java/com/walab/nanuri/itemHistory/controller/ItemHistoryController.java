@@ -37,14 +37,16 @@ public class ItemHistoryController {
     }
 
     //Item-신청자 리스트 조회
-//    @GetMapping("/api/history/{itemId}")
-//    public List<ApplicantDto> getAllApplicants(@AuthenticationPrincipal String uniqueId,
-//                                               @PathVariable long itemId) {
-//        if(uniqueId.equals(item.getUserId())){
-//            itemHistoryService.getAllApplicants(uniqueId, itemId);
-////        }
-//        return ResponseEntity.ok(400);
-//
-//    }
+    @GetMapping("/api/history/{itemId}")
+    public List<ApplicantDto> getAllApplicants(@AuthenticationPrincipal String uniqueId,
+                                               @PathVariable long itemId) {
+        return itemHistoryService.getAllApplicants(uniqueId, itemId);
+    }
 
+    //Item 거래 완료
+    @PatchMapping("/api/history/{itemId}/{applicant}")
+    public ResponseEntity<String> completeItemApplication(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId, @PathVariable String applicant){
+        itemHistoryService.completeItemApplication(uniqueId, itemId, applicant);
+        return ResponseEntity.ok().body(null);
+    }
 }

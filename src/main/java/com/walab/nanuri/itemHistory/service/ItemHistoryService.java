@@ -56,23 +56,40 @@ public class ItemHistoryService {
 
 
     //Item-신청자 리스트 조회
-//    @Transactional
-//    public List<ApplicantDto> getAllApplicants(String uniqueId, Long itemId){
-//        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
-//        if(!uniqueId.equals(item.getUserId())){ //판매자가 아닐경우 -> 접근 권한 없음
-//            throw new RuntimeException("접근 권한이 없습니다.");
-//        }
-//
-//        return itemHistoryRepository.findById(itemId)
-//                .stream()
-//                .map(history -> {
-//                    User user = userRepository.findById(history.getGetUserId())
-//                            .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다. "));
-//                    return new ApplicantDto(user.getUniqueId(), user.getNickname(), user.get())
-//                })
-//                .toList();
-//    }
+    @Transactional
+    public List<ApplicantDto> getAllApplicants(String uniqueId, Long itemId){
+        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
+        if(!uniqueId.equals(item.getUserId())){ //판매자가 아닐경우 -> 접근 권한 없음
+            throw new RuntimeException("접근 권한이 없습니다.");
+        }
+
+        return itemHistoryRepository.findById(itemId)
+                .stream()
+                .map(history -> {
+                    User user = userRepository.findById(history.getGetUserId())
+                            .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다. "));
+                    return new ApplicantDto(user.getUniqueId(), user.getNickname(), user.getRank());
+                })
+                .toList();
+    }
 
     //Item 거래 완료
+    @Transactional
+    public void completeItemApplication(String uniqueId, Long itemId, String applicant){
+        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
+        if(!uniqueId.equals(item.getUserId())){ //판매자가 아니라면 -> 접근 권한 없음
+            throw new RuntimeException("접근 권한이 없습니다.");
+        }
+        ItemHistory itemHistory = itemHistoryRepository.findByItemIdAndGetUserId(itemId, uniqueId)
+                .orElseThrow(() -> new RuntimeException("해당 신청자가 존재하지 않습니다."));
 
+        itemHistory = ItemHistory.builder()
+                .id(itemHistory.getId())
+                .itemId(itemHistory.getItemId())
+                .getUserId(applicant)
+                .isFinished(true)
+                .build();
+
+        itemHistoryRepository.save(itemHistory);
+    }
 }
