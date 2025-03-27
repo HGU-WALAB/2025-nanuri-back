@@ -12,4 +12,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Query("SELECT i FROM images i WHERE i.item.id = :itemId ORDER BY i.id ASC LIMIT 1")
     Image findTopByItemIdOrderByIdAsc(@Param("itemId") Long itemId);
 
+    List<Image> findByItemIdOrderByIdAsc(@Param("itemId") Long itemId);
+
 }

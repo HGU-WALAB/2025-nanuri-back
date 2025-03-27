@@ -110,4 +110,19 @@ public class ImageService {
             throw new FileCommonException(FileExceptionCode.FILE_PATH_INVALID);
         }
     }
+
+    public void deleteImages(Long itemId) {
+        List<Image> images = imageRepository.findByItemIdOrderByIdAsc(itemId);
+        for (Image image : images) {
+            try {
+                Path path = Paths.get(uploadDir, image.getFilePath());
+                Files.deleteIfExists(path);
+            } catch (IOException e) {
+                log.error("Failed to delete file: " + image.getFilePath(), e);
+                throw new FileCommonException(FileExceptionCode.FILE_DELETE_FAILED);
+            }
+            imageRepository.delete(image);
+        }
+
+    }
 }
