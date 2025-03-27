@@ -34,6 +34,9 @@ public class SecurityConfig {
     @Value("${jwt.secret_key}")
     private String SECRET_KEY;
 
+    @Value("${image.url}")
+    private String imageUrl;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         Key key = JwtUtil.getSigningKey(SECRET_KEY);
@@ -56,8 +59,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
                         .requestMatchers("/api/nanuri/**", "/api/**").authenticated()
-                )
-        ;
+                        .requestMatchers(imageUrl + "**").permitAll()
+                );
 
         return http.build();
     }
