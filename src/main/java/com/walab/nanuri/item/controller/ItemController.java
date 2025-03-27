@@ -16,12 +16,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/item")
 public class ItemController {
 
     private final ItemService itemService;
 
     //Item 추가
-    @PostMapping("/api/item")
+    @PostMapping()
     public ResponseEntity<ItemCreateResponseDto> createItem(@AuthenticationPrincipal String uniqueId,
                                               @RequestBody ItemRequestDto request) {
         Long itemId = itemService.createItem(uniqueId, request);
@@ -33,14 +34,14 @@ public class ItemController {
 
 
     //Item 전체 조회
-    @GetMapping("/api/items")
+    @GetMapping()
     public List<ItemListResponseDto> getAllItems(@RequestParam(required = false, defaultValue = "") String category) {
         return itemService.getAllItems(category);
     }
 
 
     //Item 단건 조회
-    @GetMapping("/api/item/{itemId}")
+    @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponseDto> getItemById(@AuthenticationPrincipal String uniqueId,
                                                        @PathVariable Long itemId) {
         return ResponseEntity.ok(itemService.getItemById(uniqueId, itemId));
@@ -48,7 +49,7 @@ public class ItemController {
 
 
     //Item 수정
-    @PatchMapping("/api/item/{itemId}")
+    @PatchMapping("/{itemId}")
     public ResponseEntity<Void> updateItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId, @RequestBody ItemRequestDto request) {
         itemService.updateItem(uniqueId, itemId, request);
         return ResponseEntity.ok().body(null);
@@ -56,7 +57,7 @@ public class ItemController {
 
 
     //Item 삭제
-    @DeleteMapping("/api/item/{itemId}")
+    @DeleteMapping("/{itemId}")
     public ResponseEntity<Void> deleteItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId) {
         itemService.deleteItem(uniqueId, itemId);
         return ResponseEntity.ok().body(null);
