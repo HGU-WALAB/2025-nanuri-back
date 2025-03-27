@@ -52,6 +52,8 @@ public class Item {
     @Column(name="wish_count")
     private Integer wishCount;
 
+    @Column
+    private String rank;
 
     public void update(String title, String description, String place, String category) {
         this.title = title;
