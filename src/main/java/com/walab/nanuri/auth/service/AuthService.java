@@ -47,14 +47,7 @@ public class AuthService {
                 key
         );
 
-        String refreshToken = JwtUtil.createRefreshToken(
-                loggedInUser.getUniqueId(),
-                loggedInUser.getName(),
-                key
-        );
-
         log.info("✅ Generated AccessToken: {}", accessToken);
-        log.info("✅ Generated RefreshToken: {}", refreshToken);
 
         return AuthDto.builder()
                 .token(accessToken)

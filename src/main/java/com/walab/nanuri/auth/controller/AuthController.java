@@ -26,11 +26,7 @@ public class AuthController {
         AuthDto authDto = hisnetLoginService.callHisnetLoginApi(AuthDto.from(request));
         LoginResponse loginResponse = LoginResponse.from(authService.login(authDto));
 
-        String accessToken = authService.createAccessToken(
-                loginResponse.getUserId(),
-                loginResponse.getUserName(),
-                loginResponse.getDepartment()
-        );
+        String accessToken = loginResponse.getToken();
         String refreshToken = authService.createRefreshToken(
                 loginResponse.getUserId(),
                 loginResponse.getUserName()
