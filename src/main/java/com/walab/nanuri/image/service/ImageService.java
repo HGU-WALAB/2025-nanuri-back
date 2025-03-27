@@ -41,6 +41,12 @@ public class ImageService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    @Value("${image.url}")
+    private String imageUrl;
+
+    @Value("${base.url}")
+    private String baseUrl;
+
     public void uploadImage(List<MultipartFile> files, Long itemId) throws IOException {
         if (files.size() > 5){
             throw new FileCommonException(FileExceptionCode.FILE_COUNT_UPPER);
@@ -61,7 +67,7 @@ public class ImageService {
             }
 
             Path directoryPath = Paths.get(uploadDir);
-            Files.createDirectories(directoryPath); // 내부적으로 존재 여부 체크,
+            Files.createDirectories(directoryPath);
 
             String uniqueFilename = UUID.randomUUID() + "_" + originalFilename;
             Path path = Paths.get(uploadDir, uniqueFilename);
@@ -71,6 +77,7 @@ public class ImageService {
             Image image = Image.builder()
                     .fileName(originalFilename)
                     .filePath(uniqueFilename)
+                    .fileUrl(baseUrl + imageUrl + uniqueFilename)
                     .fileType(ImageExtension.valueOf(extension))
                     .fileSize(file.getSize())
                     .item(item)
