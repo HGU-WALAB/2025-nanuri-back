@@ -3,6 +3,7 @@ package com.walab.nanuri.item.service;
 import com.walab.nanuri.commons.exception.ItemAccessDeniedException;
 import com.walab.nanuri.commons.exception.ItemNotExistException;
 import com.walab.nanuri.commons.util.Time;
+import com.walab.nanuri.image.service.ImageService;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final ImageService imageService;
 
     //Item 추가
     @Transactional
@@ -104,6 +106,7 @@ public class ItemService {
     public void deleteItem(String uniqueId, Long itemId) {
         Item findItem = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
         if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
+            imageService.deleteImages(itemId);
             itemRepository.delete(findItem);
         } else {
             throw new ItemAccessDeniedException("아이템에 대한 권한이 없는 사용자입니다.");
