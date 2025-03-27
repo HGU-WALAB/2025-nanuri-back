@@ -1,6 +1,7 @@
 package com.walab.nanuri.item.controller;
 
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
+import com.walab.nanuri.item.dto.response.ItemCreateResponseDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.service.ItemService;
@@ -21,10 +22,13 @@ public class ItemController {
 
     //Item 추가
     @PostMapping("/api/item")
-    public ResponseEntity<Void> createItem(@AuthenticationPrincipal String uniqueId,
+    public ResponseEntity<ItemCreateResponseDto> createItem(@AuthenticationPrincipal String uniqueId,
                                               @RequestBody ItemRequestDto request) {
-        itemService.createItem(uniqueId, request);
-        return ResponseEntity.ok().body(null);
+        Long itemId = itemService.createItem(uniqueId, request);
+        ItemCreateResponseDto responseDto = ItemCreateResponseDto.builder()
+                .itemId(itemId)
+                .build();
+        return ResponseEntity.ok().body(responseDto);
     }
 
 
