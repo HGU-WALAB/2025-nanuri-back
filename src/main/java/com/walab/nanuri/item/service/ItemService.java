@@ -23,7 +23,7 @@ public class ItemService {
 
     //Item 추가
     @Transactional
-    public void createItem(String uniqueId, ItemRequestDto itemDto) {
+    public Long createItem(String uniqueId, ItemRequestDto itemDto) {
         Item item = Item.builder()
                 .title(itemDto.getTitle())
                 .description(itemDto.getDescription())
@@ -35,6 +35,7 @@ public class ItemService {
                 .build();
 
         itemRepository.save(item);
+        return item.getId();
     }
 
     //Item 전체 조회(일반 전체 조회, 카테고리 선택 후 전체 조회)
