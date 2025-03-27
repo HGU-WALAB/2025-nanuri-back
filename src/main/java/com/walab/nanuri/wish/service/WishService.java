@@ -43,15 +43,15 @@ public class WishService {
         );
     }
 
-    public List<WishResponseDto> getWishList(String uniqueId) {
-        List<Wish> wishes = wishRepository.findAllByUniqueId(uniqueId);
-        List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
-        List<Item> items = itemRepository.findAllById(itemIds);
-        Map<Long, Item> itemMap = items.stream()
-                .collect(Collectors.toMap(Item::getId, item -> item));
-
-        return wishes.stream()
-                .map(wish -> WishResponseDto.createDefaultDto(wish, itemMap.get(wish.getItemId())))
-                .toList();
-    }
+//    public List<WishResponseDto> getWishList(String uniqueId) {
+//        List<Wish> wishes = wishRepository.findAllByUniqueId(uniqueId);
+//        List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
+//        List<Item> items = itemRepository.findAllById(itemIds);
+//        Map<Long, Item> itemMap = items.stream()
+//                .collect(Collectors.toMap(Item::getId, item -> item));
+//
+//        return wishes.stream()
+//                .map(wish -> WishResponseDto.createDefaultDto(wish, itemMap.get(wish.getItemId())))
+//                .toList();
+//    }
 }
