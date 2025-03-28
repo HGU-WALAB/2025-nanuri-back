@@ -38,9 +38,10 @@ public class WishService {
         wishRepository.save(wish);
     }
 
-    public void deleteWish(String uniqueId, Long itemId) { // TODO
+    @Transactional
+    public void deleteWish(Long wishId) {
         wishRepository.delete(
-                wishRepository.findWishByUniqueIdAndItemId(uniqueId, itemId)
+                wishRepository.findById(wishId)
                         .orElseThrow(WishNotExistException::new)
         );
     }
