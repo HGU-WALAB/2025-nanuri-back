@@ -56,9 +56,6 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Column
-    private String rank;
-
     public void update(AuthDto dto) {
         this.name = dto.getName();
         this.email = dto.getEmail();

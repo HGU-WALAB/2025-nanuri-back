@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class ApplicantDto {
     private String studentId;
     private String name;
-    private String rank;
 }
