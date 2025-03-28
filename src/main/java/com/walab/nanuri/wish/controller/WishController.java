@@ -35,9 +35,9 @@ public class WishController {
         return ResponseEntity.ok().body(null);
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<WishResponseDto>> getWishList(@AuthenticationPrincipal String uniqueId) {
-//        List<WishResponseDto> wishList = wishService.getWishList(uniqueId);
-//        return ResponseEntity.ok().body(wishList);
-//    }
+    @GetMapping
+    public ResponseEntity<List<WishResponseDto>> getWishList(@AuthenticationPrincipal String uniqueId) {
+        List<WishResponseDto> wishList = wishService.getWishList(uniqueId);
+        return ResponseEntity.ok().body(wishList);
+    }
 }

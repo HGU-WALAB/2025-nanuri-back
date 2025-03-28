@@ -18,10 +18,10 @@ public class WishResponseDto {
     private Long wishId;
     private ItemListResponseDto itemListResponseDto;
 
-    public static WishResponseDto createDefaultDto(Wish wish, Item item, String image) {
+    public static WishResponseDto createDefaultDto(Wish wish, ItemListResponseDto itemDto) {
         return WishResponseDto.builder()
                 .wishId(wish.getId())
-                .itemListResponseDto(ItemListResponseDto.from(item, image))
+                .itemListResponseDto(itemDto)
                 .build();
     }
 }
