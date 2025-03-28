@@ -70,7 +70,7 @@ public class ItemHistoryService {
                             .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다. "));
                     return new ApplicantDto(user.getUniqueId(), user.getNickname());
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //Item 거래 완료
