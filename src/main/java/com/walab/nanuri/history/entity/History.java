@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -27,5 +28,8 @@ public class History {
 
     @Column(name="is_finished")
     private Boolean isFinished;
+
+    @CreatedDate
+    private String applicationTime;
 
 }
