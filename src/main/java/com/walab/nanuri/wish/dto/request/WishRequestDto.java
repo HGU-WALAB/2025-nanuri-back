@@ -11,6 +11,6 @@ public class WishRequestDto {
 
     @Getter
     public static class WishDeleteRequestDto {
-        private Long itemId;
+        private Long wishId;
     }
 }

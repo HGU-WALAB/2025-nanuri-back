@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
     Optional<Wish> findWishByUniqueIdAndItemId(String uniqueId, Long itemId);
+    Optional<Wish> findWishByUniqueIdAndId(String uniqueId, Long id);
     List<Wish> findAllByUniqueId(String uniqueId);
 }

@@ -68,7 +68,7 @@ public class ItemHistoryService {
                 .map(history -> {
                     User user = userRepository.findById(history.getGetUserId())
                             .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다. "));
-                    return new ApplicantDto(user.getUniqueId(), user.getNickname(), user.getRank());
+                    return new ApplicantDto(user.getUniqueId(), user.getNickname());
                 })
                 .collect(Collectors.toList());
     }
