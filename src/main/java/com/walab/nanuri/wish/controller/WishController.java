@@ -29,9 +29,8 @@ public class WishController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteWish(
-            @AuthenticationPrincipal String uniqueId,
             @RequestBody WishRequestDto.WishDeleteRequestDto requestDto) {
-        wishService.deleteWish(uniqueId, requestDto.getItemId());
+        wishService.deleteWish(requestDto.getWishId());
         return ResponseEntity.ok().body(null);
     }
 
