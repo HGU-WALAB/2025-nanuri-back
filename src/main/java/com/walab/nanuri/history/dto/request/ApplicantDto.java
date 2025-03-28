@@ -1,4 +1,4 @@
-package com.walab.nanuri.itemHistory.dto.request;
+package com.walab.nanuri.history.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ApplicantDto {
-    private String studentId;
+    private String userId;
     private String name;
 }
