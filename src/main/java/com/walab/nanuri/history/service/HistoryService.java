@@ -1,25 +1,24 @@
-package com.walab.nanuri.itemHistory.service;
+package com.walab.nanuri.history.service;
 
 import com.walab.nanuri.commons.exception.ItemNotExistException;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
-import com.walab.nanuri.itemHistory.dto.request.ApplicantDto;
-import com.walab.nanuri.itemHistory.entity.ItemHistory;
-import com.walab.nanuri.itemHistory.repository.ItemHistoryRepository;
+import com.walab.nanuri.history.dto.request.ApplicantDto;
+import com.walab.nanuri.history.entity.History;
+import com.walab.nanuri.history.repository.HistoryRepository;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ItemHistoryService {
-    private final ItemHistoryRepository itemHistoryRepository;
+public class HistoryService {
+    private final HistoryRepository historyRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
@@ -34,24 +33,24 @@ public class ItemHistoryService {
         }
 
         //이미 나눔 신청한 물건인지 확인
-        if(itemHistoryRepository.existsByItemIdAndGetUserId(itemId, uniqueId)){
+        if(historyRepository.existsByItemIdAndGetUserId(itemId, uniqueId)){
             throw new RuntimeException("이미 나눔 신청한 물건입니다.");
         }
 
-        ItemHistory itemHistory = ItemHistory.builder()
+        History history = History.builder()
                 .itemId(itemId)
                 .getUserId(uniqueId)
                 .isFinished(false)
                 .build();
 
-        itemHistoryRepository.save(itemHistory);
+        historyRepository.save(history);
     }
 
 
     //Item 나눔 신청 취소
     @Transactional
     public void cancelItemApplication(String uniqueId, Long itemId){
-        itemHistoryRepository.deleteByItemIdAndGetUserId(itemId, uniqueId);
+        historyRepository.deleteByItemIdAndGetUserId(itemId, uniqueId);
     }
 
 
@@ -63,7 +62,7 @@ public class ItemHistoryService {
             throw new RuntimeException("접근 권한이 없습니다.");
         }
 
-        return itemHistoryRepository.findById(itemId)
+        return historyRepository.findById(itemId)
                 .stream()
                 .map(history -> {
                     User user = userRepository.findById(history.getGetUserId())
@@ -80,16 +79,16 @@ public class ItemHistoryService {
         if(!uniqueId.equals(item.getUserId())){ //판매자가 아니라면 -> 접근 권한 없음
             throw new RuntimeException("접근 권한이 없습니다.");
         }
-        ItemHistory itemHistory = itemHistoryRepository.findByItemIdAndGetUserId(itemId, uniqueId)
+        History history = historyRepository.findByItemIdAndGetUserId(itemId, uniqueId)
                 .orElseThrow(() -> new RuntimeException("해당 신청자가 존재하지 않습니다."));
 
-        itemHistory = ItemHistory.builder()
-                .id(itemHistory.getId())
-                .itemId(itemHistory.getItemId())
+        history = History.builder()
+                .id(history.getId())
+                .itemId(history.getItemId())
                 .getUserId(applicant)
                 .isFinished(true)
                 .build();
 
-        itemHistoryRepository.save(itemHistory);
+        historyRepository.save(history);
     }
 }

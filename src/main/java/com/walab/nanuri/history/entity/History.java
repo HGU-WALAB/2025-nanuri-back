@@ -1,4 +1,4 @@
-package com.walab.nanuri.itemHistory.entity;
+package com.walab.nanuri.history.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class ItemHistory {
+public class History {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column

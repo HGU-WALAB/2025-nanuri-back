@@ -1,4 +1,4 @@
-package com.walab.nanuri.itemHistory.dto.request;
+package com.walab.nanuri.history.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
