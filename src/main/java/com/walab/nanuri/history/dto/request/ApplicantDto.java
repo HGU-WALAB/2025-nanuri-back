@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ApplicantDto {
     private String userId;
     private String name;
+    private String applicationTime;
 }
