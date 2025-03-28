@@ -23,7 +23,7 @@ public class ApplicantDto {
     public static ApplicantDto from(History history, User user){
         return ApplicantDto.builder()
                 .nickName(user.getNickname())
-                .applicationTime(Time.calculateTime(Timestamp.valueOf(history.getApplicationTime())))
+                .applicationTime(Time.calculateTime(Timestamp.valueOf(history.getCreatedTime())))
                 .build();
     }
 }
