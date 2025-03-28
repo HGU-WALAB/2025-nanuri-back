@@ -1,6 +1,7 @@
 package com.walab.nanuri.history.service;
 
 import com.walab.nanuri.commons.exception.ItemNotExistException;
+import com.walab.nanuri.commons.util.Time;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.history.dto.request.ApplicantDto;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,17 +61,16 @@ public class HistoryService {
     public List<ApplicantDto> getAllApplicants(String uniqueId, Long itemId){
         Item item = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
         if(!uniqueId.equals(item.getUserId())){ //판매자가 아닐경우 -> 접근 권한 없음
-            throw new RuntimeException("접근 권한이 없습니다.");
+            throw new RuntimeException("물건 주인이 아니므로 접근 권한이 없습니다.");
         }
-
         return historyRepository.findById(itemId)
                 .stream()
                 .map(history -> {
                     User user = userRepository.findById(history.getGetUserId())
                             .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다. "));
-                    return new ApplicantDto(user.getUniqueId(), user.getNickname());
+                    return ApplicantDto.from(history, user);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     //Item 거래 완료
