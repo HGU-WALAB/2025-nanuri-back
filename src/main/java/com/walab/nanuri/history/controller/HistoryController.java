@@ -1,6 +1,7 @@
 package com.walab.nanuri.history.controller;
 
 import com.walab.nanuri.history.dto.response.ApplicantDto;
+import com.walab.nanuri.history.dto.response.ReceivedItemDto;
 import com.walab.nanuri.history.service.HistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,4 +45,11 @@ public class HistoryController {
         historyService.cancelItemApplication(uniqueId, itemId);
         return ResponseEntity.ok().body(null);
     }
+
+    //내가 받은 나눔 Item 조회
+    @GetMapping("/api/history/receive-done")
+    public List<ReceivedItemDto> getReceivedItems(@AuthenticationPrincipal String uniqueId) {
+        return historyService.getAllReceivedItems(uniqueId);
+    }
+
 }
