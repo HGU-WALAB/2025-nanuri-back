@@ -13,5 +13,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     List<History> findByItemId(Long itemId);
     void deleteByItemIdAndGetUserId(Long itemId, String getUserId);
     List<History> findAllByGetUserIdAndIsConfirmedTrue(String getUserId);
+    List<History> findAllByGetUserIdAndIsConfirmedFalse(String getUserId);
 
 }

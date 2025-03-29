@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReceivedItemDto {
+public class WaitingItemDto {
     private Long itemId;
     private String title;
     private String description;
@@ -24,8 +24,8 @@ public class ReceivedItemDto {
 
 
 
-    public static ReceivedItemDto from(Item item){
-        return ReceivedItemDto.builder()
+    public static WaitingItemDto from(Item item){
+        return WaitingItemDto.builder()
                 .itemId(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())

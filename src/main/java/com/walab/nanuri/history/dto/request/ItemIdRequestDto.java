@@ -1,4 +1,4 @@
-package com.walab.nanuri.history.dto.response;
+package com.walab.nanuri.history.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
