@@ -1,7 +1,6 @@
 package com.walab.nanuri.item.controller;
 
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
-import com.walab.nanuri.item.dto.response.ItemCreateResponseDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.service.ItemService;
@@ -23,13 +22,9 @@ public class ItemController {
 
     //Item 추가
     @PostMapping("/item")
-    public ResponseEntity<ItemCreateResponseDto> createItem(@AuthenticationPrincipal String uniqueId,
-                                              @RequestBody ItemRequestDto request) {
-        Long itemId = itemService.createItem(uniqueId, request);
-        ItemCreateResponseDto responseDto = ItemCreateResponseDto.builder()
-                .itemId(itemId)
-                .build();
-        return ResponseEntity.ok().body(responseDto);
+    public ResponseEntity<Long> createItem(@AuthenticationPrincipal String uniqueId,
+                                           @RequestBody ItemRequestDto request) {
+        return ResponseEntity.ok().body(itemService.createItem(uniqueId, request));
     }
 
 
@@ -47,6 +42,11 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemById(uniqueId, itemId));
     }
 
+    @GetMapping("/items/done")
+    public ResponseEntity<List<ItemListResponseDto>> getOngoingMyItems(@AuthenticationPrincipal String uniqueId,
+                                                                       @RequestParam boolean onGoing) {
+        return ResponseEntity.ok(itemService.getOngoingMyItems(uniqueId, onGoing));
+    }
 
     //Item 수정
     @PatchMapping("/item/{itemId}")
