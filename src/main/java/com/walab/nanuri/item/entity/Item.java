@@ -1,7 +1,6 @@
 package com.walab.nanuri.item.entity;
 
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
-import com.walab.nanuri.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -58,6 +57,10 @@ public class Item {
         this.description = description;
         this.place = place;
         this.category = category;
+    }
+
+    public void markIsFinished(){
+        this.isFinished = true;
     }
 
     public static Item toEntity(String userId, ItemRequestDto requestDto) {
