@@ -22,14 +22,6 @@ public class HistoryController {
         return ResponseEntity.ok().body(null);
     }
 
-    //Item 나눔 신청 취소
-    @DeleteMapping("/api/history")
-    public ResponseEntity<String> cancelItemApplication(@AuthenticationPrincipal String uniqueId,
-                                                        @RequestBody Long itemId) {
-        historyService.cancelItemApplication(uniqueId, itemId);
-        return ResponseEntity.ok().body(null);
-    }
-
     //Item-신청자 리스트 조회
     @GetMapping("/api/history/{itemId}")
     public List<ApplicantDto> getAllApplicants(@AuthenticationPrincipal String uniqueId,
@@ -41,6 +33,15 @@ public class HistoryController {
     @PatchMapping("/api/history/{historyId}/complete")
     public ResponseEntity<String> completeItemApplication(@AuthenticationPrincipal String uniqueId, @PathVariable Long historyId){
         historyService.completeItemApplication(uniqueId, historyId);
+        return ResponseEntity.ok().body(null);
+    }
+
+
+    //Item 나눔 신청 취소
+    @DeleteMapping("/api/history")
+    public ResponseEntity<String> cancelItemApplication(@AuthenticationPrincipal String uniqueId,
+                                                        @RequestBody Long itemId) {
+        historyService.cancelItemApplication(uniqueId, itemId);
         return ResponseEntity.ok().body(null);
     }
 }

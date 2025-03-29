@@ -71,19 +71,20 @@ public class HistoryService {
         historyRepository.save(history);
     }
 
-    //Item 거래 완료
+    //Item 나눔 완료
     @Transactional
     public void completeItemApplication(String sellerId, Long historyId){
         History history = historyRepository.findById(historyId).orElseThrow(ItemNotExistException::new);
         Item item = itemRepository.findById(history.getItemId()).orElseThrow(ItemNotExistException::new);
         if(!sellerId.equals(item.getUserId())){ //판매자가 아니라면 -> 접근 권한 없음
-            throw new RuntimeException("접근 권한이 없습니다.");
+            throw new RuntimeException("판매자가 아니므로 접근 권한이 없습니다.");
         }
 
         history.markConfirmed();
         historyRepository.save(history);
     }
 
+    //Item 나눔 신청 취소
     @Transactional
     public void cancelItemApplication(String receiverId, Long itemId){
         historyRepository.deleteByItemIdAndGetUserId(itemId, receiverId);
