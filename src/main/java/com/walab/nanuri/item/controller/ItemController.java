@@ -42,10 +42,10 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemById(uniqueId, itemId));
     }
 
-    @GetMapping("/items/done")
+    @GetMapping("/items/shared")
     public ResponseEntity<List<ItemListResponseDto>> getOngoingMyItems(@AuthenticationPrincipal String uniqueId,
-                                                                       @RequestParam boolean onGoing) {
-        return ResponseEntity.ok(itemService.getOngoingMyItems(uniqueId, onGoing));
+                                                                       @RequestParam boolean done) {
+        return ResponseEntity.ok(itemService.getOngoingMyItems(uniqueId, done));
     }
 
     //Item 수정
