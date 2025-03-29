@@ -42,8 +42,8 @@ public class HistoryController {
     //Item 나눔 신청 취소
     @DeleteMapping("/api/history")
     public ResponseEntity<String> cancelItemApplication(@AuthenticationPrincipal String uniqueId,
-                                                        @RequestBody Long itemId) {
-        historyService.cancelItemApplication(uniqueId, itemId);
+                                                        @RequestBody ItemIdRequestDto request) {
+        historyService.cancelItemApplication(uniqueId, request.getItemId());
         return ResponseEntity.ok().body(null);
     }
 
