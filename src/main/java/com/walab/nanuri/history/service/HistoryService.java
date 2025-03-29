@@ -68,6 +68,7 @@ public class HistoryService {
             throw new RuntimeException("물건 주인이 아니므로 접근 권한이 없습니다.");
         }
 
+        item.markIsFinished();
         history.markSelected();
         historyRepository.save(history);
     }
