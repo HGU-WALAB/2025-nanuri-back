@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
-    boolean existsByItemIdAndGetUserId(Long itemId, String getUserId);
+    boolean existsByIdAndGetUserId(Long id, String getUserId);
     List<History> findByItemId(Long itemId);
     List<History> findAllByGetUserIdAndIsConfirmedTrue(String getUserId);
     List<History> findAllByGetUserIdAndIsConfirmedFalse(String getUserId);

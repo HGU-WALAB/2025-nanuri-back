@@ -90,7 +90,7 @@ public class HistoryService {
     //Item 나눔 신청 취소
     @Transactional
     public void cancelItemApplication(String receiverId, Long historyId){
-        if(!historyRepository.existsByItemIdAndGetUserId(historyId, receiverId)){
+        if(!historyRepository.existsByIdAndGetUserId(historyId, receiverId)){
             throw new RuntimeException("신청자가 아니므로 접근 권한이 없습니다.");
         }
         historyRepository.deleteById(historyId);
