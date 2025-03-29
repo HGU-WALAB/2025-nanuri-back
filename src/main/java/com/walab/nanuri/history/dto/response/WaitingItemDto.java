@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class WaitingItemDto {
+    private Long historyId;
     private Long itemId;
     private String title;
     private String description;
@@ -24,8 +25,9 @@ public class WaitingItemDto {
 
 
 
-    public static WaitingItemDto from(Item item){
+    public static WaitingItemDto from(Item item, Long historyId){
         return WaitingItemDto.builder()
+                .historyId(historyId)
                 .itemId(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())

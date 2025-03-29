@@ -89,8 +89,11 @@ public class HistoryService {
 
     //Item 나눔 신청 취소
     @Transactional
-    public void cancelItemApplication(String receiverId, Long itemId){
-        historyRepository.deleteByItemIdAndGetUserId(itemId, receiverId);
+    public void cancelItemApplication(String receiverId, Long historyId){
+        if(!historyRepository.existsByItemIdAndGetUserId(historyId, receiverId)){
+            throw new RuntimeException("신청자가 아니므로 접근 권한이 없습니다.");
+        }
+        historyRepository.deleteById(historyId);
     }
 
     //내가 대기 중인 Item 조회
@@ -102,7 +105,7 @@ public class HistoryService {
                 .map(history -> {
                     Item item = itemRepository.findById(history.getItemId()).
                             orElseThrow(ItemNotExistException::new);
-                    return WaitingItemDto.from(item);
+                    return WaitingItemDto.from(item, history.getId());
                 })
                 .toList();
     }
@@ -116,7 +119,7 @@ public class HistoryService {
                 .map(history -> {
                     Item item = itemRepository.findById(history.getItemId()).
                             orElseThrow((ItemNotExistException::new));
-                    return ReceivedItemDto.from(item);
+                    return ReceivedItemDto.from(item, history.getId());
                 })
                 .toList();
     }
