@@ -94,12 +94,12 @@ public class HistoryService {
     //내가 받은 Item 조회
     @Transactional
     public List<ReceivedItemDto> getAllReceivedItems(String receiverId){
-        List<History> receivedList = historyRepository.findAllByGetUserAndIsConfirmedTrue(receiverId);
+        List<History> receivedList = historyRepository.findAllByGetUserIdAndIsConfirmedTrue(receiverId);
 
         return receivedList.stream()
                 .map(history -> {
                     Item item = itemRepository.findById(history.getItemId()).
-                            orElseThrow(() -> new RuntimeException("해당 아이템을 찾을 수 없습니다. "));
+                            orElseThrow((ItemNotExistException::new));
                     return ReceivedItemDto.from(item);
                 })
                 .toList();
