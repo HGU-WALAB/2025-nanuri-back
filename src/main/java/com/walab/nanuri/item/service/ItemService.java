@@ -49,7 +49,6 @@ public class ItemService {
                 .map(item -> {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
-
                     return ItemListResponseDto.from(item, image);
                 })
                 .toList();
@@ -68,14 +67,13 @@ public class ItemService {
     }
 
     //
-    public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, boolean isFinished) {
-        List<Item> items = itemRepository.findAllByUserIdAndIsFinished(uniqueId, isFinished);
+    public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, boolean done) {
+        List<Item> items = itemRepository.findAllByUserIdAndIsFinished(uniqueId, done);
 
         return items.stream()
                 .map(item -> {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
-
                     return ItemListResponseDto.from(item, image);
                 })
                 .toList();
