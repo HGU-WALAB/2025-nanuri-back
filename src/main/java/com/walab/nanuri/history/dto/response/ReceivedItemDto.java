@@ -1,11 +1,13 @@
 package com.walab.nanuri.history.dto.response;
 
+import com.walab.nanuri.commons.util.Time;
 import com.walab.nanuri.item.entity.Item;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,13 +17,21 @@ import java.time.LocalDateTime;
 public class ReceivedItemDto {
     private Long itemId;
     private String title;
-    private LocalDateTime createdTime;
+    private String description;
+    private String category;
+    private String createdTime;
+    private String updatedTime;
+
+
 
     public static ReceivedItemDto from(Item item){
         return ReceivedItemDto.builder()
                 .itemId(item.getId())
                 .title(item.getTitle())
-                .createdTime(item.getCreatedTime())
+                .description(item.getDescription())
+                .category(item.getCategory())
+                .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
+                .updatedTime(item.getUpdatedTime().toString())
                 .build();
     }
 }
