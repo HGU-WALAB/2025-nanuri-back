@@ -1,5 +1,6 @@
 package com.walab.nanuri.history.controller;
 
+import com.walab.nanuri.history.dto.request.HistoryIdRequestDto;
 import com.walab.nanuri.history.dto.response.ApplicantDto;
 import com.walab.nanuri.history.dto.request.ItemIdRequestDto;
 import com.walab.nanuri.history.dto.response.ReceivedItemDto;
@@ -43,8 +44,8 @@ public class HistoryController {
     //Item 나눔 신청 취소
     @DeleteMapping("/api/history")
     public ResponseEntity<String> cancelItemApplication(@AuthenticationPrincipal String uniqueId,
-                                                        @RequestBody ItemIdRequestDto request) {
-        historyService.cancelItemApplication(uniqueId, request.getItemId());
+                                                        @RequestBody HistoryIdRequestDto request) {
+        historyService.cancelItemApplication(uniqueId, request.getHistoryId());
         return ResponseEntity.ok().body(null);
     }
 
