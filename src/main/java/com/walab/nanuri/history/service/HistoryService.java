@@ -34,7 +34,7 @@ public class HistoryService {
         }
 
         //이미 나눔 신청한 물건인지 확인
-        if(historyRepository.existsByItemIdAndGetUserId(itemId, receiverId)){
+        if(historyRepository.existsByIdAndGetUserId(itemId, receiverId)){
             throw new RuntimeException("이미 나눔 신청한 물건입니다.");
         }
 
