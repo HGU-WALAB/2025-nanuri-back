@@ -1,6 +1,7 @@
 package com.walab.nanuri.history.controller;
 
 import com.walab.nanuri.history.dto.response.ApplicantDto;
+import com.walab.nanuri.history.dto.response.ItemIdRequestDto;
 import com.walab.nanuri.history.dto.response.ReceivedItemDto;
 import com.walab.nanuri.history.service.HistoryService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class HistoryController {
     //Item 신청 (아이템 나눔을 신청)
     @PostMapping("/api/history")
     public ResponseEntity<String> applicationItem(@AuthenticationPrincipal String uniqueId,
-                                                @RequestBody Long itemId) {
-        historyService.applicationItem(uniqueId, itemId);
+                                                @RequestBody ItemIdRequestDto request) {
+        historyService.applicationItem(uniqueId, request.getItemId());
         return ResponseEntity.ok().body(null);
     }
 
