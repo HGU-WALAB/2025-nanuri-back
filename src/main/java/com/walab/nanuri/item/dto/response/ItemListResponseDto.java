@@ -1,10 +1,7 @@
 package com.walab.nanuri.item.dto.response;
 
 import com.walab.nanuri.commons.util.Time;
-import com.walab.nanuri.image.dto.response.ImageResponseDto;
 import com.walab.nanuri.item.entity.Item;
-import com.walab.nanuri.user.dto.UserDto;
-import com.walab.nanuri.user.dto.UserResponseDto;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -20,6 +17,7 @@ public class ItemListResponseDto {
     private String category;
     private String image;
     private String createdTime;
+    private LocalDateTime updatedTime;
 
     public static ItemListResponseDto from(Item item, String image) {
         return ItemListResponseDto.builder()
@@ -29,6 +27,7 @@ public class ItemListResponseDto {
                 .category(item.getCategory())
                 .image(image)
                 .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
+                .updatedTime(item.getUpdatedTime())
                 .build();
     }
 }
