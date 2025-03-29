@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 public class ItemListResponseDto {
     private Long itemId;
     private String title;
+    private String description;
+    private String category;
     private String image;
     private String createdTime;
 
@@ -23,6 +25,8 @@ public class ItemListResponseDto {
         return ItemListResponseDto.builder()
                 .itemId(item.getId())
                 .title(item.getTitle())
+                .description(item.getDescription())
+                .category(item.getCategory())
                 .image(image)
                 .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
                 .build();
