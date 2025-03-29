@@ -48,7 +48,7 @@ public class HistoryService {
         if(!sellerId.equals(item.getUserId())){ //판매자가 아닐경우 -> 접근 권한 없음
             throw new RuntimeException("물건 주인이 아니므로 접근 권한이 없습니다.");
         }
-        return historyRepository.findById(itemId)
+        return historyRepository.findByItemId(itemId)
                 .stream()
                 .map(history -> {
                     User user = userRepository.findById(history.getGetUserId())
