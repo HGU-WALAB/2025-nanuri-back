@@ -2,6 +2,7 @@ package com.walab.nanuri.history.service;
 
 import com.walab.nanuri.commons.exception.ItemNotExistException;
 import com.walab.nanuri.history.dto.response.ReceivedItemDto;
+import com.walab.nanuri.history.dto.response.WaitingItemDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.history.dto.response.ApplicantDto;
@@ -90,6 +91,20 @@ public class HistoryService {
     @Transactional
     public void cancelItemApplication(String receiverId, Long itemId){
         historyRepository.deleteByItemIdAndGetUserId(itemId, receiverId);
+    }
+
+    //내가 대기 중인 Item 조회
+    @Transactional
+    public List<WaitingItemDto> getAllWaitingItems(String receiverId){
+        List<History> waitingList = historyRepository.findAllByGetUserIdAndIsConfirmedFalse(receiverId);
+
+        return waitingList.stream()
+                .map(history -> {
+                    Item item = itemRepository.findById(history.getItemId()).
+                            orElseThrow(ItemNotExistException::new);
+                    return WaitingItemDto.from(item);
+                })
+                .toList();
     }
 
     //내가 받은 Item 조회
