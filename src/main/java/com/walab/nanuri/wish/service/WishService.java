@@ -25,10 +25,13 @@ public class WishService {
     private final ItemRepository itemRepository;
     private final ImageRepository imageRepository;
 
+    @Transactional
     public void createWish(String uniqueId, Long itemId) {
         if(!itemRepository.existsById(itemId)) {
             throw new ItemNotExistException();
         }
+
+
 
         Wish wish = Wish.builder()
                 .uniqueId(uniqueId)
@@ -51,22 +54,20 @@ public class WishService {
         List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
         List<Item> items = itemRepository.findAllById(itemIds);
 
-        List<ItemListResponseDto> dtos = items.stream()
-                .map(item -> {
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-
-                    return ItemListResponseDto.from(item, image);
-                })
-                .toList();
-
-        Map<Long, ItemListResponseDto> itemDtoMap = dtos.stream()
-                .collect(Collectors.toMap(ItemListResponseDto::getItemId, dto -> dto));
+        Map<Long, ItemListResponseDto> itemDtoMap = items.stream()
+                .collect(Collectors.toMap(
+                        Item::getId,
+                        item -> {
+                            String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                                    .getFileUrl();
+                            return ItemListResponseDto.from(item, image);
+                        }
+                ));
 
         return wishes.stream()
                 .map(wish -> {
                     ItemListResponseDto itemDto = itemDtoMap.get(wish.getItemId());
-                    return WishResponseDto.createDefaultDto(wish, itemDto);
+                    return WishResponseDto.from(wish, itemDto);
                 })
                 .toList();
     }

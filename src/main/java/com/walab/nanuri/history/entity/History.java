@@ -28,10 +28,33 @@ public class History {
     @Column(name="get_user_id")
     private String getUserId;
 
-    @Column(name="is_finished")
-    private Boolean isFinished;
+    @Column(name="is_selected")
+    private Boolean isSelected;
+
+    @Column(name="is_confirmed")
+    private Boolean isConfirmed;
 
     @CreatedDate
     private LocalDateTime createdTime;
 
+    public static History toEntity(String userId, Long itemId) {
+        return History.builder()
+                .itemId(itemId)
+                .getUserId(userId)
+                .isSelected(false)
+                .isConfirmed(false)
+                .build();
+    }
+
+    public void markConfirmed() {
+        this.isConfirmed = true;
+    }
+
+    public void markSelected() {
+        this.isSelected = true;
+    }
+
+    public void markUnSelected() {
+        this.isSelected = false;
+    }
 }

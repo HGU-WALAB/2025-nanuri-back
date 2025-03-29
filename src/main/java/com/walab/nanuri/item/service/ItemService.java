@@ -54,8 +54,6 @@ public class ItemService {
                 })
                 .toList();
     }
-
-
     //나눔 중인 나의 Item 조회
 
     //Item 단건 조회
@@ -65,33 +63,22 @@ public class ItemService {
                 .map(Image::getFileUrl)
                 .collect(Collectors.toList());
 
-        if (item.getUserId().equals(uniqueId)) { //자신의 학번과 물건의 판매자 아이디가 같음 -> 판매자임
-            return ItemResponseDto.builder()
-                    .id(item.getId())
-                    .title(item.getTitle())
-                    .description(item.getDescription())
-                    .viewCount(item.getViewCount())
-                    .category(item.getCategory())
-                    .isFinished(item.getIsFinished())
-                    .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
-                    .wishCount(item.getWishCount())
-                    .images(imageUrls)
-                    .isOwner(true)
-                    .build();
-        } else { //구매자라면
-            return ItemResponseDto.builder()
-                    .id(item.getId())
-                    .title(item.getTitle())
-                    .description(item.getDescription())
-                    .viewCount(item.getViewCount())
-                    .category(item.getCategory())
-                    .isFinished(item.getIsFinished())
-                    .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
-                    .wishCount(item.getWishCount())
-                    .images(imageUrls)
-                    .isOwner(false)
-                    .build();
-        }
+        boolean isOwner = item.getUserId().equals(uniqueId);
+        return ItemResponseDto.from(item, imageUrls, isOwner);
+    }
+
+    //
+    public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, boolean isFinished) {
+        List<Item> items = itemRepository.findAllByUserIdAndIsFinished(uniqueId, isFinished);
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+
+                    return ItemListResponseDto.from(item, image);
+                })
+                .toList();
     }
 
 
