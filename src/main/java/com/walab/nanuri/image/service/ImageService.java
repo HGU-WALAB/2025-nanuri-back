@@ -1,9 +1,9 @@
 package com.walab.nanuri.image.service;
 
 
-import com.walab.nanuri.commons.exception.FileCommonException;
-import com.walab.nanuri.commons.exception.FileExceptionCode;
-import com.walab.nanuri.commons.exception.ItemNotExistException;
+import com.walab.nanuri.commons.exception.CustomException;
+import com.walab.nanuri.commons.exception.file.FileCommonException;
+import com.walab.nanuri.commons.exception.file.FileExceptionCode;
 import com.walab.nanuri.image.common.ImageExtension;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
@@ -27,9 +27,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.walab.nanuri.commons.exception.ErrorCode.ITEM_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class ImageService {
             throw new FileCommonException(FileExceptionCode.FILE_COUNT_UPPER);
         }
 
-        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
