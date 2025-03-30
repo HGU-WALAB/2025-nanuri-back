@@ -34,12 +34,12 @@ public class HistoryService {
 
         //본인의 물건인지 확인
         if(receiverId.equals(item.getUserId())){
-            throw new RuntimeException("본인의 물건은 나눔 신청할 수 없습니다. ");
+            throw new CustomException(VALID_OWN_ITEM);
         }
 
         //이미 나눔 신청한 물건인지 확인
         if(historyRepository.existsByIdAndGetUserId(itemId, receiverId)){
-            throw new RuntimeException("이미 나눔 신청한 물건입니다.");
+            throw new CustomException(DUPLICATE_APPLICATION_ITEM);
         }
 
         History history = History.toEntity(receiverId, itemId);
@@ -51,13 +51,13 @@ public class HistoryService {
     public List<ApplicantDto> getAllApplicants(String sellerId, Long itemId){
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         if(!sellerId.equals(item.getUserId())){ //판매자가 아닐경우 -> 접근 권한 없음
-            throw new RuntimeException("물건 주인이 아니므로 접근 권한이 없습니다.");
+            throw new CustomException(VALID_ITEM);
         }
         return historyRepository.findByItemId(itemId)
                 .stream()
                 .map(history -> {
                     User user = userRepository.findById(history.getGetUserId())
-                            .orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다. "));
+                            .orElseThrow(()-> new CustomException(USER_NOT_FOUND));
                     return ApplicantDto.from(history, user);
                 })
                 .toList();

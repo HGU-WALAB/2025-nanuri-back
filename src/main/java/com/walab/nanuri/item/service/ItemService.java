@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.walab.nanuri.commons.exception.ErrorCode.ITEM_NOT_FOUND;
-import static com.walab.nanuri.commons.exception.ErrorCode.VALID_ITEM;
+import static com.walab.nanuri.commons.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,7 +52,7 @@ public class ItemService {
 
     //Item 단건 조회
     public ItemResponseDto getItemById(String uniqueId, Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(RuntimeException::new);
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         List<String> imageUrls = imageRepository.findByItemIdOrderByIdAsc(itemId).stream()
                 .map(Image::getFileUrl)
                 .collect(Collectors.toList());
