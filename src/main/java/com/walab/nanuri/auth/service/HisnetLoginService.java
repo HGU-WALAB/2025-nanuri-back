@@ -3,7 +3,8 @@ package com.walab.nanuri.auth.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.walab.nanuri.auth.dto.AuthDto;
-import com.walab.nanuri.commons.exception.FailedHisnetLoginException;
+import com.walab.nanuri.commons.exception.CustomException;
+import com.walab.nanuri.commons.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -66,11 +67,10 @@ public class HisnetLoginService {
                 result = new ObjectMapper().readValue(e.getResponseBodyAsString(), new TypeReference<>() {
                 });
             } catch (Exception ex) {
-                throw new FailedHisnetLoginException("히즈넷 로그인 실패", 500);
+                throw new CustomException(ErrorCode.UNSUCCESSFUL_HISNET_LOGIN);
             }
 
-            throw new FailedHisnetLoginException(
-                    result.get("message").toString(), e.getStatusCode().value());
+            throw new CustomException(ErrorCode.UNSUCCESSFUL_HISNET_LOGIN);
         }
     }
 }

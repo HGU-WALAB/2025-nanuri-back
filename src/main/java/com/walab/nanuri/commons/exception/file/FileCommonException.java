@@ -1,4 +1,4 @@
-package com.walab.nanuri.commons.exception;
+package com.walab.nanuri.commons.exception.file;
 
 import lombok.Builder;
 import lombok.Getter;

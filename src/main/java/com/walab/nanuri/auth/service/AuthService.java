@@ -2,7 +2,7 @@ package com.walab.nanuri.auth.service;
 
 import com.walab.nanuri.auth.dto.AuthDto;
 import com.walab.nanuri.auth.dto.request.SignupRequestDto;
-import com.walab.nanuri.commons.exception.DoNotExistException;
+import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.util.Optional;
+
+import static com.walab.nanuri.commons.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,7 +31,7 @@ public class AuthService {
     public User getLoginUser(String uniqueId) {
         return userRepository
                 .findById(uniqueId)
-                .orElseThrow(() -> new DoNotExistException("해당 유저가 없습니다."));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
     @Transactional
@@ -73,7 +75,7 @@ public class AuthService {
     @Transactional
     public void SetUserNickname(SignupRequestDto signupRequestDto) {
         User user = userRepository.findById(signupRequestDto.getUniqueId())
-                .orElseThrow(() -> new DoNotExistException("해당 유저가 없습니다."));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         user.setNickname(signupRequestDto.getNickname());
     }

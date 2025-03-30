@@ -1,8 +1,7 @@
 package com.walab.nanuri.security.filter;
 
 import com.walab.nanuri.auth.service.AuthService;
-import com.walab.nanuri.commons.exception.DoNotLoginException;
-import com.walab.nanuri.commons.exception.WrongTokenException;
+import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.entity.User;
 import jakarta.servlet.FilterChain;
@@ -22,6 +21,8 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.walab.nanuri.commons.exception.ErrorCode.MISSING_REFRESH_TOKEN;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -81,7 +82,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     new UsernamePasswordAuthenticationToken(loginUser.getUniqueId(), null, null);
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        } catch (WrongTokenException e) {
+        } catch (RuntimeException e) {
             log.info("❗ {}", e.getMessage());
 
             // accessToken이 만료된 경우, refreshToken으로 재발급 시도
@@ -116,11 +117,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 } catch (Exception refreshEx) {
                     // 더 상세한 로깅을 포함한 개선된 예외 처리
                     log.error("❌ 토큰 리프레시 실패: {}", refreshEx.getMessage());
-                    throw new DoNotLoginException();
+                    throw new CustomException(MISSING_REFRESH_TOKEN);
                 }
             } else {
                 log.error("❌ refreshToken이 존재하지 않습니다. 로그인이 필요합니다.");
-                throw new DoNotLoginException();
+                throw new CustomException(MISSING_REFRESH_TOKEN);
             }
         }
 

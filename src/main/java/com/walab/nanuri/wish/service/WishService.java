@@ -1,7 +1,6 @@
 package com.walab.nanuri.wish.service;
 
-import com.walab.nanuri.commons.exception.ItemNotExistException;
-import com.walab.nanuri.commons.exception.WishNotExistException;
+import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.entity.Item;
@@ -17,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.walab.nanuri.commons.exception.ErrorCode.*;
+
 @Service
 @RequiredArgsConstructor
 public class WishService {
@@ -28,7 +29,7 @@ public class WishService {
     @Transactional
     public void createWish(String uniqueId, Long itemId) {
         if(!itemRepository.existsById(itemId)) {
-            throw new ItemNotExistException();
+            throw new CustomException(ITEM_NOT_FOUND);
         }
 
 
@@ -45,7 +46,7 @@ public class WishService {
     public void deleteWish(Long wishId) {
         wishRepository.delete(
                 wishRepository.findById(wishId)
-                        .orElseThrow(WishNotExistException::new)
+                        .orElseThrow(() -> new CustomException(MISSING_WISH))
         );
     }
 

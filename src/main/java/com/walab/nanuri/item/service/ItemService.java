@@ -1,9 +1,6 @@
 package com.walab.nanuri.item.service;
 
-import com.walab.nanuri.commons.exception.ItemAccessDeniedException;
-import com.walab.nanuri.commons.exception.ItemNotExistException;
-import com.walab.nanuri.commons.util.Time;
-import com.walab.nanuri.image.dto.response.ImageResponseDto;
+import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.image.service.ImageService;
@@ -12,16 +9,15 @@ import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
-import com.walab.nanuri.user.entity.User;
-import com.walab.nanuri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.walab.nanuri.commons.exception.ErrorCode.ITEM_NOT_FOUND;
+import static com.walab.nanuri.commons.exception.ErrorCode.VALID_ITEM;
 
 @Service
 @Transactional(readOnly = true)
@@ -83,12 +79,12 @@ public class ItemService {
     //Item 수정
     @Transactional
     public void updateItem(String uniqueId, Long updateId, ItemRequestDto itemDto) {
-        Item findItem = itemRepository.findById(updateId).orElseThrow(ItemNotExistException::new);
+        Item findItem = itemRepository.findById(updateId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 
         if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
             findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory());
         } else {
-            throw new ItemAccessDeniedException("아이템에 대한 권한이 없는 사용자입니다.");
+            throw new CustomException(VALID_ITEM);
         }
     }
 
@@ -96,12 +92,12 @@ public class ItemService {
     //Item 삭제하기
     @Transactional
     public void deleteItem(String uniqueId, Long itemId) {
-        Item findItem = itemRepository.findById(itemId).orElseThrow(ItemNotExistException::new);
+        Item findItem = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
             imageService.deleteImages(itemId);
             itemRepository.delete(findItem);
         } else {
-            throw new ItemAccessDeniedException("아이템에 대한 권한이 없는 사용자입니다.");
+            throw new CustomException(VALID_ITEM);
         }
     }
 
