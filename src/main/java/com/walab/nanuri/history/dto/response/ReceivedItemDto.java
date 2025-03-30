@@ -20,18 +20,20 @@ public class ReceivedItemDto {
     private String title;
     private String description;
     private String category;
+    private String image;
     private String createdTime;
     private String updatedTime;
 
 
 
-    public static ReceivedItemDto from(Item item, Long historyId){
+    public static ReceivedItemDto from(Item item, Long historyId, String image){
         return ReceivedItemDto.builder()
                 .historyId(historyId)
                 .itemId(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .category(item.getCategory())
+                .image(image)
                 .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
                 .updatedTime(item.getUpdatedTime().toString())
                 .build();
