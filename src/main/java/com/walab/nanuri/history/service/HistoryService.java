@@ -3,6 +3,7 @@ package com.walab.nanuri.history.service;
 import com.walab.nanuri.commons.exception.ItemNotExistException;
 import com.walab.nanuri.history.dto.response.ReceivedItemDto;
 import com.walab.nanuri.history.dto.response.WaitingItemDto;
+import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.history.dto.response.ApplicantDto;
@@ -22,6 +23,7 @@ public class HistoryService {
     private final HistoryRepository historyRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
     //Item 신청 (아이템 나눔 받고 싶다고 신청)
     @Transactional
@@ -105,7 +107,9 @@ public class HistoryService {
                 .map(history -> {
                     Item item = itemRepository.findById(history.getItemId()).
                             orElseThrow(ItemNotExistException::new);
-                    return WaitingItemDto.from(item, history.getId());
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    return WaitingItemDto.from(item, history.getId(), image);
                 })
                 .toList();
     }
@@ -119,7 +123,9 @@ public class HistoryService {
                 .map(history -> {
                     Item item = itemRepository.findById(history.getItemId()).
                             orElseThrow((ItemNotExistException::new));
-                    return ReceivedItemDto.from(item, history.getId());
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    return ReceivedItemDto.from(item, history.getId(), image);
                 })
                 .toList();
     }

@@ -20,18 +20,20 @@ public class WaitingItemDto {
     private String title;
     private String description;
     private String category;
+    private String image;
     private String createdTime;
     private String updatedTime;
 
 
 
-    public static WaitingItemDto from(Item item, Long historyId){
+    public static WaitingItemDto from(Item item, Long historyId, String image){
         return WaitingItemDto.builder()
                 .historyId(historyId)
                 .itemId(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .category(item.getCategory())
+                .image(image)
                 .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
                 .updatedTime(item.getUpdatedTime().toString())
                 .build();
