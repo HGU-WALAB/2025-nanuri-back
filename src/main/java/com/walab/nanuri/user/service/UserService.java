@@ -26,7 +26,7 @@ public class UserService {
     public void editNickname(String newNickname) {
         String uniqueId = JwtUtil.getUserUniqueId();
         User user = userRepository.findById(uniqueId).orElseThrow(()->new IllegalArgumentException("해당 사용자가 없습니다."));
-        user.setNickname(newNickname);
+        user.editNickname(newNickname);
         userRepository.save(user);
     }
 }
