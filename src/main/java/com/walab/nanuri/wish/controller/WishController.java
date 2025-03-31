@@ -27,10 +27,10 @@ public class WishController {
         return ResponseEntity.ok().body(null);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{wishId}")
     public ResponseEntity<Void> deleteWish(
-            @RequestBody WishRequestDto.WishDeleteRequestDto requestDto) {
-        wishService.deleteWish(requestDto.getWishId());
+            @PathVariable Long wishId) {
+        wishService.deleteWish(wishId);
         return ResponseEntity.ok().body(null);
     }
 
