@@ -8,9 +8,4 @@ public class WishRequestDto {
     public static class WishCreateRequestDto {
         private Long itemId;
     }
-
-    @Getter
-    public static class WishDeleteRequestDto {
-        private Long wishId;
-    }
 }
