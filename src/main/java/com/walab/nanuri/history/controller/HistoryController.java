@@ -14,11 +14,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/history")
 public class HistoryController {
     private final HistoryService historyService;
 
     //Item 신청 (아이템 나눔을 신청)
-    @PostMapping("/api/history")
+    @PostMapping("")
     public ResponseEntity<String> applicationItem(@AuthenticationPrincipal String uniqueId,
                                                 @RequestBody ItemIdRequestDto request) {
         historyService.applicationItem(uniqueId, request.getItemId());
@@ -26,22 +27,28 @@ public class HistoryController {
     }
 
     //Item-신청자 리스트 조회
-    @GetMapping("/api/history/{itemId}")
+    @GetMapping("/{itemId}")
     public List<ApplicantDto> getAllApplicants(@AuthenticationPrincipal String uniqueId,
                                                @PathVariable Long itemId) {
         return historyService.getAllApplicants(uniqueId, itemId);
     }
 
     //Item 거래 완료
-    @PatchMapping("/api/history/{historyId}/complete")
+    @PatchMapping("/{historyId}/complete")
     public ResponseEntity<String> completeItemApplication(@AuthenticationPrincipal String uniqueId, @PathVariable Long historyId){
         historyService.completeItemApplication(uniqueId, historyId);
         return ResponseEntity.ok().body(null);
     }
 
+    @PatchMapping("/{historyId}/select")
+    public ResponseEntity<String> selectReceiver(@AuthenticationPrincipal String uniqueId, @PathVariable Long historyId) {
+        historyService.selectReceiver(uniqueId, historyId);
+        return ResponseEntity.ok().body(null);
+    }
+
 
     //Item 나눔 신청 취소
-    @DeleteMapping("/api/history/{historyId}")
+    @DeleteMapping("/{historyId}")
     public ResponseEntity<String> cancelItemApplication(@AuthenticationPrincipal String uniqueId,
                                                         @PathVariable Long historyId) {
         historyService.cancelItemApplication(uniqueId, historyId);
@@ -49,14 +56,14 @@ public class HistoryController {
     }
 
     //내가 대기 중인 Item 조회
-    @GetMapping("/api/history/receiving")
+    @GetMapping("/receiving")
     public List<WaitingItemDto> getAllWaitingItems(@AuthenticationPrincipal String uniqueId) {
         return historyService.getAllWaitingItems(uniqueId);
     }
 
 
     //내가 받은 나눔 Item 조회
-    @GetMapping("/api/history/receive-done")
+    @GetMapping("/receive-done")
     public List<ReceivedItemDto> getReceivedItems(@AuthenticationPrincipal String uniqueId) {
         return historyService.getAllReceivedItems(uniqueId);
     }
