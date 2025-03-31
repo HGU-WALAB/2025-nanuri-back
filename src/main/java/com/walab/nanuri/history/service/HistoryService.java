@@ -38,7 +38,7 @@ public class HistoryService {
         }
 
         //이미 나눔 신청한 물건인지 확인
-        if(historyRepository.existsByIdAndGetUserId(itemId, receiverId)){
+        if(historyRepository.existsByIdAndReceivedId(itemId, receiverId)){
             throw new CustomException(DUPLICATE_APPLICATION_ITEM);
         }
 
@@ -56,7 +56,7 @@ public class HistoryService {
         return historyRepository.findByItemId(itemId)
                 .stream()
                 .map(history -> {
-                    User user = userRepository.findById(history.getGetUserId())
+                    User user = userRepository.findById(history.getReceivedId())
                             .orElseThrow(()-> new CustomException(USER_NOT_FOUND));
                     return ApplicantDto.from(history, user);
                 })
@@ -94,7 +94,7 @@ public class HistoryService {
     //Item 나눔 신청 취소
     @Transactional
     public void cancelItemApplication(String receiverId, Long historyId){
-        if(!historyRepository.existsByIdAndGetUserId(historyId, receiverId)){
+        if(!historyRepository.existsByIdAndReceivedId(historyId, receiverId)){
             throw new CustomException(VALID_ITEM);
         }
         historyRepository.deleteById(historyId);
@@ -103,7 +103,7 @@ public class HistoryService {
     //내가 대기 중인 Item 조회
     @Transactional
     public List<WaitingItemDto> getAllWaitingItems(String receiverId){
-        List<History> waitingList = historyRepository.findAllByGetUserIdAndIsConfirmedFalse(receiverId);
+        List<History> waitingList = historyRepository.findAllByReceivedIdAndIsConfirmedFalse(receiverId);
 
         return waitingList.stream()
                 .map(history -> {
@@ -119,7 +119,7 @@ public class HistoryService {
     //내가 받은 Item 조회
     @Transactional
     public List<ReceivedItemDto> getAllReceivedItems(String receiverId){
-        List<History> receivedList = historyRepository.findAllByGetUserIdAndIsConfirmedTrue(receiverId);
+        List<History> receivedList = historyRepository.findAllByReceivedIdAndIsConfirmedTrue(receiverId);
 
         return receivedList.stream()
                 .map(history -> {

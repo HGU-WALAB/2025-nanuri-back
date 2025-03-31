@@ -25,8 +25,8 @@ public class History {
     @Column(name = "item_id", nullable = false)
     private Long itemId;
 
-    @Column(name="get_user_id")
-    private String getUserId;
+    @Column(name="received_id")
+    private String receivedId;
 
     @Column(name="is_selected")
     private Boolean isSelected;
@@ -40,7 +40,7 @@ public class History {
     public static History toEntity(String userId, Long itemId) {
         return History.builder()
                 .itemId(itemId)
-                .getUserId(userId)
+                .receivedId(userId)
                 .isSelected(false)
                 .isConfirmed(false)
                 .build();
