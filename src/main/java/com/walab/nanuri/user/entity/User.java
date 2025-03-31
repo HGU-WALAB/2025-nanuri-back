@@ -46,7 +46,6 @@ public class User {
     @Column(name = "major2", length = 50)
     private String major2;
 
-    @Setter
     @Column(name = "nickname", length = 50)
     private String nickname;
 
@@ -81,4 +80,7 @@ public class User {
                 .build();
     }
 
+    public void editNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
 }

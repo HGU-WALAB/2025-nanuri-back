@@ -77,6 +77,6 @@ public class AuthService {
         User user = userRepository.findById(signupRequestDto.getUniqueId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        user.setNickname(signupRequestDto.getNickname());
+        user.editNickname(signupRequestDto.getNickname());
     }
 }
