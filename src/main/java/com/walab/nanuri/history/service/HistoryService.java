@@ -1,5 +1,7 @@
 package com.walab.nanuri.history.service;
 
+import com.walab.nanuri.chat.entity.ChatRoom;
+import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.history.dto.response.ReceivedItemDto;
 import com.walab.nanuri.history.dto.response.WaitingItemDto;
@@ -26,6 +28,7 @@ public class HistoryService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     //Item 신청 (아이템 나눔 받고 싶다고 신청)
     @Transactional
@@ -76,6 +79,21 @@ public class HistoryService {
         item.markIsFinished();
         history.markSelected();
         historyRepository.save(history);
+
+        String receiverId = history.getReceivedId();
+        String roomKey = ChatRoom.createRoomKey(item.getId(), sellerId, receiverId);
+
+        boolean exists = chatRoomRepository.existsBySellerIdAndReceiverId(sellerId, receiverId);
+        if (!exists) {
+            ChatRoom room = ChatRoom.builder()
+                    .itemId(item.getId())
+                    .historyId(historyId)
+                    .sellerId(sellerId)
+                    .receiverId(receiverId)
+                    .roomKey(roomKey)
+                    .build();
+            chatRoomRepository.save(room);
+        }
     }
 
     //Item 나눔 완료
