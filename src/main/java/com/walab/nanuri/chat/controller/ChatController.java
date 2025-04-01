@@ -22,7 +22,7 @@ public class ChatController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-    @GetMapping("/room")
+    @GetMapping("/rooms")
     public ResponseEntity<List<ChatRoomResponseDto>> getRooms(@AuthenticationPrincipal String uniqueId){
         return ResponseEntity.ok().body(chatRoomService.getChatRooms(uniqueId));
     }
