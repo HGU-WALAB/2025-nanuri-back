@@ -24,7 +24,7 @@ public class Item {
     @Column(nullable = false, length=30)
     private String title;
 
-    @Column(length =150)
+    @Column(length = 1024)
     private String description;
 
     @Column(length = 50)

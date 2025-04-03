@@ -87,6 +87,8 @@ public class ItemService {
         }
     }
 
+    // item.markIsFinished() -> 아이템 거래 완료
+
 
     //Item 삭제하기
     @Transactional

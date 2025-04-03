@@ -35,7 +35,7 @@ public class ChatRoom {
     @LastModifiedDate
     private LocalDateTime lastModified;
 
-    public static String createRoomKey(Long itemId, String sellerId, String receiverId) {
+    public static String createRoomKey(String itemId, String sellerId, String receiverId) {
         return itemId + "_" + (sellerId.compareTo(receiverId) < 0 ? sellerId + "_" + receiverId : receiverId + "_" + sellerId);
     }
 

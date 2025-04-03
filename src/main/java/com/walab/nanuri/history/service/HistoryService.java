@@ -76,12 +76,11 @@ public class HistoryService {
             throw new CustomException(VALID_ITEM);
         }
 
-        item.markIsFinished();
         history.markSelected();
         historyRepository.save(history);
 
         String receiverId = history.getReceivedId();
-        String roomKey = ChatRoom.createRoomKey(item.getId(), sellerId, receiverId);
+        String roomKey = ChatRoom.createRoomKey(String.valueOf(item.getId()), sellerId, receiverId);
 
         boolean exists = chatRoomRepository.existsBySellerIdAndReceiverId(sellerId, receiverId);
         if (!exists) {

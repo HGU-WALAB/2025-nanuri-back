@@ -26,6 +26,13 @@ public class HistoryController {
         return ResponseEntity.ok().body(null);
     }
 
+    // Item 신청자 선택
+    @PostMapping("/{historyId}/select")
+    public ResponseEntity<String> selectReceiver(@AuthenticationPrincipal String uniqueId, @PathVariable Long historyId) {
+        historyService.selectReceiver(uniqueId, historyId);
+        return ResponseEntity.ok().body(null);
+    }
+
     //Item-신청자 리스트 조회
     @GetMapping("/{itemId}")
     public List<ApplicantDto> getAllApplicants(@AuthenticationPrincipal String uniqueId,
@@ -39,13 +46,6 @@ public class HistoryController {
         historyService.completeItemApplication(uniqueId, historyId);
         return ResponseEntity.ok().body(null);
     }
-
-    @PatchMapping("/{historyId}/select")
-    public ResponseEntity<String> selectReceiver(@AuthenticationPrincipal String uniqueId, @PathVariable Long historyId) {
-        historyService.selectReceiver(uniqueId, historyId);
-        return ResponseEntity.ok().body(null);
-    }
-
 
     //Item 나눔 신청 취소
     @DeleteMapping("/{historyId}")
