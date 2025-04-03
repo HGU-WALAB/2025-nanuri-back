@@ -1,6 +1,7 @@
 package com.walab.nanuri.user.service;
 
 import com.walab.nanuri.commons.exception.CustomException;
+import com.walab.nanuri.commons.util.Tag;
 import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.dto.UserDto;
 import com.walab.nanuri.user.entity.User;
@@ -9,6 +10,8 @@ import com.walab.nanuri.wish.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.USER_NOT_FOUND;
 
@@ -28,10 +31,10 @@ public class UserService {
     }
 
     //닉네임 수정
-    public void editNickname(String newNickname) {
+    public void editUserInfo(String nickname, String mbti, List<Tag> interestTag, String hobby, String introduction) {
         String uniqueId = JwtUtil.getUserUniqueId();
         User user = userRepository.findById(uniqueId).orElseThrow(()->new CustomException(USER_NOT_FOUND));
-        user.editNickname(newNickname);
+        user.editUserDetails(nickname, mbti, interestTag, hobby, introduction);
         userRepository.save(user);
     }
 
