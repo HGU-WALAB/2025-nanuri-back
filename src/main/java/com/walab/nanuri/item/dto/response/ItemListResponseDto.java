@@ -16,6 +16,7 @@ public class ItemListResponseDto {
     private String description;
     private String category;
     private String image;
+    private Boolean isFinished;
     private String createdTime;
     private LocalDateTime updatedTime;
 
@@ -26,6 +27,7 @@ public class ItemListResponseDto {
                 .description(item.getDescription())
                 .category(item.getCategory())
                 .image(image)
+                .isFinished(item.getIsFinished())
                 .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
                 .updatedTime(item.getUpdatedTime())
                 .build();
