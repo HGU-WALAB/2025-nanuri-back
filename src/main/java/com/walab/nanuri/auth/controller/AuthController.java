@@ -21,6 +21,7 @@ public class AuthController {
     private final AuthService authService;
     private final HisnetLoginService hisnetLoginService;
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> Login(@RequestBody LoginRequest request) {
         AuthDto authDto = hisnetLoginService.callHisnetLoginApi(AuthDto.from(request));
@@ -42,11 +43,14 @@ public class AuthController {
                 .body(loginResponse);
     }
 
+    // 회원가입
     @PostMapping("/signup")
-    public void SignUp(@RequestBody SignupRequestDto signupRequestDto) {
-        authService.SetUserNickname(signupRequestDto);
+    public ResponseEntity<Void> SignUp(@RequestBody SignupRequestDto signupRequestDto) {
+        authService.setUserInfo(signupRequestDto);
+        return ResponseEntity.ok().build();
     }
 
+    // 로그아웃
     @GetMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {
         Cookie accessCookie = new Cookie("accessToken", "");

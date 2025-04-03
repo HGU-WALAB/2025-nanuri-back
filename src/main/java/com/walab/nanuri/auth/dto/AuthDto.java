@@ -1,7 +1,10 @@
 package com.walab.nanuri.auth.dto;
 
 import com.walab.nanuri.auth.dto.request.LoginRequest;
+import com.walab.nanuri.commons.util.Tag;
 import lombok.*;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +23,11 @@ public class AuthDto {
   private Integer grade;
   private Integer semester;
   private String nickname;
+  private String mbti;
+  private List<Tag> interestTag;
+  private String hobby;
+  private String introduction;
+
 
   public static AuthDto from(LoginRequest request) {
     return AuthDto.builder().hisnetToken(request.getHisnetToken()).build();

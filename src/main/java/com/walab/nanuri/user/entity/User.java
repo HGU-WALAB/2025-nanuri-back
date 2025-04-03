@@ -1,6 +1,7 @@
 package com.walab.nanuri.user.entity;
 
 import com.walab.nanuri.auth.dto.AuthDto;
+import com.walab.nanuri.commons.util.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -49,21 +51,36 @@ public class User {
     @Column(name = "nickname", length = 50)
     private String nickname;
 
+    @Column(name = "mbti", length = 10)
+    private String mbti;
+
+    @ElementCollection(targetClass = Tag.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_tags", joinColumns = @JoinColumn(name = "unique_id"))
+    @Column(name = "interest_tag")
+    private List<Tag> interestTag;
+
+    @Column(name = "hobby", length = 50)
+    private String hobby;
+
+    @Column(name = "introduction", length = 300)
+    private String introduction;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public void update(AuthDto dto) {
-        this.name = dto.getName();
-        this.email = dto.getEmail();
-        this.grade = dto.getGrade();
-        this.semester = dto.getSemester();
-        this.department = dto.getDepartment();
-        this.major1 = dto.getMajor1();
-        this.major2 = dto.getMajor2();
-    }
+//    public void update(AuthDto dto) {
+//        this.name = dto.getName();
+//        this.email = dto.getEmail();
+//        this.grade = dto.getGrade();
+//        this.semester = dto.getSemester();
+//        this.department = dto.getDepartment();
+//        this.major1 = dto.getMajor1();
+//        this.major2 = dto.getMajor2();
+//    }
 
     public static User from(AuthDto dto) {
         return User.builder()
@@ -77,10 +94,20 @@ public class User {
                 .major1(dto.getMajor1())
                 .major2(dto.getMajor2())
                 .nickname(dto.getNickname())
+                .mbti(dto.getMbti())
+                .interestTag(dto.getInterestTag())
+                .hobby(dto.getHobby())
+                .introduction(dto.getIntroduction())
                 .build();
     }
 
-    public void editNickname(String newNickname) {
-        this.nickname = newNickname;
+    public void editUserDetails(String nickname, String mbti, List<Tag> interestTag,
+                                String hobby, String introduction) {
+        this.nickname = nickname;
+        this.mbti = mbti;
+        this.interestTag = interestTag;
+        this.hobby = hobby;
+        this.introduction = introduction;
     }
+
 }

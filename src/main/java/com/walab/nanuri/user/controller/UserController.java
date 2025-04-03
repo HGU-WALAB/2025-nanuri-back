@@ -1,9 +1,7 @@
 package com.walab.nanuri.user.controller;
 
-import com.walab.nanuri.user.dto.EditNickname;
-import com.walab.nanuri.user.dto.UserDto;
+import com.walab.nanuri.user.dto.EditUserInfoDto;
 import com.walab.nanuri.user.dto.UserResponseDto;
-import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,11 +22,12 @@ public class UserController {
         return ResponseEntity.ok(UserResponseDto.from(userService.getUser(uniqueId)));
     }
 
-    //닉네임 변경
+    //회원 정보 수정
     @PatchMapping()
-    public ResponseEntity<String> editNickname(@RequestBody EditNickname request){
-        userService.editNickname(request.getNickname());
-        return ResponseEntity.ok("Update Nickname Success");
+    public ResponseEntity<String> editUserInfo(@RequestBody EditUserInfoDto request){
+        userService.editUserInfo(request.getNickname(), request.getMbti(), request.getInterestTag(),
+                request.getHobby(), request.getIntroduction());
+        return ResponseEntity.ok("Update UserInfo Success");
     }
 
     // 유저 탈퇴
