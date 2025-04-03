@@ -30,7 +30,7 @@ public class UserService {
                         .orElseThrow(() -> new CustomException(USER_NOT_FOUND)));
     }
 
-    //닉네임 수정
+    //유저 정보 수정
     public void editUserInfo(String nickname, String mbti, List<Tag> interestTag, String hobby, String introduction) {
         String uniqueId = JwtUtil.getUserUniqueId();
         User user = userRepository.findById(uniqueId).orElseThrow(()->new CustomException(USER_NOT_FOUND));
