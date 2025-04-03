@@ -34,6 +34,7 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
+    // 로그인
     @Transactional
     public AuthDto login(AuthDto authDto) {
         Optional<User> user = userRepository.findById(authDto.getUniqueId());
@@ -72,11 +73,21 @@ public class AuthService {
         return JwtUtil.createRefreshToken(uniqueId, name, key);
     }
 
+    // 회원 정보 받기
     @Transactional
-    public void SetUserNickname(SignupRequestDto signupRequestDto) {
+    public void setUserInfo(SignupRequestDto signupRequestDto) {
         User user = userRepository.findById(signupRequestDto.getUniqueId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        user.editNickname(signupRequestDto.getNickname());
+        user.editUserDetails(
+                signupRequestDto.getNickname(),
+                signupRequestDto.getMbti(),
+                signupRequestDto.getInterestTag(),
+                signupRequestDto.getHobby(),
+                signupRequestDto.getIntroduction()
+        );
+        userRepository.save(user);
     }
+
+
 }
