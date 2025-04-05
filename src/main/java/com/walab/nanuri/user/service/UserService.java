@@ -44,4 +44,9 @@ public class UserService {
         User user = userRepository.findById(uniqueId).orElseThrow(()->new CustomException(USER_NOT_FOUND));
         userRepository.delete(user);
     }
+
+    // 유저 닉네임 중복 체크
+    public boolean checkNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
 }
