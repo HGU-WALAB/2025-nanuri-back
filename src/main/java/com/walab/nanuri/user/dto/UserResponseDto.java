@@ -1,6 +1,7 @@
 package com.walab.nanuri.user.dto;
 
 import com.walab.nanuri.commons.util.Tag;
+import com.walab.nanuri.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,16 +19,16 @@ public class UserResponseDto {
     private String hobby;
     private String introduction;
 
-    public static UserResponseDto from(UserDto dto) {
+    public static UserResponseDto from(User user) {
         return UserResponseDto.builder()
-                .uniqueId(dto.getUniqueId())
-                .name(dto.getName())
-                .department(dto.getDepartment())
-                .nickname(dto.getNickname())
-                .mbti(dto.getMbti())
-                .interestTag(dto.getInterestTag())
-                .hobby(dto.getHobby())
-                .introduction(dto.getIntroduction())
+                .uniqueId(user.getUniqueId())
+                .name(user.getName())
+                .department(user.getDepartment())
+                .nickname(user.getNickname())
+                .mbti(user.getMbti())
+                .interestTag(user.getInterestTag())
+                .hobby(user.getHobby())
+                .introduction(user.getIntroduction())
                 .build();
     }
 }
