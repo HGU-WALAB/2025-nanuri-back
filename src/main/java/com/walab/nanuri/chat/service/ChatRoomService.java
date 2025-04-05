@@ -15,7 +15,6 @@ import com.walab.nanuri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ public class ChatRoomService {
     private final ItemRepository itemRepository;
 
     public List<ChatRoomResponseDto> getChatRooms(String myId){
-        List<ChatRoom> chatRooms = chatRoomRepository.findBySellerIdOrReceiverIdOrderByLastModifiedDesc(myId, myId);
+        List<ChatRoom> chatRooms = chatRoomRepository.findBySellerIdOrReceiverIdOrderByModifiedTimeDesc(myId, myId);
 
         return chatRooms.stream()
                 .map(room ->{
