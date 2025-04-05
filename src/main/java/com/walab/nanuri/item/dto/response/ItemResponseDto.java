@@ -30,7 +30,7 @@ public class ItemResponseDto {
                 .description(item.getDescription())
                 .viewCount(item.getViewCount())
                 .category(item.getCategory())
-                .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
+                .createdTime(item.getCreatedTime().toString())
                 .wishCount(item.getWishCount())
                 .isFinished(item.getIsFinished())
                 .images(images)

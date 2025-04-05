@@ -18,7 +18,7 @@ public class ItemListResponseDto {
     private String image;
     private Boolean isFinished;
     private String createdTime;
-    private LocalDateTime updatedTime;
+    private String modifiedTime;
 
     public static ItemListResponseDto from(Item item, String image) {
         return ItemListResponseDto.builder()
@@ -28,8 +28,8 @@ public class ItemListResponseDto {
                 .category(item.getCategory())
                 .image(image)
                 .isFinished(item.getIsFinished())
-                .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
-                .updatedTime(item.getUpdatedTime())
+                .createdTime(item.getCreatedTime().toString())
+                .modifiedTime(item.getModifiedTime().toString())
                 .build();
     }
 }
