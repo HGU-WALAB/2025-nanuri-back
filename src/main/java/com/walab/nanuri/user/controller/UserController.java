@@ -53,4 +53,10 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
+
+    //다른 유저 마이페이지 조회
+    @GetMapping("/{userNickname}")
+    public ResponseEntity<UserResponseDto> getOtherUserInfo(@PathVariable String userNickname) {
+        return ResponseEntity.ok(userService.getOtherUserInfo(userNickname));
+    }
 }
