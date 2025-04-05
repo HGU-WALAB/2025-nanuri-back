@@ -22,7 +22,7 @@ public class WaitingItemDto {
     private String category;
     private String image;
     private String createdTime;
-    private String updatedTime;
+    private String modifiedTime;
 
 
 
@@ -34,8 +34,8 @@ public class WaitingItemDto {
                 .description(item.getDescription())
                 .category(item.getCategory())
                 .image(image)
-                .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
-                .updatedTime(item.getUpdatedTime().toString())
+                .createdTime(item.getCreatedTime().toString())
+                .modifiedTime(item.getModifiedTime().toString())
                 .build();
     }
 }
