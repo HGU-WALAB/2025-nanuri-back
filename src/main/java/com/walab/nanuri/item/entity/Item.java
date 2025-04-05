@@ -1,10 +1,9 @@
 package com.walab.nanuri.item.entity;
 
+import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class Item {
+public class Item extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -41,12 +40,6 @@ public class Item {
 
     @Column(name="is_finished")
     private Boolean isFinished;
-
-    @CreatedDate
-    private LocalDateTime createdTime;
-
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
 
     @Column(name="wish_count")
     private Integer wishCount;

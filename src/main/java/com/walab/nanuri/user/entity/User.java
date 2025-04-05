@@ -1,14 +1,12 @@
 package com.walab.nanuri.user.entity;
 
 import com.walab.nanuri.auth.dto.AuthDto;
+import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.commons.util.Tag;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @Column(name = "unique_id", nullable = false, length = 50)
@@ -65,12 +63,6 @@ public class User {
 
     @Column(name = "introduction", length = 300)
     private String introduction;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
 //    public void update(AuthDto dto) {
 //        this.name = dto.getName();
