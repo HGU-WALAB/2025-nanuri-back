@@ -50,7 +50,6 @@ public class HistoryService {
     }
 
     //Item-신청자 리스트 조회
-    @Transactional
     public List<ApplicantDto> getAllApplicants(String sellerId, Long itemId){
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         if(!sellerId.equals(item.getUserId())){ //판매자가 아닐경우 -> 접근 권한 없음
@@ -66,13 +65,43 @@ public class HistoryService {
                 .toList();
     }
 
+    //내가 대기 중인 Item 조회
+    public List<WaitingItemDto> getAllWaitingItems(String receiverId){
+        List<History> waitingList = historyRepository.findAllByReceivedIdAndIsConfirmedFalse(receiverId);
+
+        return waitingList.stream()
+                .map(history -> {
+                    Item item = itemRepository.findById(history.getItemId()).
+                            orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    return WaitingItemDto.from(item, history.getId(), image);
+                })
+                .toList();
+    }
+
+    //내가 받은 Item 조회
+    public List<ReceivedItemDto> getAllReceivedItems(String receiverId){
+        List<History> receivedList = historyRepository.findAllByReceivedIdAndIsConfirmedTrue(receiverId);
+
+        return receivedList.stream()
+                .map(history -> {
+                    Item item = itemRepository.findById(history.getItemId()).
+                            orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    return ReceivedItemDto.from(item, history.getId(), image);
+                })
+                .toList();
+    }
+
     // 해당 유저 선택
     @Transactional
     public void selectReceiver(String sellerId, Long historyId){
         History history = historyRepository.findById(historyId).orElseThrow(() -> new CustomException(HISTORY_NOT_FOUND));
         Item item = itemRepository.findById(history.getItemId()).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 
-        if(!sellerId.equals(item.getUserId())){
+        if(isNotOwner(sellerId, item)){
             throw new CustomException(VALID_ITEM);
         }
 
@@ -100,7 +129,7 @@ public class HistoryService {
     public void completeItemApplication(String sellerId, Long historyId){
         History history = historyRepository.findById(historyId).orElseThrow(() -> new CustomException(HISTORY_NOT_FOUND));
         Item item = itemRepository.findById(history.getItemId()).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        if(!sellerId.equals(item.getUserId())){ //판매자가 아니라면 -> 접근 권한 없음
+        if(isNotOwner(sellerId, item)){
             throw new CustomException(VALID_ITEM);
         }
 
@@ -117,37 +146,7 @@ public class HistoryService {
         historyRepository.deleteById(historyId);
     }
 
-    //내가 대기 중인 Item 조회
-    @Transactional
-    public List<WaitingItemDto> getAllWaitingItems(String receiverId){
-        List<History> waitingList = historyRepository.findAllByReceivedIdAndIsConfirmedFalse(receiverId);
-
-        return waitingList.stream()
-                .map(history -> {
-                    Item item = itemRepository.findById(history.getItemId()).
-                            orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    return WaitingItemDto.from(item, history.getId(), image);
-                })
-                .toList();
+    private boolean isNotOwner(String sellerId, Item item) {
+        return !sellerId.equals(item.getUserId());
     }
-
-    //내가 받은 Item 조회
-    @Transactional
-    public List<ReceivedItemDto> getAllReceivedItems(String receiverId){
-        List<History> receivedList = historyRepository.findAllByReceivedIdAndIsConfirmedTrue(receiverId);
-
-        return receivedList.stream()
-                .map(history -> {
-                    Item item = itemRepository.findById(history.getItemId()).
-                            orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    return ReceivedItemDto.from(item, history.getId(), image);
-                })
-                .toList();
-    }
-
-
 }
