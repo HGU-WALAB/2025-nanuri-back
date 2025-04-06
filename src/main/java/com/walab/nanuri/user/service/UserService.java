@@ -1,9 +1,11 @@
 package com.walab.nanuri.user.service;
 
 import com.walab.nanuri.commons.exception.CustomException;
+import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.commons.util.Tag;
 import com.walab.nanuri.security.util.JwtUtil;
-import com.walab.nanuri.user.dto.UserDto;
+import com.walab.nanuri.user.dto.response.OtherUserResponseDto;
+import com.walab.nanuri.user.dto.response.UserResponseDto;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.wish.repository.WishRepository;
@@ -23,11 +25,9 @@ public class UserService {
     private final WishRepository wishRepository;
 
     //유저 정보 가져 오기
-    public UserDto getUser(String uniqueId) {
-        return UserDto.from(
-                userRepository
-                        .findById(uniqueId)
-                        .orElseThrow(() -> new CustomException(USER_NOT_FOUND)));
+    public User getUser(String uniqueId) {
+        return userRepository.findById(uniqueId)
+                        .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
     //유저 정보 수정
@@ -43,5 +43,17 @@ public class UserService {
         wishRepository.deleteAll(wishRepository.findAllByUniqueId(uniqueId));
         User user = userRepository.findById(uniqueId).orElseThrow(()->new CustomException(USER_NOT_FOUND));
         userRepository.delete(user);
+    }
+
+    // 유저 닉네임 중복 체크
+    public boolean checkNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+  
+    //다른 유저 마이페이지 조회
+    public OtherUserResponseDto getOtherUserInfo(String nickname) {
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        return OtherUserResponseDto.from(user);
     }
 }

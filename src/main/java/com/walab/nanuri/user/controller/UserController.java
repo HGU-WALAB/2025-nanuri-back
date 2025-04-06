@@ -1,7 +1,8 @@
 package com.walab.nanuri.user.controller;
 
-import com.walab.nanuri.user.dto.EditUserInfoDto;
-import com.walab.nanuri.user.dto.UserResponseDto;
+import com.walab.nanuri.user.dto.request.EditUserInfoDto;
+import com.walab.nanuri.user.dto.response.OtherUserResponseDto;
+import com.walab.nanuri.user.dto.response.UserResponseDto;
 import com.walab.nanuri.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,4 +54,18 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
+
+
+    // 유저 닉네임 중복 체크
+    @GetMapping("/checkNickname")
+    public ResponseEntity<Boolean> checkNicknameDuplicate(@RequestParam String nickname) {
+        return ResponseEntity.ok(userService.checkNicknameDuplicate(nickname));
+    }
+  
+    //다른 유저 마이페이지 조회
+    @GetMapping("/{userNickname}")
+    public ResponseEntity<OtherUserResponseDto> getOtherUserInfo(@PathVariable String userNickname) {
+        return ResponseEntity.ok(userService.getOtherUserInfo(userNickname));
+    }
+
 }

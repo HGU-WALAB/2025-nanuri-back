@@ -1,4 +1,4 @@
-package com.walab.nanuri.user.dto;
+package com.walab.nanuri.user.dto.request;
 
 import com.walab.nanuri.commons.util.Tag;
 import lombok.Getter;
