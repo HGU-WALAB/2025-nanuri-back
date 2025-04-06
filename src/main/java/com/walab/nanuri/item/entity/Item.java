@@ -1,12 +1,11 @@
 package com.walab.nanuri.item.entity;
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
+import com.walab.nanuri.commons.entity.ShareStatus;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
@@ -38,8 +37,8 @@ public class Item extends BaseTimeEntity {
     @Column(name="user_id", nullable=false)
     private String userId;
 
-    @Column(name="is_finished")
-    private Boolean isFinished;
+    @Column(name="share_status")
+    private ShareStatus shareStatus;
 
     @Column(name="wish_count")
     private Integer wishCount;
@@ -52,9 +51,6 @@ public class Item extends BaseTimeEntity {
         this.category = category;
     }
 
-    public void markIsFinished(){
-        this.isFinished = true;
-    }
 
     public static Item toEntity(String userId, ItemRequestDto requestDto) {
         return Item.builder()
@@ -64,7 +60,7 @@ public class Item extends BaseTimeEntity {
                 .category(requestDto.getCategory())
                 .viewCount(0)
                 .userId(userId)
-                .isFinished(Boolean.FALSE)
+                .shareStatus(ShareStatus.NONE)
                 .build();
 
     }
