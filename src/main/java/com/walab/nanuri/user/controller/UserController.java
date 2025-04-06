@@ -55,9 +55,17 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+
+    // 유저 닉네임 중복 체크
+    @GetMapping("/checkNickname")
+    public ResponseEntity<Boolean> checkNicknameDuplicate(@RequestParam String nickname) {
+        return ResponseEntity.ok(userService.checkNicknameDuplicate(nickname));
+    }
+  
     //다른 유저 마이페이지 조회
     @GetMapping("/{userNickname}")
     public ResponseEntity<OtherUserResponseDto> getOtherUserInfo(@PathVariable String userNickname) {
         return ResponseEntity.ok(userService.getOtherUserInfo(userNickname));
     }
+
 }

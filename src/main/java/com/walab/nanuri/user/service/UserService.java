@@ -45,6 +45,11 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    // 유저 닉네임 중복 체크
+    public boolean checkNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+  
     //다른 유저 마이페이지 조회
     public OtherUserResponseDto getOtherUserInfo(String nickname) {
         User user = userRepository.findByNickname(nickname)
