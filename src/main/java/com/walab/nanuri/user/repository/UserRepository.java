@@ -1,7 +1,5 @@
 package com.walab.nanuri.user.repository;
 
-import com.walab.nanuri.user.dto.UserDto;
-import com.walab.nanuri.user.dto.UserResponseDto;
 import com.walab.nanuri.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
