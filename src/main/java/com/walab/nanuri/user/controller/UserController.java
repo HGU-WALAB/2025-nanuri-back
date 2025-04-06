@@ -1,7 +1,7 @@
 package com.walab.nanuri.user.controller;
 
-import com.walab.nanuri.user.dto.EditUserInfoDto;
-import com.walab.nanuri.user.dto.UserResponseDto;
+import com.walab.nanuri.user.dto.request.EditUserInfoDto;
+import com.walab.nanuri.user.dto.response.UserResponseDto;
 import com.walab.nanuri.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

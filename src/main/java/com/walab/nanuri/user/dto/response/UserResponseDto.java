@@ -1,4 +1,4 @@
-package com.walab.nanuri.user.dto;
+package com.walab.nanuri.user.dto.response;
 
 import com.walab.nanuri.commons.util.Tag;
 import com.walab.nanuri.user.entity.User;

@@ -4,8 +4,7 @@ import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.commons.util.Tag;
 import com.walab.nanuri.security.util.JwtUtil;
-import com.walab.nanuri.user.dto.UserDto;
-import com.walab.nanuri.user.dto.UserResponseDto;
+import com.walab.nanuri.user.dto.response.UserResponseDto;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.wish.repository.WishRepository;
@@ -48,7 +47,7 @@ public class UserService {
     //다른 유저 마이페이지 조회
     public UserResponseDto getOtherUserInfo(String nickname) {
         User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         return UserResponseDto.from(user);
     }
 }
