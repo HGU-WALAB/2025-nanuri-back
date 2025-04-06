@@ -1,6 +1,7 @@
 package com.walab.nanuri.user.controller;
 
 import com.walab.nanuri.user.dto.request.EditUserInfoDto;
+import com.walab.nanuri.user.dto.response.OtherUserResponseDto;
 import com.walab.nanuri.user.dto.response.UserResponseDto;
 import com.walab.nanuri.user.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -56,7 +57,7 @@ public class UserController {
 
     //다른 유저 마이페이지 조회
     @GetMapping("/{userNickname}")
-    public ResponseEntity<UserResponseDto> getOtherUserInfo(@PathVariable String userNickname) {
+    public ResponseEntity<OtherUserResponseDto> getOtherUserInfo(@PathVariable String userNickname) {
         return ResponseEntity.ok(userService.getOtherUserInfo(userNickname));
     }
 }
