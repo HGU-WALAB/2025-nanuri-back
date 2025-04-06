@@ -1,5 +1,6 @@
 package com.walab.nanuri.item.service;
 
+import com.walab.nanuri.commons.entity.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
@@ -9,6 +10,8 @@ import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
+import com.walab.nanuri.user.entity.User;
+import com.walab.nanuri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ import static com.walab.nanuri.commons.exception.ErrorCode.*;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
     private final ImageService imageService;
 
     //Item 추가
@@ -44,11 +48,11 @@ public class ItemService {
                 .map(item -> {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
-                    return ItemListResponseDto.from(item, image);
+                    String nickname = getUserNicknameById(item.getUserId());
+                    return ItemListResponseDto.from(item, image, nickname);
                 })
                 .toList();
     }
-    //나눔 중인 나의 Item 조회
 
     //Item 단건 조회
     public ItemResponseDto getItemById(String uniqueId, Long itemId) {
@@ -57,19 +61,35 @@ public class ItemService {
                 .map(Image::getFileUrl)
                 .collect(Collectors.toList());
 
+        String nickname = getUserNicknameById(item.getUserId());
         boolean isOwner = item.getUserId().equals(uniqueId);
-        return ItemResponseDto.from(item, imageUrls, isOwner);
+        return ItemResponseDto.from(item, imageUrls, isOwner, nickname);
     }
 
-    //
-    public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, boolean done) {
-        List<Item> items = itemRepository.findAllByUserIdAndIsFinished(uniqueId, done);
+    public List<ItemListResponseDto> getItemsByUserId(String nickname) {
+        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        List<Item> items = itemRepository.findAllByUserId(user.getUniqueId());
 
         return items.stream()
                 .map(item -> {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
-                    return ItemListResponseDto.from(item, image);
+                    return ItemListResponseDto.from(item, image, nickname);
+                })
+                .toList();
+    }
+
+    //
+    public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, String done) {
+        ShareStatus upper_done = ShareStatus.valueOf(done.toUpperCase());
+        List<Item> items = itemRepository.findAllByUserIdAndIsFinished(uniqueId, upper_done);
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    String nickname = getUserNicknameById(item.getUserId());
+                    return ItemListResponseDto.from(item, image, nickname);
                 })
                 .toList();
     }
@@ -100,6 +120,12 @@ public class ItemService {
         } else {
             throw new CustomException(VALID_ITEM);
         }
+    }
+
+    private String getUserNicknameById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND))
+                .getNickname();
     }
 
 }
