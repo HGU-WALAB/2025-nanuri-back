@@ -81,7 +81,12 @@ public class ItemService {
 
     //
     public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, String done) {
-        ShareStatus upper_done = ShareStatus.valueOf(done.toUpperCase());
+        ShareStatus upper_done;
+        try {
+            upper_done = ShareStatus.valueOf(done.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(INVALID_SHARE_STATUS, "Invalid share status value: " + done);
+        }
         List<Item> items = itemRepository.findAllByUserIdAndIsFinished(uniqueId, upper_done);
 
         return items.stream()
