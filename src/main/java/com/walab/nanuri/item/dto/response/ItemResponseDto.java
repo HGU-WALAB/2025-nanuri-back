@@ -28,6 +28,7 @@ public class ItemResponseDto {
     public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname) {
         return ItemResponseDto.builder()
                 .id(item.getId())
+                .nickname(nickname)
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .viewCount(item.getViewCount())

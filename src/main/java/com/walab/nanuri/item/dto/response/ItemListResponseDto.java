@@ -25,6 +25,7 @@ public class ItemListResponseDto {
     public static ItemListResponseDto from(Item item, String image, String nickname) {
         return ItemListResponseDto.builder()
                 .itemId(item.getId())
+                .nickname(nickname)
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .category(item.getCategory())

@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class WishResponseDto {
     private Long wishId;
     private Long itemId;
+    private String nickname;
     private String title;
     private String description;
     private String category;
@@ -25,6 +26,7 @@ public class WishResponseDto {
         return WishResponseDto.builder()
                 .wishId(wish.getId())
                 .itemId(itemDto.getItemId())
+                .nickname(itemDto.getNickname())
                 .title(itemDto.getTitle())
                 .description(itemDto.getDescription())
                 .category(itemDto.getCategory())
