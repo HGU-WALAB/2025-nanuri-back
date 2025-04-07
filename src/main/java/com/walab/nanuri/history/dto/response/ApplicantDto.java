@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class ApplicantDto {
         return ApplicantDto.builder()
                 .historyId(history.getId())
                 .nickName(user.getNickname())
-                .applicationTime(Time.calculateTime(Timestamp.valueOf(history.getCreatedTime())))
+                .applicationTime(history.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }

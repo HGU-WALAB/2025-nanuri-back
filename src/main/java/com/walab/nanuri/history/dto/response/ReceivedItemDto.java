@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
@@ -34,8 +35,8 @@ public class ReceivedItemDto {
                 .description(item.getDescription())
                 .category(item.getCategory())
                 .image(image)
-                .createdTime(item.getCreatedTime().toString())
-                .modifiedTime(item.getModifiedTime().toString())
+                .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }
