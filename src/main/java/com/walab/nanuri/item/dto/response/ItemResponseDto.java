@@ -1,5 +1,6 @@
 package com.walab.nanuri.item.dto.response;
 
+import com.walab.nanuri.commons.entity.ShareStatus;
 import com.walab.nanuri.commons.util.Time;
 import com.walab.nanuri.item.entity.Item;
 import lombok.*;
@@ -13,26 +14,27 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemResponseDto {
     private Long id;
+    private String nickname;
     private String title;
     private String description;
     private Integer viewCount;
     private String category;
-    private Boolean isFinished;
+    private ShareStatus shareStatus;
     private String createdTime;
     private Integer wishCount;
     private List<String> images;
     private Boolean isOwner;
 
-    public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner) {
+    public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname) {
         return ItemResponseDto.builder()
                 .id(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .viewCount(item.getViewCount())
                 .category(item.getCategory())
-                .createdTime(Time.calculateTime(Timestamp.valueOf(item.getCreatedTime())))
+                .createdTime(item.getCreatedTime().toString())
                 .wishCount(item.getWishCount())
-                .isFinished(item.getIsFinished())
+                .shareStatus(item.getShareStatus())
                 .images(images)
                 .isOwner(isOwner)
                 .build();

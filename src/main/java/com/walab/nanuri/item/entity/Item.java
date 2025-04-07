@@ -1,13 +1,11 @@
 package com.walab.nanuri.item.entity;
 
+import com.walab.nanuri.commons.entity.BaseTimeEntity;
+import com.walab.nanuri.commons.entity.ShareStatus;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
@@ -15,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class Item {
+public class Item extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -39,14 +37,8 @@ public class Item {
     @Column(name="user_id", nullable=false)
     private String userId;
 
-    @Column(name="is_finished")
-    private Boolean isFinished;
-
-    @CreatedDate
-    private LocalDateTime createdTime;
-
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
+    @Column(name="share_status")
+    private ShareStatus shareStatus;
 
     @Column(name="wish_count")
     private Integer wishCount;
@@ -59,9 +51,6 @@ public class Item {
         this.category = category;
     }
 
-    public void markIsFinished(){
-        this.isFinished = true;
-    }
 
     public static Item toEntity(String userId, ItemRequestDto requestDto) {
         return Item.builder()
@@ -71,7 +60,7 @@ public class Item {
                 .category(requestDto.getCategory())
                 .viewCount(0)
                 .userId(userId)
-                .isFinished(Boolean.FALSE)
+                .shareStatus(ShareStatus.NONE)
                 .build();
 
     }

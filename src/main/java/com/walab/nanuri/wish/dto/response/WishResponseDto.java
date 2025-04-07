@@ -18,6 +18,8 @@ public class WishResponseDto {
     private String description;
     private String category;
     private String imageUrl;
+    private String createdTime;
+    private String modifiedTime;
 
     public static WishResponseDto from(Wish wish, ItemListResponseDto itemDto) {
         return WishResponseDto.builder()
@@ -27,6 +29,8 @@ public class WishResponseDto {
                 .description(itemDto.getDescription())
                 .category(itemDto.getCategory())
                 .imageUrl(itemDto.getImage())
+                .createdTime(itemDto.getCreatedTime())
+                .modifiedTime(itemDto.getModifiedTime())
                 .build();
     }
 }

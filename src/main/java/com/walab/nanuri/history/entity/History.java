@@ -1,14 +1,12 @@
 package com.walab.nanuri.history.entity;
 
+import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -16,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class History {
+public class History extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -33,9 +31,6 @@ public class History {
 
     @Column(name="is_confirmed")
     private Boolean isConfirmed;
-
-    @CreatedDate
-    private LocalDateTime createdTime;
 
     public static History toEntity(String userId, Long itemId) {
         return History.builder()
