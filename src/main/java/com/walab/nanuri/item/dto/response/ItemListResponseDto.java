@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
@@ -31,8 +32,8 @@ public class ItemListResponseDto {
                 .category(item.getCategory())
                 .image(image)
                 .shareStatus(item.getShareStatus())
-                .createdTime(item.getCreatedTime().toString())
-                .modifiedTime(item.getModifiedTime().toString())
+                .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }
