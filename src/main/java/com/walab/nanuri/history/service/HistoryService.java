@@ -37,7 +37,7 @@ public class HistoryService {
 
         //본인의 물건인지 확인
         if(receiverId.equals(item.getUserId())){
-            throw new CustomException(VALID_OWN_ITEM);
+            throw new CustomException(VALID_ITEM);
         }
 
         //이미 나눔 신청한 물건인지 확인
@@ -47,6 +47,21 @@ public class HistoryService {
 
         History history = History.toEntity(receiverId, itemId);
         historyRepository.save(history);
+
+        String sellerId = item.getUserId();
+        String roomKey = ChatRoom.createRoomKey(String.valueOf(item.getId()), sellerId, receiverId);
+
+        boolean exists = chatRoomRepository.existsBySellerIdAndReceiverId(sellerId, receiverId);
+        if (!exists) {
+            ChatRoom room = ChatRoom.builder()
+                    .itemId(item.getId())
+                    .historyId(history.getId())
+                    .sellerId(sellerId)
+                    .receiverId(receiverId)
+                    .roomKey(roomKey)
+                    .build();
+            chatRoomRepository.save(room);
+        }
     }
 
     //Item-신청자 리스트 조회
@@ -95,7 +110,7 @@ public class HistoryService {
                 .toList();
     }
 
-    // 해당 유저 선택
+    // 해당 유저 선택 -> 추후 삭제 가능?
     @Transactional
     public void selectReceiver(String sellerId, Long historyId){
         History history = historyRepository.findById(historyId).orElseThrow(() -> new CustomException(HISTORY_NOT_FOUND));
@@ -105,7 +120,6 @@ public class HistoryService {
             throw new CustomException(VALID_ITEM);
         }
 
-        history.markSelected();
         historyRepository.save(history);
 
         String receiverId = history.getReceivedId();
