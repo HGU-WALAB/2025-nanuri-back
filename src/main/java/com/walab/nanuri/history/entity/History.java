@@ -26,9 +26,6 @@ public class History extends BaseTimeEntity {
     @Column(name="received_id")
     private String receivedId;
 
-    @Column(name="is_selected")
-    private Boolean isSelected;
-
     @Column(name="is_confirmed")
     private Boolean isConfirmed;
 
@@ -36,20 +33,11 @@ public class History extends BaseTimeEntity {
         return History.builder()
                 .itemId(itemId)
                 .receivedId(userId)
-                .isSelected(false)
                 .isConfirmed(false)
                 .build();
     }
 
     public void markConfirmed() {
         this.isConfirmed = true;
-    }
-
-    public void markSelected() {
-        this.isSelected = true;
-    }
-
-    public void markUnSelected() {
-        this.isSelected = false;
     }
 }
