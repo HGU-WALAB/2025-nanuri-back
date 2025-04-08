@@ -1,6 +1,7 @@
 package com.walab.nanuri.history.service;
 
 import com.walab.nanuri.chat.entity.ChatRoom;
+import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.history.dto.response.ReceivedItemDto;
@@ -131,6 +132,7 @@ public class HistoryService {
                     .itemId(item.getId())
                     .historyId(historyId)
                     .sellerId(sellerId)
+                    .postType(PostType.ITEM)
                     .receiverId(receiverId)
                     .roomKey(roomKey)
                     .build();
