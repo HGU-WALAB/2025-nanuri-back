@@ -5,6 +5,7 @@ import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.entity.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.exception.ErrorCode;
+import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
@@ -65,6 +66,8 @@ public class WantPostService {
         String roomKey = ChatRoom.createRoomKey("want-"+wp.getId() , sellerId, wp.getReceiverId());
         ChatRoom room = ChatRoom.builder()
                 .sellerId(sellerId)
+                .postId(postId)
+                .postType(PostType.POST)
                 .receiverId(wp.getReceiverId())
                 .roomKey(roomKey)
                 .build();

@@ -60,7 +60,7 @@ public class WishService {
         List<Item> items = itemRepository.findAllById(itemIds);
 
         Map<Long, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
-        Map<Long, String> imageMap = imageRepository.findTopByItemIdIn(itemIds).stream()
+        Map<Long, String> imageMap = imageRepository.findFirstImagePerItem(itemIds).stream()
                 .collect(Collectors.toMap(
                         image -> image.getItem().getId(),
                         Image::getFileUrl

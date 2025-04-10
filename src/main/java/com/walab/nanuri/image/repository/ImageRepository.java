@@ -15,7 +15,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     List<Image> findByItemIdOrderByIdAsc(@Param("itemId") Long itemId);
 
-    @Query("SELECT i FROM images i WHERE i.id IN (" +
-            "SELECT MIN(i2.id) FROM images i2 WHERE i2.item IN :itemIds GROUP BY i2.item)")
-    List<Image> findTopByItemIdIn(List<Long> itemIds);
+    @Query("SELECT i FROM images i WHERE i.item.id IN :itemIds AND i.id IN (" +
+            "SELECT MIN(i2.id) FROM images i2 WHERE i2.item.id IN :itemIds GROUP BY i2.item.id)")
+    List<Image> findFirstImagePerItem(@Param("itemIds") List<Long> itemIds);
 }

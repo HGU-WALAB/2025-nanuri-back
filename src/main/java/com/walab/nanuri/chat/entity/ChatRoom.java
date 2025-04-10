@@ -2,14 +2,9 @@ package com.walab.nanuri.chat.entity;
 
 import com.walab.nanuri.chat.dto.request.ChatRoomRequestDto;
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.walab.nanuri.commons.util.PostType;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Builder
@@ -22,8 +17,18 @@ public class ChatRoom extends BaseTimeEntity {
     private Long id;
     private Long itemId;
     private Long historyId;
+    private Long postId;
+
+    @Enumerated(EnumType.STRING)
+    private PostType postType;
+
+    @Setter
     private String sellerId;
+
+    @Setter
     private String receiverId;
+
+
     private String roomKey;
 
     public static String createRoomKey(String itemId, String sellerId, String receiverId) {

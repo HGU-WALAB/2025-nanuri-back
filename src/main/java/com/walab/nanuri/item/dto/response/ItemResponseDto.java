@@ -6,6 +6,7 @@ import com.walab.nanuri.item.entity.Item;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Builder
@@ -33,7 +34,7 @@ public class ItemResponseDto {
                 .description(item.getDescription())
                 .viewCount(item.getViewCount())
                 .category(item.getCategory())
-                .createdTime(item.getCreatedTime().toString())
+                .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .wishCount(item.getWishCount())
                 .shareStatus(item.getShareStatus())
                 .images(images)
