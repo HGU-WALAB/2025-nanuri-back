@@ -38,6 +38,8 @@ public class Item extends BaseTimeEntity {
     private String userId;
 
     @Column(name="share_status")
+    @Enumerated(EnumType.STRING)
+    @Setter
     private ShareStatus shareStatus;
 
     @Column(name="wish_count")
