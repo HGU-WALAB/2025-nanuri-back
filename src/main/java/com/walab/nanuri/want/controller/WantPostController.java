@@ -12,11 +12,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/want")
+@RequestMapping("/api/want")
 public class WantPostController {
     private final WantPostService wantPostService;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<String> createPost(@AuthenticationPrincipal String uniqueId, @RequestBody WantPostRequestDto wantPost) {
         wantPostService.createPost(wantPost, uniqueId);
         return ResponseEntity.ok().body(null);
@@ -28,7 +28,7 @@ public class WantPostController {
         return ResponseEntity.ok().body(null);
     }
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}")
     public ResponseEntity<WantPostFormalResponseDto> getPostById(@PathVariable Long postId) {
         return ResponseEntity.ok().body(wantPostService.findById(postId));
     }
