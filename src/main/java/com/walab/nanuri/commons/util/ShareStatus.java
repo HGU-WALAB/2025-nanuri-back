@@ -1,4 +1,4 @@
-package com.walab.nanuri.commons.entity;
+package com.walab.nanuri.commons.util;
 
 import lombok.Getter;
 

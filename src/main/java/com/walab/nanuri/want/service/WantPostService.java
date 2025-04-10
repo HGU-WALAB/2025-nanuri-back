@@ -2,7 +2,7 @@ package com.walab.nanuri.want.service;
 
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
-import com.walab.nanuri.commons.entity.ShareStatus;
+import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.commons.util.PostType;

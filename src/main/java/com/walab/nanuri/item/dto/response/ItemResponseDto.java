@@ -1,11 +1,9 @@
 package com.walab.nanuri.item.dto.response;
 
-import com.walab.nanuri.commons.entity.ShareStatus;
-import com.walab.nanuri.commons.util.Time;
+import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.entity.Item;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 

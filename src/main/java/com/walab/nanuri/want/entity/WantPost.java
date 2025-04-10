@@ -1,7 +1,7 @@
 package com.walab.nanuri.want.entity;
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
-import com.walab.nanuri.commons.entity.ShareStatus;
+import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
