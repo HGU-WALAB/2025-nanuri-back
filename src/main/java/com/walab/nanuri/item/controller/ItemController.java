@@ -1,11 +1,9 @@
 package com.walab.nanuri.item.controller;
 
-import com.walab.nanuri.commons.entity.ShareStatus;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.dto.response.ItemResponseDto;
 import com.walab.nanuri.item.service.ItemService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

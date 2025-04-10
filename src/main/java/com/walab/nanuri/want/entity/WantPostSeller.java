@@ -1,6 +1,5 @@
 package com.walab.nanuri.want.entity;
 
-import com.walab.nanuri.commons.entity.ShareStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

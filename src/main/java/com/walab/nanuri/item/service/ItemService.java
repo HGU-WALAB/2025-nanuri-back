@@ -1,6 +1,6 @@
 package com.walab.nanuri.item.service;
 
-import com.walab.nanuri.commons.entity.ShareStatus;
+import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;

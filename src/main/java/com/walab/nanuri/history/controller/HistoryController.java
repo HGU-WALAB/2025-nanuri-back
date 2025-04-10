@@ -42,7 +42,9 @@ public class HistoryController {
 
     //Item 거래 완료
     @PatchMapping("/{historyId}/complete")
-    public ResponseEntity<String> completeItemApplication(@AuthenticationPrincipal String uniqueId, @PathVariable Long historyId){
+    public ResponseEntity<String> completeItemApplication(@AuthenticationPrincipal String uniqueId,
+                                                          @PathVariable Long historyId
+    ){
         historyService.completeItemApplication(uniqueId, historyId);
         return ResponseEntity.ok().body(null);
     }
