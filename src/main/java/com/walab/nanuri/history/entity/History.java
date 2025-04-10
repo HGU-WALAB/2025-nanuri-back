@@ -40,4 +40,8 @@ public class History extends BaseTimeEntity {
     public void markConfirmed() {
         this.isConfirmed = true;
     }
+
+    public void markUnconfirmed() {
+        this.isConfirmed = false;
+    }
 }

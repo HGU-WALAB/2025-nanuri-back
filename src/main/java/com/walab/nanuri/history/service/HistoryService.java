@@ -1,6 +1,7 @@
 package com.walab.nanuri.history.service;
 
 import com.walab.nanuri.chat.entity.ChatRoom;
+import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.exception.CustomException;
@@ -142,15 +143,24 @@ public class HistoryService {
 
     //Item 나눔 완료
     @Transactional
-    public void completeItemApplication(String sellerId, Long historyId){
+    public void completeItemApplication(String uniqueId, Long historyId){
         History history = historyRepository.findById(historyId).orElseThrow(() -> new CustomException(HISTORY_NOT_FOUND));
         Item item = itemRepository.findById(history.getItemId()).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        if(isNotOwner(sellerId, item)){
-            throw new CustomException(VALID_ITEM);
+
+        if(isNotOwner(uniqueId, item) || !uniqueId.equals(history.getReceivedId())){
+            throw new CustomException(VALID_USER);
         }
 
-        history.markConfirmed();
+        if (history.getIsConfirmed()) {
+            history.markUnconfirmed();
+            item.setShareStatus(ShareStatus.IN_PROGRESS);
+        } else {
+            history.markConfirmed();
+            item.setShareStatus(ShareStatus.COMPLETED);
+        }
+
         historyRepository.save(history);
+        itemRepository.save(item);
     }
 
     //Item 나눔 신청 취소
