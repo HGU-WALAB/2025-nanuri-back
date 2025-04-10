@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,8 +40,6 @@ public class WantPostService {
     public void selectPost(String sellerId, Long postId) {
         WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.WANT_POST_NOT_FOUND));
 
-        boolean exists = wp.getSellers().stream()
-                .anyMatch(seller -> seller.getSellerId().equals(sellerId));
 
         if (wp.getReceiverId().equals(sellerId)) {
             throw new CustomException(ErrorCode.CANNOT_APPLY_OWN_POST);
@@ -49,6 +48,11 @@ public class WantPostService {
         if (wp.isFinished()) {
             throw new CustomException(ErrorCode.ALREADY_FINISHED_POST);
         }
+
+        List<WantPostSeller> sellers = wp.getSellers() == null ? Collections.emptyList() : wp.getSellers();
+
+        boolean exists = sellers.stream()
+                .anyMatch(seller -> seller.getSellerId().equals(sellerId));
 
         if (exists) {
             throw new CustomException(ErrorCode.VALID_ALREADY_APPLIED_POST);
