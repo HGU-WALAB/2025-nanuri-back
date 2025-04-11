@@ -16,14 +16,16 @@ public class WantPostFormalResponseDto {
     private String title;
     private String createdTime;
     private String description;
+    private Boolean isOwner;
 
-    public static WantPostFormalResponseDto from(WantPost wantPost, String receiverNickName) {
+    public static WantPostFormalResponseDto from(WantPost wantPost, String receiverNickName, Boolean isOwner) {
         return WantPostFormalResponseDto.builder()
                 .id(wantPost.getId())
                 .receiverNickName(receiverNickName)
                 .title(wantPost.getTitle())
                 .createdTime(wantPost.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .description(wantPost.getDescription())
+                .isOwner(isOwner)
                 .build();
     }
 }
