@@ -29,10 +29,10 @@ public class UserService {
     }
 
     //유저 정보 수정
-    public void editUserInfo(String nickname, String mbti, List<Category> interestCategory, String hobby, String introduction) {
+    public void editUserInfo(String nickname, String mbti, List<Category> interestCategory, String introduction) {
         String uniqueId = JwtUtil.getUserUniqueId();
         User user = userRepository.findById(uniqueId).orElseThrow(()->new CustomException(USER_NOT_FOUND));
-        user.editUserDetails(nickname, mbti, interestCategory, hobby, introduction);
+        user.editUserDetails(nickname, mbti, interestCategory, introduction);
         userRepository.save(user);
     }
 

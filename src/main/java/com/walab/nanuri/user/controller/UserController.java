@@ -27,7 +27,7 @@ public class UserController {
     @PatchMapping()
     public ResponseEntity<String> editUserInfo(@RequestBody EditUserInfoDto request){
         userService.editUserInfo(request.getNickname(), request.getMbti(), request.getInterestCategory(),
-                request.getHobby(), request.getIntroduction());
+                request.getIntroduction());
         return ResponseEntity.ok("Update UserInfo Success");
     }
 

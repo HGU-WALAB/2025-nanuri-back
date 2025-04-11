@@ -22,7 +22,6 @@ public class UserDto {
   private String nickname;
   private String mbti;
   private List<Category> interestCategory;
-  private String hobby;
   private String introduction;
 
 
@@ -40,7 +39,6 @@ public class UserDto {
         .nickname(user.getNickname())
         .mbti(user.getMbti())
         .interestCategory(user.getInterestCategory())
-        .hobby(user.getHobby())
         .introduction(user.getIntroduction())
         .build();
   }
