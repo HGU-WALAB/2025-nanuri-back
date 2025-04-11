@@ -29,13 +29,13 @@ public class WantPostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<WantPostFormalResponseDto> getPostById(@PathVariable Long postId) {
-        return ResponseEntity.ok().body(wantPostService.findById(postId));
+    public ResponseEntity<WantPostFormalResponseDto> getPostById(@AuthenticationPrincipal String uniqueId, @PathVariable Long postId) {
+        return ResponseEntity.ok().body(wantPostService.findById(uniqueId, postId));
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<WantPostFormalResponseDto>> getPosts() {
-        return ResponseEntity.ok().body(wantPostService.findAll());
+    public ResponseEntity<List<WantPostFormalResponseDto>> getPosts(@AuthenticationPrincipal String uniqueId) {
+        return ResponseEntity.ok().body(wantPostService.findAll(uniqueId));
     }
 
     @PatchMapping("/{postId}")
