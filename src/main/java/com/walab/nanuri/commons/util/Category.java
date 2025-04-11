@@ -1,6 +1,6 @@
 package com.walab.nanuri.commons.util;
 
-public enum Tag {
+public enum Category {
     MAJOR_BOOK,         // 전공 서적
     GENERAL_BOOK,       // 일반 도서, 소설 등
     DIGITAL_DEVICE,     // 디지털기기 (태블릿, 이어폰 등)
