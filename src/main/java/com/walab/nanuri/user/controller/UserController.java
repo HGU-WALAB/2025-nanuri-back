@@ -18,6 +18,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // 유저 정보 가져오기
     @GetMapping
     public ResponseEntity<UserResponseDto> getProfile(@AuthenticationPrincipal String uniqueId) {
         return ResponseEntity.ok(UserResponseDto.from(userService.getUser(uniqueId)));

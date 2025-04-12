@@ -2,6 +2,11 @@ package com.walab.nanuri.user.service;
 
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.util.Category;
+import com.walab.nanuri.commons.util.ShareStatus;
+import com.walab.nanuri.image.repository.ImageRepository;
+import com.walab.nanuri.item.dto.response.ItemListResponseDto;
+import com.walab.nanuri.item.entity.Item;
+import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.dto.response.OtherUserResponseDto;
 import com.walab.nanuri.user.entity.User;
@@ -12,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.USER_NOT_FOUND;
 
@@ -21,6 +28,8 @@ import static com.walab.nanuri.commons.exception.ErrorCode.USER_NOT_FOUND;
 public class UserService {
     private final UserRepository userRepository;
     private final WishRepository wishRepository;
+    private final ItemRepository itemRepository;
+    private final ImageRepository imageRepository;
 
     //유저 정보 가져 오기
     public User getUser(String uniqueId) {
@@ -52,6 +61,31 @@ public class UserService {
     public OtherUserResponseDto getOtherUserInfo(String nickname) {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        return OtherUserResponseDto.from(user);
+
+        //나눔중 아이템 목록
+        List<Item> sharingItems = itemRepository.findAllByUserIdAndIsFinished(user.getUniqueId(), ShareStatus.NONE);
+        List<ItemListResponseDto> sharingItemList = sharingItems.stream()
+                .map(item -> {
+                        String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
+                        return ItemListResponseDto.from(item, imageUrl, nickname);
+                })
+                .toList();
+
+        //나눔 완료 아이템 목록
+        List<Item> completedItems = itemRepository.findAllByUserIdAndIsFinished(user.getUniqueId(), ShareStatus.COMPLETED);
+        List<ItemListResponseDto> completedItemList = completedItems.stream()
+                .map(item -> {
+                    String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
+                    return ItemListResponseDto.from(item, imageUrl, nickname);
+                })
+                .toList();
+
+        return OtherUserResponseDto.builder()
+                .nickname(user.getNickname())
+                .mbti(user.getMbti())
+                .introduction(user.getIntroduction())
+                .sharingItemList(sharingItemList)
+                .completedItemList(completedItemList)
+                .build();
     }
 }
