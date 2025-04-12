@@ -32,6 +32,7 @@ public class WishService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
 
+    //관심 목록 추가
     @Transactional
     public void createWish(String uniqueId, Long itemId) {
         if(!itemRepository.existsById(itemId)) {
@@ -46,6 +47,7 @@ public class WishService {
         wishRepository.save(wish);
     }
 
+    //관심 목록 삭제
     @Transactional
     public void deleteWish(Long wishId) {
         wishRepository.delete(
@@ -54,12 +56,17 @@ public class WishService {
         );
     }
 
+    //관심 목록 전체 조회
     public List<WishResponseDto> getWishList(String uniqueId) {
         List<Wish> wishes = wishRepository.findAllByUniqueId(uniqueId);
         List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
         List<Item> items = itemRepository.findAllById(itemIds);
 
-        Map<Long, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
+        Map<Long, Item> itemMap = items.stream().
+                collect(Collectors.toMap(
+                        Item::getId,
+                        Function.identity()
+                ));
         Map<Long, String> imageMap = imageRepository.findFirstImagePerItem(itemIds).stream()
                 .collect(Collectors.toMap(
                         image -> image.getItem().getId(),

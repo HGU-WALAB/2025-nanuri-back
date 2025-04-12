@@ -66,7 +66,8 @@ public class ItemService {
         return ItemResponseDto.from(item, imageUrls, isOwner, nickname);
     }
 
-    public List<ItemListResponseDto> getItemsByUserId(String nickname) {
+    //다른 User의 Item 전체 조회
+    public List<ItemListResponseDto> getItemsByUserNickname(String nickname) {
         User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         List<Item> items = itemRepository.findAllByUserId(user.getUniqueId());
 
@@ -79,7 +80,7 @@ public class ItemService {
                 .toList();
     }
 
-    //
+    //나눔 중 혹은 완료된 나의 Item 조회
     public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, String done) {
         ShareStatus upper_done;
         try {
@@ -87,7 +88,7 @@ public class ItemService {
         } catch (IllegalArgumentException e) {
             throw new CustomException(INVALID_SHARE_STATUS);
         }
-        List<Item> items = itemRepository.findAllByUserIdAndIsFinished(uniqueId, upper_done);
+        List<Item> items = itemRepository.findAllByUserIdAndShareStatus(uniqueId, upper_done);
 
         return items.stream()
                 .map(item -> {
@@ -111,8 +112,6 @@ public class ItemService {
             throw new CustomException(VALID_ITEM);
         }
     }
-
-    // item.markIsFinished() -> 아이템 거래 완료
 
 
     //Item 삭제하기
