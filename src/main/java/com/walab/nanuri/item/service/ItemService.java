@@ -1,5 +1,6 @@
 package com.walab.nanuri.item.service;
 
+import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.entity.Image;
@@ -12,6 +13,8 @@ import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
+import com.walab.nanuri.wish.controller.WishController;
+import com.walab.nanuri.wish.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +29,12 @@ import static com.walab.nanuri.commons.exception.ErrorCode.*;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final WishRepository wishRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final WishController wishController;
 
     //Item 추가
     @Transactional
@@ -49,7 +55,9 @@ public class ItemService {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname);
+                    int wishCount = wishRepository.countByItemId(item.getId());
+                    int chatCount = chatRoomRepository.countByItemId(item.getId());
+                    return ItemListResponseDto.from(item, image, nickname, wishCount, chatCount);
                 })
                 .toList();
     }
@@ -63,7 +71,9 @@ public class ItemService {
 
         String nickname = getUserNicknameById(item.getUserId());
         boolean isOwner = item.getUserId().equals(uniqueId);
-        return ItemResponseDto.from(item, imageUrls, isOwner, nickname);
+        int wishCount = wishRepository.countByItemId(itemId);
+        int chatCount = chatRoomRepository.countByItemId(itemId);
+        return ItemResponseDto.from(item, imageUrls, isOwner, nickname, wishCount, chatCount);
     }
 
     //다른 User의 Item 전체 조회
@@ -75,7 +85,9 @@ public class ItemService {
                 .map(item -> {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
-                    return ItemListResponseDto.from(item, image, nickname);
+                    int wishCount = wishRepository.countByItemId(item.getId());
+                    int chatCount = chatRoomRepository.countByItemId(item.getId());
+                    return ItemListResponseDto.from(item, image, nickname, wishCount, chatCount);
                 })
                 .toList();
     }
@@ -95,7 +107,9 @@ public class ItemService {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname);
+                    int wishCount = wishRepository.countByItemId(item.getId());
+                    int chatCount = chatRoomRepository.countByItemId(item.getId());
+                    return ItemListResponseDto.from(item, image, nickname, wishCount, chatCount);
                 })
                 .toList();
     }

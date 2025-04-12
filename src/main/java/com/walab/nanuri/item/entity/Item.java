@@ -45,6 +45,9 @@ public class Item extends BaseTimeEntity {
     @Column(name="wish_count")
     private Integer wishCount;
 
+    @Column(name = "chat_count")
+    private Integer chatCount;
+
 
     public void update(String title, String description, String place, String category) {
         this.title = title;
@@ -52,7 +55,6 @@ public class Item extends BaseTimeEntity {
         this.place = place;
         this.category = category;
     }
-
 
     public static Item toEntity(String userId, ItemRequestDto requestDto) {
         return Item.builder()
