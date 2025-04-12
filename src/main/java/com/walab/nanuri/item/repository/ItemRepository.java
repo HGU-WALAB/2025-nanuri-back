@@ -13,7 +13,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i " +
             "FROM Item i " +
             "WHERE i.userId = :userId AND i.shareStatus = :shareStatus")
-    List<Item> findAllByUserIdAndIsFinished(String userId, ShareStatus shareStatus);
+    List<Item> findAllByUserIdAndShareStatus(String userId, ShareStatus shareStatus);
 
     List<Item> findAllByUserId(String userId);
 }
