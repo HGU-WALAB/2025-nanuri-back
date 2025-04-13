@@ -1,11 +1,9 @@
 package com.walab.nanuri.user.service;
 
 import com.walab.nanuri.commons.exception.CustomException;
-import com.walab.nanuri.commons.exception.ErrorCode;
-import com.walab.nanuri.commons.util.Tag;
+import com.walab.nanuri.commons.util.Category;
 import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.dto.response.OtherUserResponseDto;
-import com.walab.nanuri.user.dto.response.UserResponseDto;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.wish.repository.WishRepository;
@@ -31,10 +29,10 @@ public class UserService {
     }
 
     //유저 정보 수정
-    public void editUserInfo(String nickname, String mbti, List<Tag> interestTag, String hobby, String introduction) {
+    public void editUserInfo(String nickname, String mbti, List<Category> interestCategory, String hobby, String introduction) {
         String uniqueId = JwtUtil.getUserUniqueId();
         User user = userRepository.findById(uniqueId).orElseThrow(()->new CustomException(USER_NOT_FOUND));
-        user.editUserDetails(nickname, mbti, interestTag, hobby, introduction);
+        user.editUserDetails(nickname, mbti, interestCategory, hobby, introduction);
         userRepository.save(user);
     }
 

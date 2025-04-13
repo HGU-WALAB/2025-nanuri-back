@@ -1,6 +1,6 @@
 package com.walab.nanuri.user.dto;
 
-import com.walab.nanuri.commons.util.Tag;
+import com.walab.nanuri.commons.util.Category;
 import com.walab.nanuri.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class UserDto {
   private String major2;
   private String nickname;
   private String mbti;
-  private List<Tag> interestTag;
+  private List<Category> interestCategory;
   private String hobby;
   private String introduction;
 
@@ -39,7 +39,7 @@ public class UserDto {
         .major2(user.getMajor2())
         .nickname(user.getNickname())
         .mbti(user.getMbti())
-        .interestTag(user.getInterestTag())
+        .interestCategory(user.getInterestCategory())
         .hobby(user.getHobby())
         .introduction(user.getIntroduction())
         .build();

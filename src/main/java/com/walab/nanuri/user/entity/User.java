@@ -2,7 +2,7 @@ package com.walab.nanuri.user.entity;
 
 import com.walab.nanuri.auth.dto.AuthDto;
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
-import com.walab.nanuri.commons.util.Tag;
+import com.walab.nanuri.commons.util.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -52,11 +52,11 @@ public class User extends BaseTimeEntity {
     @Column(name = "mbti", length = 10)
     private String mbti;
 
-    @ElementCollection(targetClass = Tag.class)
+    @ElementCollection(targetClass = Category.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_tags", joinColumns = @JoinColumn(name = "unique_id"))
     @Column(name = "interest_tag")
-    private List<Tag> interestTag;
+    private List<Category> interestCategory;
 
     @Column(name = "hobby", length = 50)
     private String hobby;
@@ -87,17 +87,17 @@ public class User extends BaseTimeEntity {
                 .major2(dto.getMajor2())
                 .nickname(dto.getNickname())
                 .mbti(dto.getMbti())
-                .interestTag(dto.getInterestTag())
+                .interestCategory(dto.getInterestCategory())
                 .hobby(dto.getHobby())
                 .introduction(dto.getIntroduction())
                 .build();
     }
 
-    public void editUserDetails(String nickname, String mbti, List<Tag> interestTag,
+    public void editUserDetails(String nickname, String mbti, List<Category> interestCategory,
                                 String hobby, String introduction) {
         this.nickname = nickname;
         this.mbti = mbti;
-        this.interestTag = interestTag;
+        this.interestCategory = interestCategory;
         this.hobby = hobby;
         this.introduction = introduction;
     }
