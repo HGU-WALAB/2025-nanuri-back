@@ -15,11 +15,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Item extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
 
-    @Column(nullable = false, length=30)
+    @Column(nullable = false, length = 30)
     private String title;
 
     @Column(length = 1024)
@@ -28,24 +29,27 @@ public class Item extends BaseTimeEntity {
     @Column(length = 50)
     private String place;
 
-    @Column(name="view_count")
+    @Column(name = "view_count")
     private Integer viewCount;
 
     @Column(length = 50)
     private String category;
 
-    @Column(name="user_id", nullable=false)
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
-    @Column(name="share_status")
+    @Column(name = "share_status")
     @Enumerated(EnumType.STRING)
     @Setter
     private ShareStatus shareStatus;
 
-    @Column(name="wish_count")
+
+    @Column(name = "wish_count")
+    @Setter
     private Integer wishCount;
 
     @Column(name = "chat_count")
+    @Setter
     private Integer chatCount;
 
 
@@ -69,13 +73,5 @@ public class Item extends BaseTimeEntity {
                 .chatCount(0)
                 .build();
 
-    }
-
-    public void setWishCount(Integer wishCount) {
-        this.wishCount = wishCount;
-    }
-
-    public void setChatCount(Integer chatCount) {
-        this.chatCount = chatCount;
     }
 }

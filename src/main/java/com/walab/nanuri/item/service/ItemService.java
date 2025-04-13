@@ -13,7 +13,6 @@ import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
-import com.walab.nanuri.wish.controller.WishController;
 import com.walab.nanuri.wish.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,6 @@ public class ItemService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
-    private final WishController wishController;
 
     //Item 추가
     @Transactional

@@ -48,8 +48,8 @@ public class ItemListResponseDto {
                 .shareStatus(item.getShareStatus())
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .wishCount(item.getWishCount() != null ? item.getWishCount() : 0)
-                .chatCount(item.getChatCount() != null ? item.getChatCount() : 0)
+                .wishCount(wishCount)
+                .chatCount(chatCount)
                 .build();
     }
 
