@@ -65,7 +65,17 @@ public class Item extends BaseTimeEntity {
                 .viewCount(0)
                 .userId(userId)
                 .shareStatus(ShareStatus.NONE)
+                .wishCount(0)
+                .chatCount(0)
                 .build();
 
+    }
+
+    public void setWishCount(Integer wishCount) {
+        this.wishCount = wishCount;
+    }
+
+    public void setChatCount(Integer chatCount) {
+        this.chatCount = chatCount;
     }
 }
