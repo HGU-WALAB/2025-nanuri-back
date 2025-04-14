@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,14 +34,15 @@ public class ChatMessageService {
     public void saveAndSend(ChatMessageRequestDto request) {
         ChatRoom chatRoom = chatRoomRepository.findById(Long.parseLong(request.getRoomId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
+        String receiverId = Objects.equals(chatRoom.getSellerId(), request.getSenderId()) ? chatRoom.getReceiverId() : chatRoom.getSellerId();
         String roomKey = chatRoom.getRoomKey();
 
-        ChatMessage message = ChatMessage.fromDto(request, roomKey);
+        ChatMessage message = ChatMessage.fromDto(request, receiverId, roomKey);
         chatMessageRepository.save(message);
 
         User sender = userRepository.findById(request.getSenderId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        User receiver = userRepository.findById(request.getReceiverId())
+        User receiver = userRepository.findById(receiverId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         ChatMessageResponseDto response = ChatMessageResponseDto.from(message, request.getSenderId(), sender, receiver);

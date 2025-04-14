@@ -19,14 +19,15 @@ public class WishController {
 
     private final WishService wishService;
 
+    //관심 목록 추가
     @PostMapping
-    public ResponseEntity<Void> createWish(
-            @AuthenticationPrincipal String uniqueId,
+    public ResponseEntity<Void> createWish(@AuthenticationPrincipal String uniqueId,
             @RequestBody WishRequestDto.WishCreateRequestDto requestDto) {
         wishService.createWish(uniqueId, requestDto.getItemId());
         return ResponseEntity.ok().body(null);
     }
 
+    //관심 목록 삭제
     @DeleteMapping("/{wishId}")
     public ResponseEntity<Void> deleteWish(
             @PathVariable Long wishId) {
@@ -34,6 +35,7 @@ public class WishController {
         return ResponseEntity.ok().body(null);
     }
 
+    //관심 목록 전체 조회
     @GetMapping
     public ResponseEntity<List<WishResponseDto>> getWishList(@AuthenticationPrincipal String uniqueId) {
         List<WishResponseDto> wishList = wishService.getWishList(uniqueId);

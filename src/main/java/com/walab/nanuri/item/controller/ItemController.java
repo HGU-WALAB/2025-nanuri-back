@@ -33,9 +33,10 @@ public class ItemController {
         return itemService.getAllItems(category);
     }
 
+    //다른 User의 Item 전체 조회
     @GetMapping("/items/{userNickname}")
     public List<ItemListResponseDto> getUserItems(@PathVariable String userNickname) {
-        return itemService.getItemsByUserId(userNickname);
+        return itemService.getItemsByUserNickname(userNickname);
     }
 
 
@@ -46,6 +47,7 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemById(uniqueId, itemId));
     }
 
+    //나눔 중 혹은 완료된 나의 Item 조회
     @GetMapping("/items/shared")
     public ResponseEntity<List<ItemListResponseDto>> getOngoingMyItems(@AuthenticationPrincipal String uniqueId,
                                                                        @RequestParam String done) {

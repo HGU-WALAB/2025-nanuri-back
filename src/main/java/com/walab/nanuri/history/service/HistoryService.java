@@ -63,6 +63,9 @@ public class HistoryService {
                     .roomKey(roomKey)
                     .build();
             chatRoomRepository.save(room);
+
+            //채팅방 생성시 chatCount 증가
+            item.setChatCount(item.getChatCount() + 1);
         }
     }
 

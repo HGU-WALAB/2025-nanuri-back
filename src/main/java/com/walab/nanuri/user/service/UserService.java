@@ -61,7 +61,7 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         //나눔중 아이템 목록
-        List<Item> sharingItems = itemRepository.findAllByUserIdAndIsFinished(user.getUniqueId(), ShareStatus.NONE);
+        List<Item> sharingItems = itemRepository.findAllByUserIdAndShareStatus(user.getUniqueId(), ShareStatus.NONE);
         List<ItemListResponseDto> sharingItemList = sharingItems.stream()
                 .map(item -> {
                         String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
@@ -70,7 +70,7 @@ public class UserService {
                 .toList();
 
         //나눔 완료 아이템 목록
-        List<Item> completedItems = itemRepository.findAllByUserIdAndIsFinished(user.getUniqueId(), ShareStatus.COMPLETED);
+        List<Item> completedItems = itemRepository.findAllByUserIdAndShareStatus(user.getUniqueId(), ShareStatus.COMPLETED);
         List<ItemListResponseDto> completedItemList = completedItems.stream()
                 .map(item -> {
                     String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();

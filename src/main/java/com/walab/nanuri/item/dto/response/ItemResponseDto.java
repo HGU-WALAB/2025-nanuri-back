@@ -21,6 +21,7 @@ public class ItemResponseDto {
     private ShareStatus shareStatus;
     private String createdTime;
     private Integer wishCount;
+    private Integer chatCount;
     private List<String> images;
     private Boolean isOwner;
 
@@ -34,6 +35,7 @@ public class ItemResponseDto {
                 .category(item.getCategory())
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .wishCount(item.getWishCount())
+                .chatCount(item.getChatCount())
                 .shareStatus(item.getShareStatus())
                 .images(images)
                 .isOwner(isOwner)

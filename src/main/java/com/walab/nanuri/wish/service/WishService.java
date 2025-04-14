@@ -32,6 +32,7 @@ public class WishService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
 
+    //관심 목록 추가
     @Transactional
     public void createWish(String uniqueId, Long itemId) {
         if(!itemRepository.existsById(itemId)) {
@@ -44,22 +45,40 @@ public class WishService {
                 .build();
 
         wishRepository.save(wish);
+
+        //wishCount 증가
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+        Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
+        item.setWishCount(currentWishCount + 1);
     }
 
+    //관심 목록 삭제
     @Transactional
     public void deleteWish(Long wishId) {
         wishRepository.delete(
                 wishRepository.findById(wishId)
                         .orElseThrow(() -> new CustomException(MISSING_WISH))
         );
+
+        //wishCount 감소
+        Item item = itemRepository.findById(wishId)
+                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+        Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
+        item.setWishCount(Math.max(0, currentWishCount - 1));
     }
 
+    //관심 목록 전체 조회
     public List<WishResponseDto> getWishList(String uniqueId) {
         List<Wish> wishes = wishRepository.findAllByUniqueId(uniqueId);
         List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
         List<Item> items = itemRepository.findAllById(itemIds);
 
-        Map<Long, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
+        Map<Long, Item> itemMap = items.stream().
+                collect(Collectors.toMap(
+                        Item::getId,
+                        Function.identity()
+                ));
         Map<Long, String> imageMap = imageRepository.findFirstImagePerItem(itemIds).stream()
                 .collect(Collectors.toMap(
                         image -> image.getItem().getId(),
