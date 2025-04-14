@@ -82,7 +82,7 @@ public class AuthService {
         user.editUserDetails(
                 signupRequestDto.getNickname(),
                 signupRequestDto.getMbti(),
-                signupRequestDto.getInterestTag(),
+                signupRequestDto.getInterestCategory(),
                 signupRequestDto.getHobby(),
                 signupRequestDto.getIntroduction()
         );

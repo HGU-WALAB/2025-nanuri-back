@@ -1,6 +1,6 @@
 package com.walab.nanuri.auth.dto.request;
 
-import com.walab.nanuri.commons.util.Tag;
+import com.walab.nanuri.commons.util.Category;
 import lombok.Getter;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public class SignupRequestDto {
     private String uniqueId;
     private String nickname;
     private String mbti;
-    private List<Tag> interestTag;
+    private List<Category> interestCategory;
     private String hobby;
     private String introduction;
 }
