@@ -16,7 +16,6 @@ public class UserResponseDto {
     private String nickname;
     private String mbti;
     private List<Category> interestCategory;
-    private String hobby;
     private String introduction;
 
     public static UserResponseDto from(User user) {
@@ -27,7 +26,6 @@ public class UserResponseDto {
                 .nickname(user.getNickname())
                 .mbti(user.getMbti())
                 .interestCategory(user.getInterestCategory())
-                .hobby(user.getHobby())
                 .introduction(user.getIntroduction())
                 .build();
     }

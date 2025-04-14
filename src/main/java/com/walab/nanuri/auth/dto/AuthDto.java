@@ -25,7 +25,6 @@ public class AuthDto {
   private String nickname;
   private String mbti;
   private List<Category> interestCategory;
-  private String hobby;
   private String introduction;
 
 

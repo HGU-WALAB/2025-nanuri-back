@@ -1,7 +1,7 @@
 package com.walab.nanuri.user.controller;
 
 import com.walab.nanuri.user.dto.request.EditUserInfoDto;
-import com.walab.nanuri.user.dto.response.OtherUserResponseDto;
+import com.walab.nanuri.user.dto.response.OtherUserInfoResponseDto;
 import com.walab.nanuri.user.dto.response.UserResponseDto;
 import com.walab.nanuri.user.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -18,6 +18,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // 유저 정보 가져오기
     @GetMapping
     public ResponseEntity<UserResponseDto> getProfile(@AuthenticationPrincipal String uniqueId) {
         return ResponseEntity.ok(UserResponseDto.from(userService.getUser(uniqueId)));
@@ -27,7 +28,7 @@ public class UserController {
     @PatchMapping()
     public ResponseEntity<String> editUserInfo(@RequestBody EditUserInfoDto request){
         userService.editUserInfo(request.getNickname(), request.getMbti(), request.getInterestCategory(),
-                request.getHobby(), request.getIntroduction());
+                request.getIntroduction());
         return ResponseEntity.ok("Update UserInfo Success");
     }
 
@@ -64,7 +65,7 @@ public class UserController {
   
     //다른 유저 마이페이지 조회
     @GetMapping("/{userNickname}")
-    public ResponseEntity<OtherUserResponseDto> getOtherUserInfo(@PathVariable String userNickname) {
+    public ResponseEntity<OtherUserInfoResponseDto> getOtherUserInfo(@PathVariable String userNickname) {
         return ResponseEntity.ok(userService.getOtherUserInfo(userNickname));
     }
 

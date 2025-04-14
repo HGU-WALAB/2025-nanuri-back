@@ -83,7 +83,6 @@ public class AuthService {
                 signupRequestDto.getNickname(),
                 signupRequestDto.getMbti(),
                 signupRequestDto.getInterestCategory(),
-                signupRequestDto.getHobby(),
                 signupRequestDto.getIntroduction()
         );
         userRepository.save(user);
