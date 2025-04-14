@@ -15,14 +15,4 @@ public class OtherUserInfoResponseDto {
     private String introduction;
     private List<ItemListResponseDto> sharingItemList;
     private List<ItemListResponseDto> completedItemList;
-
-    public static OtherUserInfoResponseDto from(User user, List<ItemListResponseDto> sharingItemList, List<ItemListResponseDto> completedItemList) {
-        return OtherUserInfoResponseDto.builder()
-                .nickname(user.getNickname())
-                .mbti(user.getMbti())
-                .introduction(user.getIntroduction())
-                .sharingItemList(sharingItemList)
-                .completedItemList(completedItemList)
-                .build();
-    }
 }
