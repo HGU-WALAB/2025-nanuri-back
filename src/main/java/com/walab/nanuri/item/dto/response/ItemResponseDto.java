@@ -25,7 +25,7 @@ public class ItemResponseDto {
     private List<String> images;
     private Boolean isOwner;
 
-    public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname, Integer wishCount, Integer chatCount) {
+    public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname) {
         return ItemResponseDto.builder()
                 .id(item.getId())
                 .nickname(nickname)
@@ -34,8 +34,8 @@ public class ItemResponseDto {
                 .viewCount(item.getViewCount())
                 .category(item.getCategory())
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .wishCount(wishCount)
-                .chatCount(chatCount)
+                .wishCount(item.getWishCount())
+                .chatCount(item.getChatCount())
                 .shareStatus(item.getShareStatus())
                 .images(images)
                 .isOwner(isOwner)

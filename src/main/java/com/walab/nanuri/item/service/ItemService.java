@@ -55,7 +55,7 @@ public class ItemService {
                     String nickname = getUserNicknameById(item.getUserId());
                     int wishCount = wishRepository.countByItemId(item.getId());
                     int chatCount = chatRoomRepository.countByItemId(item.getId());
-                    return ItemListResponseDto.from(item, image, nickname, wishCount, chatCount);
+                    return ItemListResponseDto.from(item, image, nickname);
                 })
                 .toList();
     }
@@ -69,7 +69,7 @@ public class ItemService {
 
         String nickname = getUserNicknameById(item.getUserId());
         boolean isOwner = item.getUserId().equals(uniqueId);
-        return ItemResponseDto.from(item, imageUrls, isOwner, nickname, item.getWishCount(), item.getChatCount());
+        return ItemResponseDto.from(item, imageUrls, isOwner, nickname);
     }
 
     //다른 User의 Item 전체 조회
@@ -81,7 +81,7 @@ public class ItemService {
                 .map(item -> {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
-                    return ItemListResponseDto.from(item, image, nickname, item.getWishCount(), item.getChatCount());
+                    return ItemListResponseDto.from(item, image, nickname);
                 })
                 .toList();
     }
@@ -101,7 +101,7 @@ public class ItemService {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, item.getWishCount(), item.getChatCount());
+                    return ItemListResponseDto.from(item, image, nickname);
                 })
                 .toList();
     }

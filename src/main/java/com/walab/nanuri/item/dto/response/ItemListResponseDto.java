@@ -22,7 +22,6 @@ public class ItemListResponseDto {
     private Integer wishCount;
     private Integer chatCount;
 
-
     public static ItemListResponseDto from(Item item, String image, String nickname) {
         return ItemListResponseDto.builder()
                 .itemId(item.getId())
@@ -34,22 +33,8 @@ public class ItemListResponseDto {
                 .shareStatus(item.getShareStatus())
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .build();
-    }
-
-    public static ItemListResponseDto from(Item item, String image, String nickname, Integer wishCount, Integer chatCount) {
-        return ItemListResponseDto.builder()
-                .itemId(item.getId())
-                .nickname(nickname)
-                .title(item.getTitle())
-                .description(item.getDescription())
-                .category(item.getCategory())
-                .image(image)
-                .shareStatus(item.getShareStatus())
-                .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .wishCount(wishCount)
-                .chatCount(chatCount)
+                .wishCount(item.getWishCount())
+                .chatCount(item.getChatCount())
                 .build();
     }
 
