@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findAllByUniqueId(String uniqueId);
+    int countByItemId(Long itemId); //관심목록 추가한 사람의 수 계산
 }

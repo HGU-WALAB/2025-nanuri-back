@@ -19,6 +19,8 @@ public class ItemListResponseDto {
     private ShareStatus shareStatus;
     private String createdTime;
     private String modifiedTime;
+    private Integer wishCount;
+    private Integer chatCount;
 
     public static ItemListResponseDto from(Item item, String image, String nickname) {
         return ItemListResponseDto.builder()
@@ -31,6 +33,9 @@ public class ItemListResponseDto {
                 .shareStatus(item.getShareStatus())
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .wishCount(item.getWishCount())
+                .chatCount(item.getChatCount())
                 .build();
     }
+
 }

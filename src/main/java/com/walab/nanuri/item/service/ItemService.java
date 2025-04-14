@@ -1,5 +1,6 @@
 package com.walab.nanuri.item.service;
 
+import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.entity.Image;
@@ -12,6 +13,7 @@ import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
+import com.walab.nanuri.wish.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,8 @@ import static com.walab.nanuri.commons.exception.ErrorCode.*;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final WishRepository wishRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
@@ -49,6 +53,8 @@ public class ItemService {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
+                    int wishCount = wishRepository.countByItemId(item.getId());
+                    int chatCount = chatRoomRepository.countByItemId(item.getId());
                     return ItemListResponseDto.from(item, image, nickname);
                 })
                 .toList();
