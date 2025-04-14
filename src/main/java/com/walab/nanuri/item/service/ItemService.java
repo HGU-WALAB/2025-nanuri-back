@@ -61,6 +61,7 @@ public class ItemService {
     }
 
     //Item 단건 조회
+    @Transactional
     public ItemResponseDto getItemById(String uniqueId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         List<String> imageUrls = imageRepository.findByItemIdOrderByIdAsc(itemId).stream()
@@ -69,6 +70,7 @@ public class ItemService {
 
         String nickname = getUserNicknameById(item.getUserId());
         boolean isOwner = item.getUserId().equals(uniqueId);
+        item.addViewCount(); // 조회수 증가
         return ItemResponseDto.from(item, imageUrls, isOwner, nickname);
     }
 
