@@ -8,7 +8,7 @@ import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
 import com.walab.nanuri.security.util.JwtUtil;
-import com.walab.nanuri.user.dto.response.OtherUserResponseDto;
+import com.walab.nanuri.user.dto.response.OtherUserInfoResponseDto;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.wish.repository.WishRepository;
@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.USER_NOT_FOUND;
 
@@ -58,7 +56,7 @@ public class UserService {
     }
   
     //다른 유저 마이페이지 조회
-    public OtherUserResponseDto getOtherUserInfo(String nickname) {
+    public OtherUserInfoResponseDto getOtherUserInfo(String nickname) {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -80,7 +78,7 @@ public class UserService {
                 })
                 .toList();
 
-        return OtherUserResponseDto.builder()
+        return OtherUserInfoResponseDto.builder()
                 .nickname(user.getNickname())
                 .mbti(user.getMbti())
                 .introduction(user.getIntroduction())
