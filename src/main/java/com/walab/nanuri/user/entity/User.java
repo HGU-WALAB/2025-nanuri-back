@@ -58,21 +58,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "interest_tag")
     private List<Category> interestCategory;
 
-    @Column(name = "hobby", length = 50)
-    private String hobby;
-
     @Column(name = "introduction", length = 300)
     private String introduction;
-
-//    public void update(AuthDto dto) {
-//        this.name = dto.getName();
-//        this.email = dto.getEmail();
-//        this.grade = dto.getGrade();
-//        this.semester = dto.getSemester();
-//        this.department = dto.getDepartment();
-//        this.major1 = dto.getMajor1();
-//        this.major2 = dto.getMajor2();
-//    }
 
     public static User from(AuthDto dto) {
         return User.builder()
@@ -88,17 +75,15 @@ public class User extends BaseTimeEntity {
                 .nickname(dto.getNickname())
                 .mbti(dto.getMbti())
                 .interestCategory(dto.getInterestCategory())
-                .hobby(dto.getHobby())
                 .introduction(dto.getIntroduction())
                 .build();
     }
 
     public void editUserDetails(String nickname, String mbti, List<Category> interestCategory,
-                                String hobby, String introduction) {
+                                String introduction) {
         this.nickname = nickname;
         this.mbti = mbti;
         this.interestCategory = interestCategory;
-        this.hobby = hobby;
         this.introduction = introduction;
     }
 
