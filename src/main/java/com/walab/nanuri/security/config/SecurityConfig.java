@@ -58,7 +58,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
-                        .requestMatchers("/api/nanuri/**", "/api/**").authenticated()
+                        .requestMatchers("/api/nanuri/**", "/api/**", "/ws-stomp/**").authenticated()
                         .requestMatchers(imageUrl + "**").permitAll()
                 );
 
