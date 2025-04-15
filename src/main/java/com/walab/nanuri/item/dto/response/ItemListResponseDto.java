@@ -21,6 +21,7 @@ public class ItemListResponseDto {
     private String modifiedTime;
     private Integer wishCount;
     private Integer chatCount;
+    private Integer viewCount;
 
     public static ItemListResponseDto from(Item item, String image, String nickname) {
         return ItemListResponseDto.builder()
@@ -35,7 +36,7 @@ public class ItemListResponseDto {
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .wishCount(item.getWishCount())
                 .chatCount(item.getChatCount())
+                .viewCount(item.getViewCount())
                 .build();
     }
-
 }

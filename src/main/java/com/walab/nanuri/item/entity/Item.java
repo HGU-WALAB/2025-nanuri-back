@@ -5,8 +5,11 @@ import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+
+@Slf4j
 @Entity
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -72,6 +75,9 @@ public class Item extends BaseTimeEntity {
                 .wishCount(0)
                 .chatCount(0)
                 .build();
+    }
 
+    public void addViewCount() {
+        this.viewCount = (this.viewCount == null)? 1 : this.viewCount + 1;
     }
 }
