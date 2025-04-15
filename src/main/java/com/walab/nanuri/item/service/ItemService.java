@@ -46,7 +46,7 @@ public class ItemService {
     //Item 전체 조회(일반 전체 조회, 카테고리 선택 후 전체 조회)
     public List<ItemListResponseDto> getAllItems(String category) {
         List<Item> items = category.isEmpty() ?
-                itemRepository.findAll() : itemRepository.findAllByCategory(category);
+                itemRepository.findAllOrdered() : itemRepository.findAllByCategoryOrdered(category);
 
         return items.stream()
                 .map(item -> {
