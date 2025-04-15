@@ -4,7 +4,6 @@ import com.walab.nanuri.chat.dto.response.ChatRoomResponseDto;
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatMessageRepository;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
-
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.item.entity.Item;

@@ -1,6 +1,5 @@
 package com.walab.nanuri.chat.controller;
 
-import com.walab.nanuri.chat.dto.request.ChatRoomRequestDto;
 import com.walab.nanuri.chat.dto.response.ChatMessageResponseDto;
 import com.walab.nanuri.chat.dto.response.ChatRoomResponseDto;
 import com.walab.nanuri.chat.service.ChatMessageService;
@@ -30,10 +29,9 @@ public class ChatController {
     public ResponseEntity<List<ChatMessageResponseDto>> getMessagesInRoom(
                                                             @AuthenticationPrincipal String uniqueId,
                                                             @PathVariable Long roomId,
-                                                            @RequestBody ChatRoomRequestDto.ChatRoomUserValidationRequest request,
                                                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime cursor
     ){
-        return ResponseEntity.ok().body(chatMessageService.getChatMessages(uniqueId , roomId ,request, cursor));
+        return ResponseEntity.ok().body(chatMessageService.getChatMessages(uniqueId, roomId, cursor));
     }
 
     @DeleteMapping("/room/{roomId}")
