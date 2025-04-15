@@ -38,7 +38,7 @@ public class ChatMessageService {
         String receiverId = Objects.equals(chatRoom.getSellerId(), sender.getUniqueId()) ? chatRoom.getReceiverId() : chatRoom.getSellerId();
         String roomKey = chatRoom.getRoomKey();
 
-        ChatMessage message = ChatMessage.fromDto(request, receiverId, roomKey);
+        ChatMessage message = ChatMessage.fromDto(request, sender.getUniqueId(), receiverId, roomKey);
         chatMessageRepository.save(message);
 
         User receiver = userRepository.findById(receiverId)
