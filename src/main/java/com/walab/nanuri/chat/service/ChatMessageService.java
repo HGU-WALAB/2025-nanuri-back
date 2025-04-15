@@ -33,14 +33,14 @@ public class ChatMessageService {
     public void saveAndSend(ChatMessageRequestDto request) {
         ChatRoom chatRoom = chatRoomRepository.findById(Long.parseLong(request.getRoomId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
-        String receiverId = Objects.equals(chatRoom.getSellerId(), request.getSenderId()) ? chatRoom.getReceiverId() : chatRoom.getSellerId();
+        User sender = userRepository.findByNickname(request.getNickname())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        String receiverId = Objects.equals(chatRoom.getSellerId(), sender.getUniqueId()) ? chatRoom.getReceiverId() : chatRoom.getSellerId();
         String roomKey = chatRoom.getRoomKey();
 
-        ChatMessage message = ChatMessage.fromDto(request, receiverId, roomKey);
+        ChatMessage message = ChatMessage.fromDto(request, sender.getUniqueId(), receiverId, roomKey);
         chatMessageRepository.save(message);
 
-        User sender = userRepository.findById(request.getSenderId())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         User receiver = userRepository.findById(receiverId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
