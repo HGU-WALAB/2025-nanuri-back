@@ -14,7 +14,7 @@ public class ChatMessageHandler {
     private final ChatMessageService chatMessageService;
 
     @MessageMapping("/chat/message")
-    public void handleMessage(@AuthenticationPrincipal String uniqueId, ChatMessageRequestDto dto) {
-        chatMessageService.saveAndSend(uniqueId, dto);
+    public void handleMessage(ChatMessageRequestDto dto) {
+        chatMessageService.saveAndSend(dto);
     }
 }
