@@ -17,8 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -56,20 +60,34 @@ public class ChatMessageService {
             throw new CustomException(ErrorCode.CHATROOM_NOT_FOUND);
         }
 
+        if (!chatRoomRepository.existsByUserInChatRoom(uniqueId)){
+            throw new CustomException(ErrorCode.VALID_USER);
+        }
+
         String stringRoomId = String.valueOf(roomId);
 
         List<ChatMessage> messages = (timestamp == null) ?
                 chatMessageRepository.findTop40ByRoomIdOrderByTimestampDesc(stringRoomId) :
                 chatMessageRepository.findTop40ByRoomIdAndTimestampLessThanOrderByTimestampDesc(stringRoomId, timestamp);
 
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
-        String receiverId = Objects.equals(chatRoom.getSellerId(), uniqueId) ? chatRoom.getReceiverId() : chatRoom.getSellerId();
+        Set<String> userIds = messages.stream()
+                .flatMap(msg -> Stream.of(msg.getSenderId(), msg.getReceiverId()))
+                .collect(Collectors.toSet());
 
-        User sender = userRepository.findById(uniqueId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        User receiver = userRepository.findById(receiverId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Map<String, User> userMap = userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(User::getUniqueId, Function.identity()));
 
         return messages.stream()
-                .map(message -> ChatMessageResponseDto.from(message, sender, receiver))
+                .map(message -> {
+                    User sender = userMap.get(message.getSenderId());
+                    User receiver = userMap.get(message.getReceiverId());
+
+                    if (sender == null || receiver == null) {
+                        throw new CustomException(ErrorCode.USER_NOT_FOUND);
+                    }
+
+                    return ChatMessageResponseDto.from(message, sender, receiver);
+                })
                 .collect(Collectors.toList());
     }
 }
