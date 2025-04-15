@@ -1,7 +1,6 @@
 package com.walab.nanuri.chat.service;
 
 import com.walab.nanuri.chat.dto.request.ChatMessageRequestDto;
-import com.walab.nanuri.chat.dto.request.ChatRoomRequestDto;
 import com.walab.nanuri.chat.dto.response.ChatMessageResponseDto;
 import com.walab.nanuri.chat.entity.ChatMessage;
 import com.walab.nanuri.chat.entity.ChatRoom;
@@ -52,13 +51,7 @@ public class ChatMessageService {
 
     public List<ChatMessageResponseDto> getChatMessages(String uniqueId,
                                                        Long roomId,
-                                                       ChatRoomRequestDto.ChatRoomUserValidationRequest request,
                                                        LocalDateTime timestamp) {
-
-        if (!request.checkChatRoomUserId(uniqueId)) {
-            throw new CustomException(ErrorCode.VALID_USER);
-        }
-
         if (!chatRoomRepository.existsById(roomId)) {
             throw new CustomException(ErrorCode.CHATROOM_NOT_FOUND);
         }
@@ -70,8 +63,10 @@ public class ChatMessageService {
                 chatMessageRepository.findTop40ByRoomIdAndTimestampLessThanOrderByTimestampDesc(stringRoomId, timestamp);
 
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
-        User sender = userRepository.findById(chatRoom.getSellerId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        User receiver = userRepository.findById(chatRoom.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        String receiverId = Objects.equals(chatRoom.getSellerId(), uniqueId) ? chatRoom.getReceiverId() : chatRoom.getSellerId();
+
+        User sender = userRepository.findById(uniqueId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User receiver = userRepository.findById(receiverId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return messages.stream()
                 .map(message -> ChatMessageResponseDto.from(message, uniqueId, sender, receiver))
