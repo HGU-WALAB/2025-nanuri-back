@@ -44,7 +44,7 @@ public class ChatMessageService {
         User receiver = userRepository.findById(receiverId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        ChatMessageResponseDto response = ChatMessageResponseDto.from(message, request.getSenderId(), sender, receiver);
+        ChatMessageResponseDto response = ChatMessageResponseDto.from(message, sender, receiver);
 
         messagingTemplate.convertAndSend("/sub/chat/room/" + request.getRoomId(), response);
     }
@@ -69,7 +69,7 @@ public class ChatMessageService {
         User receiver = userRepository.findById(receiverId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return messages.stream()
-                .map(message -> ChatMessageResponseDto.from(message, uniqueId, sender, receiver))
+                .map(message -> ChatMessageResponseDto.from(message, sender, receiver))
                 .collect(Collectors.toList());
     }
 }
