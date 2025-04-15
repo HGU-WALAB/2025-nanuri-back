@@ -15,7 +15,7 @@ public class ChatRoomResponseDto {
     private Long postId;
     private String title;
     private String itemImage;
-    private String opponentName;
+    private String opponentNickname;
     private boolean isSeller;
 
     public static ChatRoomResponseDto from(ChatRoom room, String myId, User opponent, Item item, String ItemUrl, WantPost post) {
@@ -25,7 +25,7 @@ public class ChatRoomResponseDto {
                 .roomId(room.getId())
                 .itemId(room.getItemId())
                 .postId(room.getPostId())
-                .opponentName(opponent.getName())
+                .opponentNickname(opponent.getNickname())
                 .title(item == null ? post.getTitle() : item.getTitle())
                 .itemImage(ItemUrl)
                 .isSeller(isSeller)
