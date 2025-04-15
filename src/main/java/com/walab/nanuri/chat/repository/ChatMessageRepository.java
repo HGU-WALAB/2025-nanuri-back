@@ -11,4 +11,6 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     List<ChatMessage> findTop40ByRoomIdAndTimestampLessThanOrderByTimestampDesc(String roomId, LocalDateTime timestamp);
 
     void deleteByRoomKey(String roomKey);
+
+    void deleteByRoomIdIn(List<String> roomIds);
 }
