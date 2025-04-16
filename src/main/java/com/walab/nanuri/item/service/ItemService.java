@@ -1,6 +1,7 @@
 package com.walab.nanuri.item.service;
 
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
+import com.walab.nanuri.chat.service.ChatRoomService;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.entity.Image;
@@ -32,6 +33,7 @@ public class ItemService {
     private final ChatRoomRepository chatRoomRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
+    private final ChatRoomService chatRoomService;
     private final ImageService imageService;
 
     //Item 추가
@@ -126,7 +128,8 @@ public class ItemService {
     @Transactional
     public void deleteItem(String uniqueId, Long itemId) {
         Item findItem = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
+        if(findItem.getUserId().equals(uniqueId)) {
+            chatRoomService.deleteChatRoomsByItemId(uniqueId, itemId);
             imageService.deleteImages(itemId);
             itemRepository.delete(findItem);
         } else {

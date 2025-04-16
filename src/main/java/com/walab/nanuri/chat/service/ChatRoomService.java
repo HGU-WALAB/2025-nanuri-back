@@ -79,4 +79,16 @@ public class ChatRoomService {
             chatRoomRepository.delete(chatRoom);
         }
     }
+
+    public void deleteChatRoomsByItemId(String myId, Long itemId) {
+        List<ChatRoom> chatRooms = chatRoomRepository.findByItemId(itemId);
+
+        List<String> roomIds = chatRooms.stream()
+                .map(chatRoom -> String.valueOf(chatRoom.getId()))
+                .collect(Collectors.toList());
+
+        chatMessageRepository.deleteByRoomIdIn(roomIds);
+
+        chatRoomRepository.deleteAll(chatRooms);
+    }
 }
