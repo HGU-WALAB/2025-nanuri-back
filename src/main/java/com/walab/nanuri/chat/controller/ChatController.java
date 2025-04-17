@@ -25,6 +25,11 @@ public class ChatController {
         return ResponseEntity.ok().body(chatRoomService.getChatRooms(uniqueId));
     }
 
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<ChatRoomResponseDto> getRoom(@AuthenticationPrincipal String uniqueId, @PathVariable Long roomId){
+        return ResponseEntity.ok().body(chatRoomService.getChatRoom(uniqueId, roomId));
+    }
+
     @GetMapping("/room/{roomId}/messages")
     public ResponseEntity<List<ChatMessageResponseDto>> getMessagesInRoom(
                                                             @AuthenticationPrincipal String uniqueId,
