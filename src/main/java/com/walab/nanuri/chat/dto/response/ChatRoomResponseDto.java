@@ -16,19 +16,16 @@ public class ChatRoomResponseDto {
     private String title;
     private String itemImage;
     private String opponentNickname;
-    private boolean isSeller;
 
-    public static ChatRoomResponseDto from(ChatRoom room, String myId, User opponent, Item item, String ItemUrl, WantPost post) {
-        boolean isSeller = room.getSellerId().equals(myId);
+    public static ChatRoomResponseDto from(ChatRoom room, String opponentNickname, Item item, String ItemUrl, WantPost post) {
 
         return ChatRoomResponseDto.builder()
                 .roomId(room.getId())
                 .itemId(room.getItemId())
                 .postId(room.getPostId())
-                .opponentNickname(opponent.getNickname())
+                .opponentNickname(opponentNickname)
                 .title(item == null ? post.getTitle() : item.getTitle())
                 .itemImage(ItemUrl)
-                .isSeller(isSeller)
                 .build();
     }
 }

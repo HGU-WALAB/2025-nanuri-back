@@ -31,27 +31,21 @@ public class ChatRoomService {
     private final ItemRepository itemRepository;
     private final WantPostRepository wantPostRepository;
 
+    public ChatRoomResponseDto getChatRoom(String myId, Long chatRoomId) {
+        ChatRoom room = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new CustomException(CHATROOM_NOT_FOUND));
+
+        return toChatRoomResponse(room, myId);
+    }
+
     public List<ChatRoomResponseDto> getChatRooms(String myId){
         List<ChatRoom> chatRooms = chatRoomRepository.findBySellerIdOrReceiverIdOrderByModifiedTimeDesc(myId, myId);
 
         return chatRooms.stream()
-                .map(room -> {
-                            String opponentId = room.getSellerId().equals(myId) ? room.getReceiverId() : room.getSellerId();
-                            User opponent = userRepository.findById(opponentId)
-                                    .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-
-                            Item item = room.getItemId() == null ? null : itemRepository.findById(room.getItemId())
-                                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
-                            String image = room.getItemId() == null ? null : imageRepository.findTopByItemIdOrderByIdAsc(room.getItemId()).getFileUrl();
-
-                            WantPost post = room.getPostId() == null ? null : wantPostRepository.findById(room.getPostId())
-                                    .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
-
-                            return ChatRoomResponseDto.from(room, myId, opponent, item, image, post);
-                        }
+                .map(room -> toChatRoomResponse(room, myId)
                 ).collect(Collectors.toList());
     }
+
 
     public void deleteChatRoom(String myId, Long roomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
@@ -90,5 +84,30 @@ public class ChatRoomService {
         chatMessageRepository.deleteByRoomIdIn(roomIds);
 
         chatRoomRepository.deleteAll(chatRooms);
+    }
+
+    private ChatRoomResponseDto toChatRoomResponse(ChatRoom room, String myId) {
+        String opponentId = room.getSellerId().equals(myId) ? room.getReceiverId() : room.getSellerId();
+
+        User opponent = userRepository.findById(opponentId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        Item item = null;
+        String image = null;
+
+        if (room.getItemId() != null) {
+            item = itemRepository.findById(room.getItemId())
+                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+
+            image = imageRepository.findTopByItemIdOrderByIdAsc(room.getItemId()).getFileUrl();
+        }
+
+        WantPost post = null;
+        if (room.getPostId() != null) {
+            post = wantPostRepository.findById(room.getPostId())
+                    .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
+        }
+
+        return ChatRoomResponseDto.from(room, opponent.getNickname(), item, image, post);
     }
 }
