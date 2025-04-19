@@ -1,4 +1,4 @@
-package com.walab.nanuri.alarm.config;
+package com.walab.nanuri.notification.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

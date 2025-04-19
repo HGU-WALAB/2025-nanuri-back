@@ -1,6 +1,6 @@
-package com.walab.nanuri.alarm.repository;
+package com.walab.nanuri.notification.repository;
 
-import com.walab.nanuri.alarm.entity.Notification;
+import com.walab.nanuri.notification.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

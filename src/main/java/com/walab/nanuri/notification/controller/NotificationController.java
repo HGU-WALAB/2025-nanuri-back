@@ -1,8 +1,8 @@
-package com.walab.nanuri.alarm.controller;
+package com.walab.nanuri.notification.controller;
 
-import com.walab.nanuri.alarm.dto.request.NotificationRequestDto;
-import com.walab.nanuri.alarm.entity.Notification;
-import com.walab.nanuri.alarm.service.NotificationService;
+import com.walab.nanuri.notification.dto.request.NotificationRequestDto;
+import com.walab.nanuri.notification.entity.Notification;
+import com.walab.nanuri.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

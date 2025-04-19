@@ -1,4 +1,4 @@
-package com.walab.nanuri.alarm.dto.response;
+package com.walab.nanuri.notification.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

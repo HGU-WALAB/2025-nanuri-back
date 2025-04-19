@@ -1,8 +1,8 @@
-package com.walab.nanuri.alarm.service;
+package com.walab.nanuri.notification.service;
 
-import com.walab.nanuri.alarm.dto.request.NotificationRequestDto;
-import com.walab.nanuri.alarm.entity.Notification;
-import com.walab.nanuri.alarm.repository.NotificationRepository;
+import com.walab.nanuri.notification.dto.request.NotificationRequestDto;
+import com.walab.nanuri.notification.entity.Notification;
+import com.walab.nanuri.notification.repository.NotificationRepository;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.user.entity.User;

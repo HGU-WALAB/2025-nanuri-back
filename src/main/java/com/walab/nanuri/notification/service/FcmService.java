@@ -1,10 +1,10 @@
-package com.walab.nanuri.alarm.service;
+package com.walab.nanuri.notification.service;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
-import com.walab.nanuri.alarm.dto.response.FcmTokenResponseDto;
+import com.walab.nanuri.notification.dto.response.FcmTokenResponseDto;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;

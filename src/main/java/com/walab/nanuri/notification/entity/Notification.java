@@ -1,4 +1,4 @@
-package com.walab.nanuri.alarm.entity;
+package com.walab.nanuri.notification.entity;
 
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;

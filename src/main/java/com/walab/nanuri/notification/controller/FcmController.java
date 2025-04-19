@@ -1,13 +1,9 @@
-package com.walab.nanuri.alarm.controller;
+package com.walab.nanuri.notification.controller;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
-import com.walab.nanuri.alarm.dto.request.FcmTokenRequestDto;
-import com.walab.nanuri.alarm.dto.response.FcmTokenResponseDto;
-import com.walab.nanuri.alarm.service.FcmService;
-import com.walab.nanuri.alarm.service.NotificationService;
+import com.walab.nanuri.notification.dto.request.FcmTokenRequestDto;
+import com.walab.nanuri.notification.dto.response.FcmTokenResponseDto;
+import com.walab.nanuri.notification.service.FcmService;
+import com.walab.nanuri.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
