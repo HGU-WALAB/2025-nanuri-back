@@ -5,11 +5,9 @@ import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
-@Slf4j
 @Entity
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -46,7 +44,6 @@ public class Item extends BaseTimeEntity {
     @Setter
     private ShareStatus shareStatus;
 
-
     @Column(name = "wish_count")
     @Setter
     private Integer wishCount;
@@ -77,6 +74,7 @@ public class Item extends BaseTimeEntity {
                 .build();
     }
 
+    //조회수 증가
     public void addViewCount() {
         this.viewCount = (this.viewCount == null)? 1 : this.viewCount + 1;
     }

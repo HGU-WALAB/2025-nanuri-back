@@ -65,7 +65,8 @@ public class UserService {
         List<ItemListResponseDto> sharingItemList = sharingItems.stream()
                 .map(item -> {
                         String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
-                        return ItemListResponseDto.from(item, imageUrl, nickname);
+                        boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
+                        return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
                 })
                 .toList();
 
@@ -74,7 +75,8 @@ public class UserService {
         List<ItemListResponseDto> completedItemList = completedItems.stream()
                 .map(item -> {
                     String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
-                    return ItemListResponseDto.from(item, imageUrl, nickname);
+                    boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
+                    return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
                 })
                 .toList();
 
