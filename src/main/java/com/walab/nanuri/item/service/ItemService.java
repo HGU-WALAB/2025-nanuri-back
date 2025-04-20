@@ -29,8 +29,6 @@ import static com.walab.nanuri.commons.exception.ErrorCode.*;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
-    private final WishRepository wishRepository;
-    private final ChatRoomRepository chatRoomRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
@@ -55,8 +53,6 @@ public class ItemService {
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
-                    int wishCount = wishRepository.countByItemId(item.getId());
-                    int chatCount = chatRoomRepository.countByItemId(item.getId());
                     return ItemListResponseDto.from(item, image, nickname);
                 })
                 .toList();

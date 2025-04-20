@@ -19,6 +19,7 @@ public class ItemResponseDto {
     private Integer viewCount;
     private String category;
     private ShareStatus shareStatus;
+    private Boolean wishStatus;
     private String createdTime;
     private Integer wishCount;
     private Integer chatCount;
@@ -37,6 +38,7 @@ public class ItemResponseDto {
                 .wishCount(item.getWishCount())
                 .chatCount(item.getChatCount())
                 .shareStatus(item.getShareStatus())
+                .wishStatus(item.getWishStatus())
                 .images(images)
                 .isOwner(isOwner)
                 .build();

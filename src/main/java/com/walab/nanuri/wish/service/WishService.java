@@ -51,6 +51,7 @@ public class WishService {
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
         item.setWishCount(currentWishCount + 1);
+        item.setWishStatus(true);
     }
 
     //관심 목록 삭제
@@ -66,6 +67,7 @@ public class WishService {
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
         item.setWishCount(Math.max(0, currentWishCount - 1));
+        item.setWishStatus(false);
     }
 
     //관심 목록 전체 조회

@@ -17,6 +17,7 @@ public class ItemListResponseDto {
     private String category;
     private String image;
     private ShareStatus shareStatus;
+    private Boolean wishStatus;
     private String createdTime;
     private String modifiedTime;
     private Integer wishCount;
@@ -32,6 +33,7 @@ public class ItemListResponseDto {
                 .category(item.getCategory())
                 .image(image)
                 .shareStatus(item.getShareStatus())
+                .wishStatus(item.getWishStatus())
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .wishCount(item.getWishCount())
