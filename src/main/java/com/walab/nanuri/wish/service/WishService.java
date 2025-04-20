@@ -53,16 +53,13 @@ public class WishService {
 
     //관심 목록 삭제
     @Transactional
-    public void deleteWish(String uniqueId, Long wishId) {
-        Wish wish = wishRepository.findById(wishId)
+    public void deleteWish(String uniqueId, Long itemId) {
+        Wish wish = wishRepository.findByUniqueIdAndItemId(uniqueId, itemId)
                 .orElseThrow(() -> new CustomException(MISSING_WISH));
-        if (!wish.getUniqueId().equals(uniqueId)) {
-            throw new CustomException(VALID_USER);
-        }
         wishRepository.delete(wish);
 
         //wishCount 감소
-        Item item = itemRepository.findById(wish.getItemId())
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
         item.setWishCount(Math.max(0, currentWishCount - 1));
