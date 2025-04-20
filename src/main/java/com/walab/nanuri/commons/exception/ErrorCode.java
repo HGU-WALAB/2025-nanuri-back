@@ -28,6 +28,7 @@ public enum ErrorCode {
     VALID_OWN_ITEM(FORBIDDEN, "본인의 물건은 나눔 신청할 수 없습니다."),
     VALID_ALREADY_APPLIED_POST(FORBIDDEN, "이미 신청한 게시글입니다."),
     VALID_TOKEN(FORBIDDEN, "만료된 토큰입니다."),
+    ALREADY_REACTED_POST(FORBIDDEN, "이미 감정표현한 게시글입니다."),
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     USER_NOT_FOUND(NOT_FOUND, "해당 회원 정보를 찾을 수 없습니다."),
@@ -38,6 +39,7 @@ public enum ErrorCode {
     CHATROOM_NOT_FOUND(NOT_FOUND, "해당 채팅방을 찾을 수 없습니다."),
     WANT_POST_NOT_FOUND(NOT_FOUND, "해당 포스트를 찾을 수 없습니다."),
     TOKEN_NOT_FOUND(NOT_FOUND,"존재하지 않는 토큰입니다."),
+    EMOTION_NOT_FOUND(NOT_FOUND,"해당 감정표현을 찾을 수 없습니다."),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     /* DUPLICATE : (다른 무엇과) 똑같은 */
