@@ -44,10 +44,6 @@ public class Item extends BaseTimeEntity {
     @Setter
     private ShareStatus shareStatus;
 
-    @Column(name = "wish_status")
-    @Setter
-    private Boolean wishStatus;
-
     @Column(name = "wish_count")
     @Setter
     private Integer wishCount;
@@ -73,7 +69,6 @@ public class Item extends BaseTimeEntity {
                 .viewCount(0)
                 .userId(userId)
                 .shareStatus(ShareStatus.NONE)
-                .wishStatus(false)
                 .wishCount(0)
                 .chatCount(0)
                 .build();

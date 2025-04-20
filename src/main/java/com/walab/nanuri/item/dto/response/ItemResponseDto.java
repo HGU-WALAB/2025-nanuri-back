@@ -26,7 +26,7 @@ public class ItemResponseDto {
     private List<String> images;
     private Boolean isOwner;
 
-    public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname) {
+    public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname, Boolean wishStatus) {
         return ItemResponseDto.builder()
                 .id(item.getId())
                 .nickname(nickname)
@@ -38,7 +38,7 @@ public class ItemResponseDto {
                 .wishCount(item.getWishCount())
                 .chatCount(item.getChatCount())
                 .shareStatus(item.getShareStatus())
-                .wishStatus(item.getWishStatus())
+                .wishStatus(wishStatus)
                 .images(images)
                 .isOwner(isOwner)
                 .build();

@@ -16,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -51,23 +49,23 @@ public class WishService {
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
         item.setWishCount(currentWishCount + 1);
-        item.setWishStatus(true);
     }
 
     //관심 목록 삭제
     @Transactional
-    public void deleteWish(Long wishId) {
-        wishRepository.delete(
-                wishRepository.findById(wishId)
-                        .orElseThrow(() -> new CustomException(MISSING_WISH))
-        );
+    public void deleteWish(String uniqueId, Long wishId) {
+        Wish wish = wishRepository.findById(wishId)
+                .orElseThrow(() -> new CustomException(MISSING_WISH));
+        if (!wish.getUniqueId().equals(uniqueId)) {
+            throw new CustomException(VALID_USER);
+        }
+        wishRepository.delete(wish);
 
         //wishCount 감소
         Item item = itemRepository.findById(wishId)
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
         item.setWishCount(Math.max(0, currentWishCount - 1));
-        item.setWishStatus(false);
     }
 
     //관심 목록 전체 조회
@@ -75,6 +73,7 @@ public class WishService {
         List<Wish> wishes = wishRepository.findAllByUniqueId(uniqueId);
         List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
         List<Item> items = itemRepository.findAllById(itemIds);
+        Set<Long> wishItemIdSet = new HashSet<>(itemIds);
 
         Map<Long, Item> itemMap = items.stream().
                 collect(Collectors.toMap(
@@ -99,8 +98,9 @@ public class WishService {
                     Item item = itemMap.get(wish.getItemId());
                     String image = imageMap.get(item.getId());
                     String nickname = userNameMap.get(item.getUserId());
+                    boolean wishStatus = wishItemIdSet.contains(item.getId());
 
-                    ItemListResponseDto itemDto = ItemListResponseDto.from(item, image, nickname);
+                    ItemListResponseDto itemDto = ItemListResponseDto.from(item, image, nickname, wishStatus);
                     return WishResponseDto.from(wish, itemDto);
                 })
                 .toList();

@@ -29,8 +29,9 @@ public class ItemController {
 
     //Item 전체 조회
     @GetMapping("/items")
-    public List<ItemListResponseDto> getAllItems(@RequestParam(required = false, defaultValue = "") String category) {
-        return itemService.getAllItems(category);
+    public List<ItemListResponseDto> getAllItems(@AuthenticationPrincipal String uniqueId,
+                                                 @RequestParam(required = false, defaultValue = "") String category) {
+        return itemService.getAllItems(uniqueId, category);
     }
 
     //다른 User의 Item 전체 조회
