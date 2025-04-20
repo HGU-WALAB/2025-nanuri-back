@@ -17,6 +17,7 @@ import com.walab.nanuri.want.repository.WantPostSellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -80,11 +81,12 @@ public class WantPostService {
     }
 
     // WantPost 글 단건 조회
+    @Transactional
     public WantPostFormalResponseDto getPostById(String uniqueId, Long postId) {
         WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.WANT_POST_NOT_FOUND));
         User receiver = userRepository.findById(wp.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         boolean isOwner = wp.getReceiverId().equals(uniqueId);
-
+        wp.addViewCount(); //조회수 증가
         return WantPostFormalResponseDto.from(wp, receiver.getNickname(), isOwner);
     }
 

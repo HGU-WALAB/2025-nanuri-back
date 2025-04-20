@@ -4,10 +4,7 @@ import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +19,11 @@ public class WantPost extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(name = "title", nullable = false, length = 50)
     private String title;
 
+    @Setter
     @Column(name = "description", nullable = false, length = 1024)
     private String description;
 
@@ -37,8 +36,13 @@ public class WantPost extends BaseTimeEntity {
     @OneToMany(mappedBy = "wantPost", cascade = CascadeType.ALL)
     private List<WantPostSeller> sellers;
 
+    @Setter
     @Column(name = "status")
     private ShareStatus status;
+
+    @Column(name = "view_count")
+    private Integer viewCount;
+
 
     public static WantPost toEntity(WantPostRequestDto dto, String receiverId) {
         return WantPost.builder()
@@ -48,26 +52,19 @@ public class WantPost extends BaseTimeEntity {
                 .sellers(new ArrayList<>())
                 .isFinished(false)
                 .status(ShareStatus.NONE)
+                .viewCount(0)
                 .build();
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public void setFinished(Boolean isFinished) {
         this.isFinished = isFinished;
     }
 
-    public void setStatus(ShareStatus status) {
-        this.status = status;
-    }
-
     public boolean isFinished() {
         return this.isFinished;
+    }
+
+    public void addViewCount() {
+        this.viewCount = (this.viewCount == null)? 1 : this.viewCount + 1;
     }
 }
