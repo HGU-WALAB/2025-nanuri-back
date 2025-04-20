@@ -1,6 +1,6 @@
 package com.walab.nanuri.user.dto.request;
 
-import com.walab.nanuri.commons.util.Category;
+import com.walab.nanuri.commons.util.ItemCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +11,6 @@ import java.util.List;
 public class EditUserInfoDto {
     private String nickname;
     private String mbti;
-    private List<Category> interestCategory;
+    private List<ItemCategory> interestItemCategory;
     private String introduction;
 }

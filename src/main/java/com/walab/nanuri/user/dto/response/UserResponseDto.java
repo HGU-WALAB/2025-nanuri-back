@@ -1,6 +1,6 @@
 package com.walab.nanuri.user.dto.response;
 
-import com.walab.nanuri.commons.util.Category;
+import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class UserResponseDto {
     private String department;
     private String nickname;
     private String mbti;
-    private List<Category> interestCategory;
+    private List<ItemCategory> interestItemCategory;
     private String introduction;
 
     public static UserResponseDto from(User user) {
@@ -25,7 +25,7 @@ public class UserResponseDto {
                 .department(user.getDepartment())
                 .nickname(user.getNickname())
                 .mbti(user.getMbti())
-                .interestCategory(user.getInterestCategory())
+                .interestItemCategory(user.getInterestItemCategory())
                 .introduction(user.getIntroduction())
                 .build();
     }

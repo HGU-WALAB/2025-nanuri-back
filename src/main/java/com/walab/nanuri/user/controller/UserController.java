@@ -26,10 +26,10 @@ public class UserController {
 
     //회원 정보 수정
     @PatchMapping()
-    public ResponseEntity<String> editUserInfo(@RequestBody EditUserInfoDto request){
-        userService.editUserInfo(request.getNickname(), request.getMbti(), request.getInterestCategory(),
+    public ResponseEntity<Void> editUserInfo(@RequestBody EditUserInfoDto request){
+        userService.editUserInfo(request.getNickname(), request.getMbti(), request.getInterestItemCategory(),
                 request.getIntroduction());
-        return ResponseEntity.ok("Update UserInfo Success");
+        return ResponseEntity.ok().build();
     }
 
     // 유저 탈퇴

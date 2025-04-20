@@ -23,7 +23,7 @@ public class AuthController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> Login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         AuthDto authDto = hisnetLoginService.callHisnetLoginApi(AuthDto.from(request));
         LoginResponse loginResponse = LoginResponse.from(authService.login(authDto));
 
@@ -45,8 +45,8 @@ public class AuthController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<Void> SignUp(@RequestBody SignupRequestDto signupRequestDto) {
-        authService.setUserInfo(signupRequestDto);
+    public ResponseEntity<Void> signUp(@RequestBody SignupRequestDto signupRequestDto) {
+        authService.signUp(signupRequestDto);
         return ResponseEntity.ok().build();
     }
 
