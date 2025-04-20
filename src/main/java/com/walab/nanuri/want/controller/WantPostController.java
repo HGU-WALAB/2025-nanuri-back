@@ -1,6 +1,8 @@
 package com.walab.nanuri.want.controller;
 
+import com.walab.nanuri.want.dto.request.WantPostEmotionRequestDto;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
+import com.walab.nanuri.want.dto.response.WantPostEmotionResponseDto;
 import com.walab.nanuri.want.dto.response.WantPostFormalResponseDto;
 import com.walab.nanuri.want.service.WantPostService;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +64,29 @@ public class WantPostController {
     public ResponseEntity<String> deletePost(@AuthenticationPrincipal String uniqueId, @PathVariable Long postId) {
         wantPostService.deletePost(uniqueId, postId);
         return ResponseEntity.ok().body(null);
+    }
+
+    //WantPost에 감정 표현 추가
+    @PostMapping("/{postId}/emotion")
+    public ResponseEntity<Void> addEmotion(@AuthenticationPrincipal String uniqueId,
+                                           @PathVariable Long postId,
+                                           @RequestBody WantPostEmotionRequestDto emotionRequestDto) {
+        wantPostService.addEmotion(uniqueId, postId, emotionRequestDto.getEmotionType());
+        return ResponseEntity.ok().build();
+    }
+
+    //WantPost에 감정 표현 삭제
+    @DeleteMapping("/{postId}/emotion")
+    public ResponseEntity<Void> deleteEmotion(@AuthenticationPrincipal String uniqueId,
+                                              @PathVariable Long postId) {
+        wantPostService.deleteEmotion(uniqueId, postId);
+        return ResponseEntity.ok().build();
+    }
+
+    //WantPost에 감정 표현 조회
+    @GetMapping("/{postId}/emotion")
+    public ResponseEntity<List<WantPostEmotionResponseDto>> getEmotionCount(@AuthenticationPrincipal String uniqueId,
+                                                                            @PathVariable Long postId) {
+        return ResponseEntity.ok(wantPostService.getEmotionCount(uniqueId, postId));
     }
 }
