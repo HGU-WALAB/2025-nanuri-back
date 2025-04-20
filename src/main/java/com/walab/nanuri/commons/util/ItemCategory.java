@@ -1,6 +1,6 @@
 package com.walab.nanuri.commons.util;
 
-public enum Category {
+public enum ItemCategory {
     MAJOR_BOOK,         // 전공 서적
     GENERAL_BOOK,       // 일반 도서, 소설 등
     DIGITAL_DEVICE,     // 디지털기기 (태블릿, 이어폰 등)
@@ -17,11 +17,5 @@ public enum Category {
     FURNITURE,          // 가구
     Electronics,        // 전자 제품
     ETC,                 // 기타
-    //물건 상태
-    NEW,              // 새 물건
-    ALMOST_NEW,       // 거의 새 물건
-    USED,             // 중고 물건
-    //거래 방식
-    FAST_CHANGE,          // 빠른 거래 선호
 
 }

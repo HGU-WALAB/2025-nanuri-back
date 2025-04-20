@@ -73,16 +73,16 @@ public class AuthService {
         return JwtUtil.createRefreshToken(uniqueId, name, key);
     }
 
-    // 회원 정보 받기
+    // 회원 정보 받기(회원 가입)
     @Transactional
-    public void setUserInfo(SignupRequestDto signupRequestDto) {
+    public void signUp(SignupRequestDto signupRequestDto) {
         User user = userRepository.findById(signupRequestDto.getUniqueId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         user.editUserDetails(
                 signupRequestDto.getNickname(),
                 signupRequestDto.getMbti(),
-                signupRequestDto.getInterestCategory(),
+                signupRequestDto.getInterestItemCategory(),
                 signupRequestDto.getIntroduction()
         );
         userRepository.save(user);

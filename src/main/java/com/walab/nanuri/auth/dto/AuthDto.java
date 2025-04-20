@@ -1,7 +1,7 @@
 package com.walab.nanuri.auth.dto;
 
 import com.walab.nanuri.auth.dto.request.LoginRequest;
-import com.walab.nanuri.commons.util.Category;
+import com.walab.nanuri.commons.util.ItemCategory;
 import lombok.*;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class AuthDto {
   private Integer semester;
   private String nickname;
   private String mbti;
-  private List<Category> interestCategory;
+  private List<ItemCategory> interestItemCategory;
   private String introduction;
 
 
