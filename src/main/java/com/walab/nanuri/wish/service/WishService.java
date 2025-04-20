@@ -62,7 +62,7 @@ public class WishService {
         wishRepository.delete(wish);
 
         //wishCount 감소
-        Item item = itemRepository.findById(wishId)
+        Item item = itemRepository.findById(wish.getItemId())
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         Integer currentWishCount = item.getWishCount() != null ? item.getWishCount() : 0;
         item.setWishCount(Math.max(0, currentWishCount - 1));
