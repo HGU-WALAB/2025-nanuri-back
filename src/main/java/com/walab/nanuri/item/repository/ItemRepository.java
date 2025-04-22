@@ -31,4 +31,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "FROM Item i " +
             "ORDER BY i.id DESC")
     List<Item> findAllOrdered();
+
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.title like %:title% " +
+            "ORDER BY i.id DESC")
+    List<Item> findAllByTitleLike(@Param("title") String title);
 }
