@@ -34,7 +34,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private static final List<String> EXCLUDED_PATHS = Arrays.asList(
             "/api/nanuri/auth/login$",
             "/api/nanuri/auth/signup$",
-            "/api/nanuri/auth/logout$"
+            "/api/nanuri/auth/logout$",
+            "/api/item.*",
+            "/api/items.*",
+            "/api/want.*"
     );
 
     private boolean isExcludedPath(String requestURI) {
