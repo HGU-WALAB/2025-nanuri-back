@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class ChatMessageRequestDto {
     private String roomId;
-    private String senderId;
+    private String nickname;
     private String message;
 }

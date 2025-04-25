@@ -1,5 +1,6 @@
 package com.walab.nanuri.wish.dto.response;
 
+import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.wish.entity.Wish;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,11 @@ public class WishResponseDto {
     private String description;
     private String category;
     private String imageUrl;
+    private ShareStatus shareStatus;
+    private Boolean wishStatus;
+    private Integer wishCount;
+    private Integer chatCount;
+    private Integer viewCount;
     private String createdTime;
     private String modifiedTime;
 
@@ -31,6 +37,11 @@ public class WishResponseDto {
                 .description(itemDto.getDescription())
                 .category(itemDto.getCategory())
                 .imageUrl(itemDto.getImage())
+                .shareStatus(itemDto.getShareStatus())
+                .wishStatus(itemDto.getWishStatus())
+                .wishCount(itemDto.getWishCount())
+                .chatCount(itemDto.getChatCount())
+                .viewCount(itemDto.getViewCount())
                 .createdTime(itemDto.getCreatedTime())
                 .modifiedTime(itemDto.getModifiedTime())
                 .build();

@@ -1,6 +1,7 @@
 package com.walab.nanuri.want.repository;
 
 import com.walab.nanuri.want.entity.WantPost;
+import com.walab.nanuri.want.entity.WantPostEmotion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

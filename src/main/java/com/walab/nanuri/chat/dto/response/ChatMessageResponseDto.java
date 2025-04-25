@@ -4,6 +4,8 @@ import com.walab.nanuri.chat.entity.ChatMessage;
 import com.walab.nanuri.user.entity.User;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -11,18 +13,18 @@ import lombok.*;
 @AllArgsConstructor
 public class ChatMessageResponseDto {
     private String roomId;
-    private String senderName;
-    private String receiverName;
+    private String senderNickname;
+    private String receiverNickname;
+    private LocalDateTime createdAt;
     private String message;
-    private boolean isMine;
 
-    public static ChatMessageResponseDto from(ChatMessage chatMessage, String uniqueId, User sender, User receiver) {
+    public static ChatMessageResponseDto from(ChatMessage chatMessage, User sender, User receiver) {
         return ChatMessageResponseDto.builder()
                 .roomId(chatMessage.getRoomId())
-                .senderName(sender.getName())
-                .receiverName(receiver.getName())
+                .senderNickname(sender.getNickname())
+                .receiverNickname(receiver.getNickname())
+                .createdAt(chatMessage.getTimestamp())
                 .message(chatMessage.getMessage())
-                .isMine(uniqueId.equals(chatMessage.getSenderId()))
                 .build();
     }
 }

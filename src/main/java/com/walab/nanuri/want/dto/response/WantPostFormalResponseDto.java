@@ -17,6 +17,7 @@ public class WantPostFormalResponseDto {
     private String createdTime;
     private String description;
     private Boolean isOwner;
+    private Integer viewCount;
 
     public static WantPostFormalResponseDto from(WantPost wantPost, String receiverNickName, Boolean isOwner) {
         return WantPostFormalResponseDto.builder()
@@ -26,6 +27,7 @@ public class WantPostFormalResponseDto {
                 .createdTime(wantPost.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .description(wantPost.getDescription())
                 .isOwner(isOwner)
+                .viewCount(wantPost.getViewCount())
                 .build();
     }
 }

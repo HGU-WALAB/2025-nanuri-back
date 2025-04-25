@@ -1,7 +1,7 @@
 package com.walab.nanuri.user.service;
 
 import com.walab.nanuri.commons.exception.CustomException;
-import com.walab.nanuri.commons.util.Category;
+import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
@@ -36,10 +36,10 @@ public class UserService {
     }
 
     //유저 정보 수정
-    public void editUserInfo(String nickname, String mbti, List<Category> interestCategory, String introduction) {
+    public void editUserInfo(String nickname, String mbti, List<ItemCategory> interestItemCategory, String introduction) {
         String uniqueId = JwtUtil.getUserUniqueId();
         User user = userRepository.findById(uniqueId).orElseThrow(()->new CustomException(USER_NOT_FOUND));
-        user.editUserDetails(nickname, mbti, interestCategory, introduction);
+        user.editUserDetails(nickname, mbti, interestItemCategory, introduction);
         userRepository.save(user);
     }
 
@@ -65,7 +65,8 @@ public class UserService {
         List<ItemListResponseDto> sharingItemList = sharingItems.stream()
                 .map(item -> {
                         String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
-                        return ItemListResponseDto.from(item, imageUrl, nickname);
+                        boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
+                        return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
                 })
                 .toList();
 
@@ -74,7 +75,8 @@ public class UserService {
         List<ItemListResponseDto> completedItemList = completedItems.stream()
                 .map(item -> {
                     String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
-                    return ItemListResponseDto.from(item, imageUrl, nickname);
+                    boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
+                    return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
                 })
                 .toList();
 

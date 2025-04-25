@@ -28,10 +28,9 @@ public class WishController {
     }
 
     //관심 목록 삭제
-    @DeleteMapping("/{wishId}")
-    public ResponseEntity<Void> deleteWish(
-            @PathVariable Long wishId) {
-        wishService.deleteWish(wishId);
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> deleteWish(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId) {
+        wishService.deleteWish(uniqueId, itemId);
         return ResponseEntity.ok().body(null);
     }
 

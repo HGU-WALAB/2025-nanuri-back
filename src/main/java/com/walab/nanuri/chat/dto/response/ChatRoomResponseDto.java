@@ -15,23 +15,17 @@ public class ChatRoomResponseDto {
     private Long postId;
     private String title;
     private String itemImage;
-    private String opponentId;
-    private String opponentName;
-    private boolean isSeller;
+    private String opponentNickname;
 
-    public static ChatRoomResponseDto from(ChatRoom room, String myId, User opponent, Item item, String ItemUrl, WantPost post) {
-        boolean isSeller = room.getSellerId().equals(myId);
-        String opponentId = isSeller ? room.getReceiverId() : room.getSellerId();
+    public static ChatRoomResponseDto from(ChatRoom room, String opponentNickname, Item item, String ItemUrl, WantPost post) {
 
         return ChatRoomResponseDto.builder()
                 .roomId(room.getId())
                 .itemId(room.getItemId())
                 .postId(room.getPostId())
-                .opponentId(opponentId)
-                .opponentName(opponent.getName())
+                .opponentNickname(opponentNickname)
                 .title(item == null ? post.getTitle() : item.getTitle())
                 .itemImage(ItemUrl)
-                .isSeller(isSeller)
                 .build();
     }
 }

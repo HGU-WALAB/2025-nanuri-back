@@ -33,10 +33,10 @@ public class ChatMessage {
         this.timestamp = now;
     }
 
-    public static ChatMessage fromDto(ChatMessageRequestDto dto, String receiverId, String roomKey) {
+    public static ChatMessage fromDto(ChatMessageRequestDto dto, String senderId,String receiverId, String roomKey) {
         return new ChatMessage(
                 dto.getRoomId(),
-                dto.getSenderId(),
+                senderId,
                 receiverId,
                 dto.getMessage(),
                 roomKey,

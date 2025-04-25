@@ -2,6 +2,7 @@ package com.walab.nanuri.want.service;
 
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
+import com.walab.nanuri.commons.util.EmotionType;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.exception.ErrorCode;
@@ -9,18 +10,23 @@ import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
+import com.walab.nanuri.want.dto.response.WantPostEmotionResponseDto;
 import com.walab.nanuri.want.dto.response.WantPostFormalResponseDto;
 import com.walab.nanuri.want.entity.WantPost;
+import com.walab.nanuri.want.entity.WantPostEmotion;
 import com.walab.nanuri.want.entity.WantPostSeller;
+import com.walab.nanuri.want.repository.WantPostEmotionRepository;
 import com.walab.nanuri.want.repository.WantPostRepository;
 import com.walab.nanuri.want.repository.WantPostSellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+        import java.util.stream.Collectors;
+
+import static com.walab.nanuri.commons.exception.ErrorCode.*;
 
 @Service
 @Slf4j
@@ -28,6 +34,7 @@ import java.util.Objects;
 public class WantPostService {
     private final WantPostRepository wantPostRepository;
     private final WantPostSellerRepository wantPostSellerRepository;
+    private final WantPostEmotionRepository wantPostEmotionRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
 
@@ -40,7 +47,7 @@ public class WantPostService {
 
     //나눔자가 WantPost글에 나눔 해준다는 신청
     public void selectPost(String sellerId, Long postId) {
-        WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.WANT_POST_NOT_FOUND));
+        WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
 
         if (wp.getReceiverId().equals(sellerId)) {
             throw new CustomException(ErrorCode.CANNOT_APPLY_OWN_POST);
@@ -68,7 +75,7 @@ public class WantPostService {
         wantPostSellerRepository.save(seller);
         wantPostRepository.save(wp);
 
-        String roomKey = ChatRoom.createRoomKey("want-"+wp.getId() , sellerId, wp.getReceiverId());
+        String roomKey = ChatRoom.createRoomKey("want-" + wp.getId(), sellerId, wp.getReceiverId());
         ChatRoom room = ChatRoom.builder()
                 .sellerId(sellerId)
                 .postId(postId)
@@ -80,11 +87,12 @@ public class WantPostService {
     }
 
     // WantPost 글 단건 조회
+    @Transactional
     public WantPostFormalResponseDto getPostById(String uniqueId, Long postId) {
-        WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.WANT_POST_NOT_FOUND));
+        WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
         User receiver = userRepository.findById(wp.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         boolean isOwner = wp.getReceiverId().equals(uniqueId);
-
+        wp.addViewCount(); //조회수 증가
         return WantPostFormalResponseDto.from(wp, receiver.getNickname(), isOwner);
     }
 
@@ -105,7 +113,7 @@ public class WantPostService {
     // WantPost 글 수정
     public void updatePost(String receiverId, Long postId, WantPostRequestDto dto) {
         WantPost wp = wantPostRepository.findById(postId).orElseThrow(()
-                -> new CustomException(ErrorCode.WANT_POST_NOT_FOUND));
+                -> new CustomException(WANT_POST_NOT_FOUND));
 
         validateOwnerOrThrow(receiverId, wp.getReceiverId());
 
@@ -118,7 +126,7 @@ public class WantPostService {
     // 나눔 받기 완료
     public void isFinished(String receiverId, Long postId, boolean isFinished) {
         WantPost wp = wantPostRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorCode.WANT_POST_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
 
         validateOwnerOrThrow(receiverId, wp.getReceiverId());
         if (wp.isFinished()) {
@@ -131,7 +139,7 @@ public class WantPostService {
 
     // WantPost 글 삭제
     public void deletePost(String receiverId, Long postId) {
-        WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.WANT_POST_NOT_FOUND));
+        WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
         validateOwnerOrThrow(receiverId, wp.getReceiverId());
 
         wantPostRepository.delete(wp);
@@ -142,5 +150,54 @@ public class WantPostService {
         if (!actualReceiverId.equals(expectedReceiverId)) {
             throw new CustomException(ErrorCode.DUPLICATE_DIFFERENT_USER);
         }
+    }
+
+
+    //감정 표현 추가
+    @Transactional
+    public void addEmotion(String userId, Long postId, EmotionType emotionType) {
+        WantPost wp = wantPostRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
+
+        if (wantPostEmotionRepository.existsByUserIdAndWantPostId(userId, postId)) {
+            throw new CustomException(ALREADY_REACTED_POST);
+        }
+
+        WantPostEmotion wantPostEmotion = WantPostEmotion.builder()
+                .userId(userId)
+                .wantPost(wp)
+                .emotionType(emotionType)
+                .build();
+
+        wp.addEmotionCount(emotionType);
+        wantPostEmotionRepository.save(wantPostEmotion);
+    }
+
+    //감정 표현 삭제
+    @Transactional
+    public void deleteEmotion(String userId, Long postId) {
+        WantPostEmotion wantPostEmotion = wantPostEmotionRepository.findByUserIdAndWantPostId(userId, postId)
+                .orElseThrow(() -> new CustomException(EMOTION_NOT_FOUND));
+
+        WantPost wp = wantPostEmotion.getWantPost();
+        wp.minusEmotionCount(wantPostEmotion.getEmotionType());
+        wantPostEmotionRepository.delete(wantPostEmotion);
+    }
+
+    // 감정 표현 count
+    public List<WantPostEmotionResponseDto> getEmotionCount(String userId, Long postId) {
+        List<Object[]> results = wantPostEmotionRepository.countEmotionsByPostId(postId);
+
+        //emotion을 클릭했는지 판단
+        Set<EmotionType> myEmotion = new HashSet<>(wantPostEmotionRepository.findEmotionTypesByUserIdAndPostId(userId, postId));
+
+        //emotionType에 따른 count 출력
+        return results.stream()
+                .map(result -> new WantPostEmotionResponseDto(
+                        (EmotionType) result[0],
+                        (Long) result[1],
+                        myEmotion.contains((EmotionType) result[0])
+                ))
+                .collect(Collectors.toList());
     }
 }

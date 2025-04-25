@@ -17,13 +17,14 @@ public class ItemListResponseDto {
     private String category;
     private String image;
     private ShareStatus shareStatus;
+    private Boolean wishStatus;
     private String createdTime;
     private String modifiedTime;
     private Integer wishCount;
     private Integer chatCount;
     private Integer viewCount;
 
-    public static ItemListResponseDto from(Item item, String image, String nickname) {
+    public static ItemListResponseDto from(Item item, String image, String nickname, Boolean wishStatus) {
         return ItemListResponseDto.builder()
                 .itemId(item.getId())
                 .nickname(nickname)
@@ -32,6 +33,7 @@ public class ItemListResponseDto {
                 .category(item.getCategory())
                 .image(image)
                 .shareStatus(item.getShareStatus())
+                .wishStatus(wishStatus)
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .wishCount(item.getWishCount())
