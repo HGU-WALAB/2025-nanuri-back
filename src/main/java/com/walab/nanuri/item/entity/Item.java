@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
@@ -52,6 +54,9 @@ public class Item extends BaseTimeEntity {
     @Setter
     private Integer chatCount;
 
+    @Column(name = "deadline")
+    private LocalDateTime deadline;
+
 
     public void update(String title, String description, String place, String category) {
         this.title = title;
@@ -71,6 +76,7 @@ public class Item extends BaseTimeEntity {
                 .shareStatus(ShareStatus.NONE)
                 .wishCount(0)
                 .chatCount(0)
+                .deadline(requestDto.getDeadline())
                 .build();
     }
 
