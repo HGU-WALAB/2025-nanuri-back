@@ -98,7 +98,7 @@ public class WantPostService {
 
     // WantPost 글 전체 조회
     public List<WantPostFormalResponseDto> getAllPosts(String uniqueId) {
-        List<WantPost> wps = wantPostRepository.findAllOrderByModifiedDateDesc();
+        List<WantPost> wps = wantPostRepository.findAllOrderByCreatedTimeDesc();
 
         return wps.stream()
                 .map(wp -> {

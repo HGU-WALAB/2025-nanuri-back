@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WantPostRepository extends JpaRepository<WantPost, Long> {
-    @Query("SELECT w FROM want_post w ORDER BY w.modifiedTime DESC")
-    List<WantPost> findAllOrderByModifiedDateDesc();
+    @Query("SELECT w FROM want_post w ORDER BY w.createdTime DESC")
+    List<WantPost> findAllOrderByCreatedTimeDesc();
 }
