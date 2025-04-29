@@ -91,7 +91,7 @@ public class WantPostService {
     public WantPostFormalResponseDto getPostById(String uniqueId, Long postId) {
         WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
         User receiver = userRepository.findById(wp.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        boolean isOwner = wp.getReceiverId().equals(uniqueId);
+        boolean isOwner = !uniqueId.isEmpty() && wp.getReceiverId().equals(uniqueId);
         wp.addViewCount(); //조회수 증가
         return WantPostFormalResponseDto.from(wp, receiver.getNickname(), isOwner);
     }
@@ -104,7 +104,7 @@ public class WantPostService {
                 .map(wp -> {
                     User receiver = userRepository.findById(wp.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
                     String nickName = receiver.getNickname();
-                    boolean isOwner = wp.getReceiverId().equals(uniqueId);
+                    boolean isOwner = !uniqueId.isEmpty() && wp.getReceiverId().equals(uniqueId);
 
                     return WantPostFormalResponseDto.from(wp, nickName, isOwner);
                 }).toList();
