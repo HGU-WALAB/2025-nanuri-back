@@ -1,5 +1,6 @@
 package com.walab.nanuri.item.repository;
 
+import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "FROM Item i " +
             "WHERE i.category = :category " +
             "ORDER BY i.id DESC")
-    List<Item> findAllByCategoryOrdered(@Param("category") String category);
+    List<Item> findAllByCategoryOrdered(@Param("category") ItemCategory category);
 
     @Query("SELECT i " +
             "FROM Item i " +
@@ -31,4 +32,17 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "FROM Item i " +
             "ORDER BY i.id DESC")
     List<Item> findAllOrdered();
+
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.title LIKE CONCAT('%', :title, '%') " +
+            "ORDER BY i.id DESC")
+    List<Item> findByTitleContaining(@Param("title") String title);
+
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "AND i.title LIKE CONCAT('%', :title, '%') " +
+            "ORDER BY i.id DESC")
+    List<Item> findByTitleContainingAndCategoryOrdered(@Param("title") String title, @Param("category") ItemCategory category);
 }
