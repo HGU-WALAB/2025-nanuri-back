@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -34,7 +35,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private static final List<String> EXCLUDED_PATHS = Arrays.asList(
             "/api/nanuri/auth/login$",
             "/api/nanuri/auth/signup$",
-            "/api/nanuri/auth/logout$"
+            "/api/nanuri/auth/logout$",
+            "/api/items/.*", "/api/item/.*", "/api/want/.*"
     );
 
     private boolean isExcludedPath(String requestURI) {
