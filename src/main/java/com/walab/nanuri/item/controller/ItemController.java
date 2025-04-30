@@ -55,6 +55,14 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getOngoingMyItems(uniqueId, done));
     }
 
+    //나눔 물품 검색 조회
+    @GetMapping("/items/search/{title}")
+    public ResponseEntity<List<ItemListResponseDto>> getSearchTitleItems(@AuthenticationPrincipal String uniqueId,
+                                                                         @PathVariable String title,
+                                                                         @RequestParam(required = false, defaultValue = "") String category) {
+        return ResponseEntity.ok(itemService.getSearchTitleItems(uniqueId, title, category));
+    }
+
     //Item 수정
     @PatchMapping("/item/{itemId}")
     public ResponseEntity<Void> updateItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId, @RequestBody ItemRequestDto request) {

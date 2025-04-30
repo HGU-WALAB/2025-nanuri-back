@@ -1,6 +1,7 @@
 package com.walab.nanuri.item.entity;
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
+import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
 import jakarta.persistence.*;
@@ -34,7 +35,8 @@ public class Item extends BaseTimeEntity {
     private Integer viewCount;
 
     @Column(length = 50)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private ItemCategory category;
 
     @Column(name = "user_id", nullable = false)
     private String userId;
@@ -57,7 +59,7 @@ public class Item extends BaseTimeEntity {
         this.title = title;
         this.description = description;
         this.place = place;
-        this.category = category;
+        this.category = ItemCategory.valueOf(category);
     }
 
     public static Item toEntity(String userId, ItemRequestDto requestDto) {
@@ -65,7 +67,7 @@ public class Item extends BaseTimeEntity {
                 .title(requestDto.getTitle())
                 .description(requestDto.getDescription())
                 .place(requestDto.getPlace())
-                .category(requestDto.getCategory())
+                .category(ItemCategory.valueOf(requestDto.getCategory()))
                 .viewCount(0)
                 .userId(userId)
                 .shareStatus(ShareStatus.NONE)

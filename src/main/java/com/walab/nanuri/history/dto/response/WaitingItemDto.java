@@ -33,7 +33,7 @@ public class WaitingItemDto {
                 .itemId(item.getId())
                 .title(item.getTitle())
                 .description(item.getDescription())
-                .category(item.getCategory())
+                .category(item.getCategory().getKoreanName())
                 .image(image)
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))

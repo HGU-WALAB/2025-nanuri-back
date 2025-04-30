@@ -2,6 +2,7 @@ package com.walab.nanuri.item.service;
 
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.chat.service.ChatRoomService;
+import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.entity.Image;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
@@ -48,11 +51,16 @@ public class ItemService {
     //Item 전체 조회(일반 전체 조회, 카테고리 선택 후 전체 조회)
     public List<ItemListResponseDto> getAllItems(String uniqueId, String category) {
         List<Item> items = category.isEmpty() ?
-                itemRepository.findAllOrdered() : itemRepository.findAllByCategoryOrdered(category);
+                itemRepository.findAllOrdered() : itemRepository.findAllByCategoryOrdered(ItemCategory.valueOf(category));
 
-        List<Long> wishItemIds = wishRepository.findAllByUniqueId(uniqueId).stream()
-                .map(Wish::getItemId)
-                .collect(Collectors.toList());
+        List<Long> wishItemIds;
+        if (!uniqueId.isEmpty()) {
+            wishItemIds = wishRepository.findAllByUniqueId(uniqueId).stream()
+                    .map(Wish::getItemId)
+                    .collect(Collectors.toList());
+        } else {
+            wishItemIds = List.of();
+        }
 
         return items.stream()
                 .map(item -> {
@@ -75,8 +83,16 @@ public class ItemService {
                 .collect(Collectors.toList());
 
         String nickname = getUserNicknameById(item.getUserId());
-        boolean isOwner = item.getUserId().equals(uniqueId);
-        boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, itemId);
+        boolean isOwner;
+        boolean wishStatus;
+        if (uniqueId.isEmpty()) {
+            isOwner = false;
+            wishStatus = false;
+        } else {
+            isOwner = item.getUserId().equals(uniqueId);
+            wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, itemId);
+        }
+
         item.addViewCount(); // 조회수 증가
         return ItemResponseDto.from(item, imageUrls, isOwner, nickname, wishStatus);
     }
@@ -98,6 +114,10 @@ public class ItemService {
 
     //나눔 중 혹은 완료된 나의 Item 조회
     public List<ItemListResponseDto> getOngoingMyItems(String uniqueId, String done) {
+        if (uniqueId.isEmpty()) {
+            return List.of();
+        }
+
         ShareStatus upper_done;
         try {
             upper_done = ShareStatus.valueOf(done.toUpperCase());
@@ -112,6 +132,24 @@ public class ItemService {
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                })
+                .toList();
+    }
+
+    public List<ItemListResponseDto> getSearchTitleItems(String uniqueId, String title, String category) {
+        List<Item> items = category.isEmpty() ?
+            itemRepository.findByTitleContaining(title) : itemRepository.findByTitleContainingAndCategoryOrdered(title, ItemCategory.valueOf(category));
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    boolean wishStatus = false;
+                    if (uniqueId != null && !uniqueId.isEmpty()) {
+                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    }
+                    String nickname = getUserNicknameById(item.getUserId());
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
                 .toList();
@@ -149,5 +187,4 @@ public class ItemService {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND))
                 .getNickname();
     }
-
 }

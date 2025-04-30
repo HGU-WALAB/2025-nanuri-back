@@ -30,7 +30,7 @@ public class ItemListResponseDto {
                 .nickname(nickname)
                 .title(item.getTitle())
                 .description(item.getDescription())
-                .category(item.getCategory())
+                .category(item.getCategory().getKoreanName())
                 .image(image)
                 .shareStatus(item.getShareStatus())
                 .wishStatus(wishStatus)
