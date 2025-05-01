@@ -5,11 +5,13 @@ import com.walab.nanuri.chat.dto.response.ChatMessageResponseDto;
 import com.walab.nanuri.chat.entity.ChatMessage;
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatMessageRepository;
+import com.walab.nanuri.chat.repository.ChatParticipantRepository;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
+import com.walab.nanuri.chat.entity.ChatParticipant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -18,17 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
-
     private final SimpMessagingTemplate messagingTemplate;
+    private final ChatParticipantRepository chatParticipantRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
@@ -39,8 +41,21 @@ public class ChatMessageService {
                 .orElseThrow(() -> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
         User sender = userRepository.findByNickname(request.getNickname())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        String receiverId = Objects.equals(chatRoom.getSellerId(), sender.getUniqueId()) ? chatRoom.getReceiverId() : chatRoom.getSellerId();
+
         String roomKey = chatRoom.getRoomKey();
+
+        List<ChatParticipant> participants = chatParticipantRepository.findByRoomKeyAndHasLeftFalse(roomKey);
+
+        if (participants.size() != 2) {
+            throw new CustomException(ErrorCode.VALID_USER);
+        }
+
+        String senderId = sender.getUniqueId();
+        String receiverId = participants.stream()
+                .map(ChatParticipant::getUserId)
+                .filter(id -> !id.equals(senderId))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.PARTICIPANT_NOT_FOUND));
 
         ChatMessage message = ChatMessage.fromDto(request, sender.getUniqueId(), receiverId, roomKey);
         chatMessageRepository.save(message);
@@ -60,15 +75,19 @@ public class ChatMessageService {
             throw new CustomException(ErrorCode.CHATROOM_NOT_FOUND);
         }
 
-        if (!chatRoomRepository.existsByUserInChatRoom(uniqueId)){
+        String roomKey = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHATROOM_NOT_FOUND))
+                .getRoomKey();
+
+        if (!chatParticipantRepository.existsByRoomKeyAndUserIdAndHasLeftFalse(roomKey,  uniqueId)) {
             throw new CustomException(ErrorCode.VALID_USER);
         }
 
         String stringRoomId = String.valueOf(roomId);
 
         List<ChatMessage> messages = (timestamp == null) ?
-                chatMessageRepository.findTop40ByRoomIdOrderByTimestampDesc(stringRoomId) :
-                chatMessageRepository.findTop40ByRoomIdAndTimestampLessThanOrderByTimestampDesc(stringRoomId, timestamp);
+                chatMessageRepository.findTop40ByRoomKeyOrderByTimestampDesc(roomKey) :
+                chatMessageRepository.findTop40ByRoomKeyAndTimestampLessThanOrderByTimestampDesc(roomKey, timestamp);
 
         Set<String> userIds = messages.stream()
                 .flatMap(msg -> Stream.of(msg.getSenderId(), msg.getReceiverId()))

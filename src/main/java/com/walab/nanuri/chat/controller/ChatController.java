@@ -3,7 +3,9 @@ package com.walab.nanuri.chat.controller;
 import com.walab.nanuri.chat.dto.response.ChatMessageResponseDto;
 import com.walab.nanuri.chat.dto.response.ChatRoomResponseDto;
 import com.walab.nanuri.chat.service.ChatMessageService;
+import com.walab.nanuri.chat.service.ChatParticipantService;
 import com.walab.nanuri.chat.service.ChatRoomService;
+import com.walab.nanuri.chat.service.implement.ChatParticipantServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.List;
 public class ChatController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
+    private final ChatParticipantServiceImpl chatParticipantService;
 
     @GetMapping("/rooms")
     public ResponseEntity<List<ChatRoomResponseDto>> getRooms(@AuthenticationPrincipal String uniqueId){
@@ -41,7 +44,7 @@ public class ChatController {
 
     @DeleteMapping("/room/{roomId}")
     public ResponseEntity<?> deleteRoom(@AuthenticationPrincipal String uniqueId, @PathVariable Long roomId) {
-        chatRoomService.deleteChatRoom(uniqueId, roomId);
+        chatParticipantService.leaveRoom(roomId, uniqueId);
         return ResponseEntity.ok().build();
     }
 }
