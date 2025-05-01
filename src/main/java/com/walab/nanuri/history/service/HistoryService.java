@@ -1,6 +1,7 @@
 package com.walab.nanuri.history.service;
 
 import com.walab.nanuri.chat.entity.ChatRoom;
+import com.walab.nanuri.chat.service.ChatParticipantService;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
@@ -31,6 +32,7 @@ public class HistoryService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatParticipantService chatParticipantService;
 
     //Item 신청 (아이템 나눔 받고 싶다고 신청)
     @Transactional
@@ -43,7 +45,7 @@ public class HistoryService {
         }
 
         //이미 나눔 신청한 물건인지 확인
-        if(historyRepository.existsByIdAndReceivedId(itemId, receiverId)){
+        if(historyRepository.existsByItemIdAndReceivedId(itemId, receiverId)){
             throw new CustomException(DUPLICATE_APPLICATION_ITEM);
         }
 
@@ -53,18 +55,20 @@ public class HistoryService {
         String sellerId = item.getUserId();
         String roomKey = ChatRoom.createRoomKey(String.valueOf(item.getId()), sellerId, receiverId);
 
-        boolean exists = chatRoomRepository.existsBySellerIdAndReceiverId(sellerId, receiverId);
-        if (!exists) {
-            ChatRoom room = ChatRoom.builder()
+        ChatRoom chatRoom = chatRoomRepository.findByRoomKey(roomKey);
+
+        if (chatRoom == null) {
+            chatRoom = ChatRoom.builder()
                     .itemId(item.getId())
                     .historyId(history.getId())
-                    .sellerId(sellerId)
-                    .receiverId(receiverId)
+                    .postType(PostType.ITEM)
                     .roomKey(roomKey)
                     .build();
-            chatRoomRepository.save(room);
+            chatRoomRepository.save(chatRoom);
 
-            //채팅방 생성시 chatCount 증가
+            chatParticipantService.enterRoom(chatRoom, receiverId);
+            chatParticipantService.enterRoom(chatRoom, sellerId);
+
             item.setChatCount(item.getChatCount() + 1);
         }
     }
@@ -113,35 +117,6 @@ public class HistoryService {
                     return ReceivedItemDto.from(item, history.getId(), image);
                 })
                 .toList();
-    }
-
-    // 해당 유저 선택 -> 추후 삭제 가능?
-    @Transactional
-    public void selectReceiver(String sellerId, Long historyId){
-        History history = historyRepository.findById(historyId).orElseThrow(() -> new CustomException(HISTORY_NOT_FOUND));
-        Item item = itemRepository.findById(history.getItemId()).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
-        if(isNotOwner(sellerId, item)){
-            throw new CustomException(VALID_ITEM);
-        }
-
-        historyRepository.save(history);
-
-        String receiverId = history.getReceivedId();
-        String roomKey = ChatRoom.createRoomKey(String.valueOf(item.getId()), sellerId, receiverId);
-
-        boolean exists = chatRoomRepository.existsBySellerIdAndReceiverId(sellerId, receiverId);
-        if (!exists) {
-            ChatRoom room = ChatRoom.builder()
-                    .itemId(item.getId())
-                    .historyId(historyId)
-                    .sellerId(sellerId)
-                    .postType(PostType.ITEM)
-                    .receiverId(receiverId)
-                    .roomKey(roomKey)
-                    .build();
-            chatRoomRepository.save(room);
-        }
     }
 
     //Item 나눔 완료

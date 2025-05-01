@@ -83,15 +83,8 @@ public class ItemService {
                 .collect(Collectors.toList());
 
         String nickname = getUserNicknameById(item.getUserId());
-        boolean isOwner;
-        boolean wishStatus;
-        if (uniqueId.isEmpty()) {
-            isOwner = false;
-            wishStatus = false;
-        } else {
-            isOwner = item.getUserId().equals(uniqueId);
-            wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, itemId);
-        }
+        boolean isOwner = item.getUserId().equals(uniqueId);
+        boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, itemId);
 
         item.addViewCount(); // 조회수 증가
         return ItemResponseDto.from(item, imageUrls, isOwner, nickname, wishStatus);
@@ -174,7 +167,7 @@ public class ItemService {
     public void deleteItem(String uniqueId, Long itemId) {
         Item findItem = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         if(findItem.getUserId().equals(uniqueId)) {
-            chatRoomService.deleteChatRoomsByItemId(uniqueId, itemId);
+            chatRoomService.deleteChatRoomsByItemId(itemId);
             imageService.deleteImages(itemId);
             itemRepository.delete(findItem);
         } else {

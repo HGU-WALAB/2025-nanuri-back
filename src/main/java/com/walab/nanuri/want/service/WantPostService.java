@@ -2,6 +2,7 @@ package com.walab.nanuri.want.service;
 
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
+import com.walab.nanuri.chat.service.ChatParticipantService;
 import com.walab.nanuri.commons.util.EmotionType;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
@@ -37,6 +38,7 @@ public class WantPostService {
     private final WantPostEmotionRepository wantPostEmotionRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
+    private final ChatParticipantService chatParticipantService;
 
     //WantPost 등록
     public void createPost(WantPostRequestDto dto, String receiverId) {
@@ -77,13 +79,14 @@ public class WantPostService {
 
         String roomKey = ChatRoom.createRoomKey("want-" + wp.getId(), sellerId, wp.getReceiverId());
         ChatRoom room = ChatRoom.builder()
-                .sellerId(sellerId)
                 .postId(postId)
                 .postType(PostType.POST)
-                .receiverId(wp.getReceiverId())
                 .roomKey(roomKey)
                 .build();
         chatRoomRepository.save(room);
+
+        chatParticipantService.enterRoom(room, sellerId);
+        chatParticipantService.enterRoom(room, wp.getReceiverId());
     }
 
     // WantPost 글 단건 조회
