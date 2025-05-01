@@ -1,8 +1,10 @@
 package com.walab.nanuri.chat.service;
 
 import com.walab.nanuri.chat.dto.response.ChatRoomResponseDto;
+import com.walab.nanuri.chat.entity.ChatParticipant;
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatMessageRepository;
+import com.walab.nanuri.chat.repository.ChatParticipantRepository;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.image.repository.ImageRepository;
@@ -26,6 +28,7 @@ import static com.walab.nanuri.commons.exception.ErrorCode.*;
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ChatParticipantRepository chatParticipantRepository;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final ItemRepository itemRepository;
@@ -35,46 +38,21 @@ public class ChatRoomService {
         ChatRoom room = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new CustomException(CHATROOM_NOT_FOUND));
 
-        return toChatRoomResponse(room, myId);
+        ChatParticipant participant = chatParticipantRepository.findByRoomKeyAndUserId(room.getRoomKey(), myId)
+                .orElseThrow(() -> new CustomException(PARTICIPANT_NOT_FOUND));
+
+        return toChatRoomResponse(participant, myId);
     }
 
-    public List<ChatRoomResponseDto> getChatRooms(String myId){
-        List<ChatRoom> chatRooms = chatRoomRepository.findBySellerIdOrReceiverIdOrderByModifiedTimeDesc(myId, myId);
+    public List<ChatRoomResponseDto> getChatRooms(String myId) {
+        List<ChatParticipant> chatParticipants = chatParticipantRepository.findByUserIdAndHasLeftFalse(myId);
 
-        return chatRooms.stream()
-                .map(room -> toChatRoomResponse(room, myId)
-                ).collect(Collectors.toList());
+        return chatParticipants.stream()
+                .map(participant -> toChatRoomResponse(participant, myId))
+                .collect(Collectors.toList());
     }
 
-
-    public void deleteChatRoom(String myId, Long roomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new CustomException(CHATROOM_NOT_FOUND));
-
-        boolean isSeller = Objects.equals(chatRoom.getSellerId(), myId);
-        boolean isReceiver = Objects.equals(chatRoom.getReceiverId(), myId);
-
-        if (!isSeller && !isReceiver) {
-            throw new CustomException(VALID_DELETE_CHATROOM);
-        }
-
-        if (isSeller) {
-            chatRoom.setSellerId(null);
-        } else {
-            chatRoom.setReceiverId(null);
-        }
-
-        chatRoomRepository.save(chatRoom);
-
-        if ((chatRoom.getSellerId() == null || chatRoom.getSellerId().isBlank()) &&
-                (chatRoom.getReceiverId() == null || chatRoom.getReceiverId().isBlank())) {
-
-            chatMessageRepository.deleteByRoomKey(chatRoom.getRoomKey());
-            chatRoomRepository.delete(chatRoom);
-        }
-    }
-
-    public void deleteChatRoomsByItemId(String myId, Long itemId) {
+    public void deleteChatRoomsByItemId(Long itemId) {
         List<ChatRoom> chatRooms = chatRoomRepository.findByItemId(itemId);
 
         List<String> roomIds = chatRooms.stream()
@@ -86,19 +64,23 @@ public class ChatRoomService {
         chatRoomRepository.deleteAll(chatRooms);
     }
 
-    private ChatRoomResponseDto toChatRoomResponse(ChatRoom room, String myId) {
-        String opponentId = room.getSellerId().equals(myId) ? room.getReceiverId() : room.getSellerId();
+    private ChatRoomResponseDto toChatRoomResponse(ChatParticipant participant, String myId) {
+        ChatRoom room = participant.getChatRoom();
+
+        String opponentId = chatParticipantRepository.findByRoomKey(room.getRoomKey()).stream()
+                .map(ChatParticipant::getUserId)
+                .filter(id -> !id.equals(myId))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         User opponent = userRepository.findById(opponentId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         Item item = null;
         String image = null;
-
         if (room.getItemId() != null) {
             item = itemRepository.findById(room.getItemId())
                     .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
             image = imageRepository.findTopByItemIdOrderByIdAsc(room.getItemId()).getFileUrl();
         }
 
