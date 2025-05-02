@@ -39,7 +39,6 @@ dependencies {
 
 	implementation "io.jsonwebtoken:jjwt:0.9.1"
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-	implementation 'com.google.firebase:firebase-admin:9.4.3'
 }
 
 tasks.named('test') {
