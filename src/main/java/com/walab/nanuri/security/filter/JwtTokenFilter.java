@@ -53,15 +53,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
+        Cookie[] cookies = request.getCookies();
         log.debug("🚀 JwtTokenFilter: 요청 URI: {}", requestURI);
 
-        if (isExcludedPath(request)) {
+        if (isExcludedPath(request) && cookies == null){
             log.debug("🔸 JwtTokenFilter: 제외된 경로입니다. 필터 체인 계속 진행.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        Cookie[] cookies = request.getCookies();
         String accessToken = null;
         String refreshToken = null;
 
