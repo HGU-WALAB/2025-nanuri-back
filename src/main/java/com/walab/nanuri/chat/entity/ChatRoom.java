@@ -21,16 +21,10 @@ public class ChatRoom extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PostType postType;
 
-    @Setter
-    private String sellerId;
-
-    @Setter
-    private String receiverId;
-
 
     private String roomKey;
 
-    public static String createRoomKey(String itemId, String sellerId, String receiverId) {
-        return itemId + "_" + (sellerId.compareTo(receiverId) < 0 ? sellerId + "_" + receiverId : receiverId + "_" + sellerId);
+    public static String createRoomKey(String itemId, String userId1, String userId2) {
+        return itemId + "_" + (userId1.compareTo(userId2) < 0 ? userId1 + "_" + userId2 : userId2 + "_" + userId1);
     }
 }

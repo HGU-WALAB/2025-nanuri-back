@@ -32,17 +32,20 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final AuthService authService;
     private final Key SECRET_KEY;
 
-    private static final List<String> EXCLUDED_PATHS = Arrays.asList(
-            "/api/nanuri/auth/login$",
-            "/api/nanuri/auth/signup$",
-            "/api/nanuri/auth/logout$",
-            "/api/items/.*", "/api/item/.*", "/api/want/.*"
-    );
+    private boolean isExcludedPath(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+        
+        return (
+                (method.equals("GET") && uri.matches("^/api/items(/.*)?$")) ||
+                        (method.equals("GET") && uri.matches("^/api/item(/.*)?$")) ||
+                        (method.equals("GET") && uri.matches("^/api/want(/.*)?$")) ||
 
-    private boolean isExcludedPath(String requestURI) {
-        return EXCLUDED_PATHS.stream().anyMatch(requestURI::matches);
+                        uri.equals("/api/nanuri/auth/login") ||
+                        uri.equals("/api/nanuri/auth/signup") ||
+                        uri.equals("/api/nanuri/auth/logout")
+        );
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
             @NonNull HttpServletResponse response,
@@ -52,7 +55,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         log.debug("🚀 JwtTokenFilter: 요청 URI: {}", requestURI);
 
-        if (isExcludedPath(requestURI)) {
+        if (isExcludedPath(request)) {
             log.debug("🔸 JwtTokenFilter: 제외된 경로입니다. 필터 체인 계속 진행.");
             filterChain.doFilter(request, response);
             return;

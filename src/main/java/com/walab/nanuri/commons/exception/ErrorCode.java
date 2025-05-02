@@ -37,6 +37,7 @@ public enum ErrorCode {
     HISTORY_NOT_FOUND(NOT_FOUND, "해당 히스토리를 찾을 수 없습니다."),
     CATEGORY_NOT_FOUND(NOT_FOUND,"해당 카테고리를 찾을 수 없습니다."),
     CHATROOM_NOT_FOUND(NOT_FOUND, "해당 채팅방을 찾을 수 없습니다."),
+    PARTICIPANT_NOT_FOUND(NOT_FOUND, "해당 채팅 참여자를 찾을 수 없습니다."),
     WANT_POST_NOT_FOUND(NOT_FOUND, "해당 포스트를 찾을 수 없습니다."),
     TOKEN_NOT_FOUND(NOT_FOUND,"존재하지 않는 토큰입니다."),
     EMOTION_NOT_FOUND(NOT_FOUND,"해당 감정표현을 찾을 수 없습니다."),
