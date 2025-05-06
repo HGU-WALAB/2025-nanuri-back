@@ -1,6 +1,7 @@
 package com.walab.nanuri.notification.controller;
 
 import com.walab.nanuri.notification.dto.request.NotificationRequestDto;
+import com.walab.nanuri.notification.dto.response.NotificationResponseDto;
 import com.walab.nanuri.notification.entity.Notification;
 import com.walab.nanuri.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class NotificationController {
 
     //알림 리스트 조회
     @GetMapping
-    public ResponseEntity<List<Notification>> getMyNotificationList(@AuthenticationPrincipal String uniqueId) {
+    public ResponseEntity<List<NotificationResponseDto>> getMyNotificationList(@AuthenticationPrincipal String uniqueId) {
         return ResponseEntity.ok(notificationService.getMyAlarmList(uniqueId));
     }
 

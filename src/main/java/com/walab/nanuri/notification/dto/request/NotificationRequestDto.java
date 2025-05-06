@@ -14,4 +14,5 @@ public class NotificationRequestDto {
     private String title;
     private String body;
     private String itemId;
+    private String relatedUrl;
 }

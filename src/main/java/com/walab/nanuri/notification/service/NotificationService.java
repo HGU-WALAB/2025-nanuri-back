@@ -1,6 +1,7 @@
 package com.walab.nanuri.notification.service;
 
 import com.walab.nanuri.notification.dto.request.NotificationRequestDto;
+import com.walab.nanuri.notification.dto.response.NotificationResponseDto;
 import com.walab.nanuri.notification.entity.Notification;
 import com.walab.nanuri.notification.repository.NotificationRepository;
 import com.walab.nanuri.commons.exception.CustomException;
@@ -40,6 +41,7 @@ public class NotificationService {
                 .itemId(notificationRequestDto.getItemId())
                 .isRead(false)
                 .fcmToken(token)
+                .relatedUrl(notificationRequestDto.getRelatedUrl())
                 .build();
 
         notificationRepository.save(notification);
@@ -47,8 +49,11 @@ public class NotificationService {
 
 
     // 알림 리스트 조회
-    public List<Notification> getMyAlarmList(String uniqueId) {
-        return notificationRepository.findByReceiverIdOrderByCreatedTimeDesc(uniqueId);
+    public List<NotificationResponseDto> getMyAlarmList(String uniqueId) {
+        return notificationRepository.findByReceiverIdOrderByCreatedTimeDesc(uniqueId)
+                .stream()
+                .map(NotificationResponseDto::from)
+                .toList();
     }
 
 

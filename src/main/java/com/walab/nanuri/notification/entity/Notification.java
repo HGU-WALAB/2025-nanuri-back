@@ -29,10 +29,15 @@ public class Notification extends BaseTimeEntity {
 
     private String itemId;
 
+    //알림 읽은 여부
     @Setter
-    private boolean isRead; //알림 읽은 여부
+    private boolean isRead;
 
     @Column(length = 512)
     private String fcmToken;
+
+    //알림 클릭 시 이동할 URL
+    @Column(name = "related_url", length = 512)
+    private String relatedUrl;
 
 }
