@@ -1,5 +1,6 @@
 package com.walab.nanuri.want.controller;
 
+import com.walab.nanuri.commons.util.EmotionType;
 import com.walab.nanuri.want.dto.request.WantPostEmotionRequestDto;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
 import com.walab.nanuri.want.dto.response.WantPostEmotionResponseDto;
@@ -78,8 +79,9 @@ public class WantPostController {
     //WantPost에 감정 표현 삭제
     @DeleteMapping("/{postId}/emotion")
     public ResponseEntity<Void> deleteEmotion(@AuthenticationPrincipal String uniqueId,
-                                              @PathVariable Long postId) {
-        wantPostService.deleteEmotion(uniqueId, postId);
+                                              @PathVariable Long postId,
+                                              @RequestParam("emotionType") EmotionType emotionType) {
+        wantPostService.deleteEmotion(uniqueId, postId, emotionType);
         return ResponseEntity.ok().build();
     }
 
