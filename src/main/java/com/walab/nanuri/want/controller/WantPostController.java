@@ -20,9 +20,9 @@ public class WantPostController {
 
     //WantPost 등록
     @PostMapping
-    public ResponseEntity<String> createPost(@AuthenticationPrincipal String uniqueId, @RequestBody WantPostRequestDto wantPost) {
-        wantPostService.createPost(wantPost, uniqueId);
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<Long> createPost(@AuthenticationPrincipal String uniqueId,
+                                           @RequestBody WantPostRequestDto wantPost) {
+        return ResponseEntity.ok().body(wantPostService.createPost(uniqueId, wantPost));
     }
 
     //나눔자가 WantPost글에 나눔 해준다는 신청

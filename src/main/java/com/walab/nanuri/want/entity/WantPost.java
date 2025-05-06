@@ -54,7 +54,7 @@ public class WantPost extends BaseTimeEntity {
     private Integer amazingCount;
 
 
-    public static WantPost toEntity(WantPostRequestDto dto, String receiverId) {
+    public static WantPost toEntity(String receiverId, WantPostRequestDto dto) {
         return WantPost.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())

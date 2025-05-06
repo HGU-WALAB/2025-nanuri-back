@@ -41,10 +41,11 @@ public class WantPostService {
     private final ChatParticipantService chatParticipantService;
 
     //WantPost 등록
-    public void createPost(WantPostRequestDto dto, String receiverId) {
-        WantPost wp = WantPost.toEntity(dto, receiverId);
-
+    public Long createPost( String receiverId, WantPostRequestDto dto) {
+        WantPost wp = WantPost.toEntity(receiverId, dto);
         wantPostRepository.save(wp);
+
+        return wp.getId();
     }
 
     //나눔자가 WantPost글에 나눔 해준다는 신청
