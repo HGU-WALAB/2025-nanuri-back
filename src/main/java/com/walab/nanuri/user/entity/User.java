@@ -61,6 +61,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "introduction", length = 300)
     private String introduction;
 
+    @Column(name = "fcm_token", length = 512)
+    private String fcmToken;
+
+
     public static User from(AuthDto dto) {
         return User.builder()
                 .uniqueId(dto.getUniqueId())
@@ -85,6 +89,11 @@ public class User extends BaseTimeEntity {
         this.mbti = mbti;
         this.interestItemCategory = interestItemCategory;
         this.introduction = introduction;
+    }
+
+    // FCM 토큰 업데이트
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 }

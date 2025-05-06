@@ -20,7 +20,7 @@ import static com.walab.nanuri.commons.exception.ErrorCode.USER_NOT_FOUND;
 public class FcmService {
     private final UserRepository userRepository;
 
-    //user DB에 토큰 저장
+    //user DB에 fcm 토큰 저장
     public FcmTokenResponseDto saveFcmToken(String uniqueId, String token) {
         User user = userRepository.findById(uniqueId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
