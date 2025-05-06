@@ -51,7 +51,8 @@ public enum ErrorCode {
     DUPLICATE_APPLICATION_ITEM(CONFLICT, "이미 나눔 신청한 물건입니다."),
 
     /* 500 : */
-    UNSUCCESSFUL_HISNET_LOGIN(INTERNAL_SERVER_ERROR,"히즈넷 로그인에 실패했습니다.");
+    UNSUCCESSFUL_HISNET_LOGIN(INTERNAL_SERVER_ERROR,"히즈넷 로그인에 실패했습니다."),
+    UNSUCCESSFUL_FIREBASE_INITIALIZER(INTERNAL_SERVER_ERROR,"파이어베이스 초기화에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String detail;
