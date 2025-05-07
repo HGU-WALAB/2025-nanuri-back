@@ -159,23 +159,24 @@ public class WantPostService {
 
     //감정 표현 추가
     @Transactional
-    public void addEmotion(String userId, Long postId, EmotionType emotionType) {
+    public void addEmotion(String userId, Long postId, List<EmotionType> emotionTypes) {
         WantPost wp = wantPostRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
 
-        //같은 emotion 중복 체크
-        if (wantPostEmotionRepository.existsByUserIdAndWantPostIdAndEmotionType(userId, postId, emotionType)) {
-            throw new CustomException(ALREADY_REACTED_POST);
+        for(EmotionType emotionType : emotionTypes) {
+            //같은 emotion 중복 체크
+            if (wantPostEmotionRepository.existsByUserIdAndWantPostIdAndEmotionType(userId, postId, emotionType))
+                continue;
+
+            WantPostEmotion wantPostEmotion = WantPostEmotion.builder()
+                    .userId(userId)
+                    .wantPost(wp)
+                    .emotionType(emotionType)
+                    .build();
+
+            wp.addEmotionCount(emotionType);
+            wantPostEmotionRepository.save(wantPostEmotion);
         }
-
-        WantPostEmotion wantPostEmotion = WantPostEmotion.builder()
-                .userId(userId)
-                .wantPost(wp)
-                .emotionType(emotionType)
-                .build();
-
-        wp.addEmotionCount(emotionType);
-        wantPostEmotionRepository.save(wantPostEmotion);
     }
 
     //감정 표현 삭제

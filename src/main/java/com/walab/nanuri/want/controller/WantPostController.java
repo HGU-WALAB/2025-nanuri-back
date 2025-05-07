@@ -72,7 +72,7 @@ public class WantPostController {
     public ResponseEntity<Void> addEmotion(@AuthenticationPrincipal String uniqueId,
                                            @PathVariable Long postId,
                                            @RequestBody WantPostEmotionRequestDto emotionRequestDto) {
-        wantPostService.addEmotion(uniqueId, postId, emotionRequestDto.getEmotionType());
+        wantPostService.addEmotion(uniqueId, postId, emotionRequestDto.getEmotionTypes());
         return ResponseEntity.ok().build();
     }
 
