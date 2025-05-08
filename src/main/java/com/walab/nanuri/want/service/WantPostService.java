@@ -10,6 +10,7 @@ import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
+import com.walab.nanuri.want.dto.request.WantPostEmotionRequestDto;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
 import com.walab.nanuri.want.dto.response.WantPostEmotionResponseDto;
 import com.walab.nanuri.want.dto.response.WantPostFormalResponseDto;
@@ -21,6 +22,7 @@ import com.walab.nanuri.want.repository.WantPostRepository;
 import com.walab.nanuri.want.repository.WantPostSellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,37 +159,37 @@ public class WantPostService {
     }
 
 
-    //감정 표현 추가
+    //WantPost에 감정 표현 상태 저장
     @Transactional
-    public void addEmotion(String userId, Long postId, List<EmotionType> emotionTypes) {
-        WantPost wp = wantPostRepository.findById(postId)
+    public void saveEmotionStatus(String uniqueId, Long postId,
+                                  WantPostEmotionRequestDto requestDto){
+        WantPost post = wantPostRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
 
-        for(EmotionType emotionType : emotionTypes) {
-            //같은 emotion 중복 체크
-            if (wantPostEmotionRepository.existsByUserIdAndWantPostIdAndEmotionType(userId, postId, emotionType))
-                continue;
+        for(Map.Entry<EmotionType, Boolean> entry : requestDto.getEmotions().entrySet()){
+            EmotionType emotionType = entry.getKey();
+            boolean isClicked = entry.getValue();
 
-            WantPostEmotion wantPostEmotion = WantPostEmotion.builder()
-                    .userId(userId)
-                    .wantPost(wp)
-                    .emotionType(emotionType)
-                    .build();
+            boolean alreadyExists = wantPostEmotionRepository.existsByUserIdAndWantPostIdAndEmotionType(uniqueId, postId, emotionType);
 
-            wp.addEmotionCount(emotionType);
-            wantPostEmotionRepository.save(wantPostEmotion);
+            //자신이 지금 감정 클릭하고, 이미 누른 적이 없다면 -> 감정표현 추가
+            if(isClicked && !alreadyExists) {
+                WantPostEmotion newEmotion = WantPostEmotion.builder()
+                        .userId(uniqueId)
+                        .wantPost(post)
+                        .emotionType(emotionType)
+                        .build();
+                post.addEmotionCount(emotionType);
+                wantPostEmotionRepository.save(newEmotion);
+            }
+            //감정 클릭을 취소 했다면,
+            else if(!isClicked && alreadyExists){
+                WantPostEmotion emotion = wantPostEmotionRepository.findByUserIdAndWantPostIdAndEmotionType(uniqueId, postId, emotionType)
+                        .orElseThrow(() -> new CustomException(EMOTION_NOT_FOUND));
+                post.minusEmotionCount(emotionType);
+                wantPostEmotionRepository.delete(emotion);
+            }
         }
-    }
-
-    //감정 표현 삭제
-    @Transactional
-    public void deleteEmotion(String userId, Long postId, EmotionType emotionType) {
-        WantPostEmotion wantPostEmotion = wantPostEmotionRepository.findByUserIdAndWantPostIdAndEmotionType(userId, postId, emotionType)
-                .orElseThrow(() -> new CustomException(EMOTION_NOT_FOUND));
-
-        WantPost wp = wantPostEmotion.getWantPost();
-        wp.minusEmotionCount(wantPostEmotion.getEmotionType());
-        wantPostEmotionRepository.delete(wantPostEmotion);
     }
 
     // 감정 표현 count

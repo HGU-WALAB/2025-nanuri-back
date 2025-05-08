@@ -4,8 +4,9 @@ import com.walab.nanuri.commons.util.EmotionType;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class WantPostEmotionRequestDto {
-    private List<EmotionType> emotionTypes;
+    private Map<EmotionType, Boolean> emotions;
 }

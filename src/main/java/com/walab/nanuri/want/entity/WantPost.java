@@ -83,7 +83,7 @@ public class WantPost extends BaseTimeEntity {
 
     public void addEmotionCount(EmotionType emotionType){
         switch (emotionType) {
-            case NEED_IT -> this.needItCount = (this.needItCount == null) ? 1 : this.needItCount + 1;
+            case NEED -> this.needItCount = (this.needItCount == null) ? 1 : this.needItCount + 1;
             case CHEERING -> this.cheeringCount = (this.cheeringCount == null) ? 1 : this.cheeringCount + 1;
             case AMAZING -> this.amazingCount = (this.amazingCount == null) ? 1 : this.amazingCount + 1;
         }
@@ -91,7 +91,7 @@ public class WantPost extends BaseTimeEntity {
 
     public void minusEmotionCount(EmotionType emotionType){
         switch (emotionType) {
-            case NEED_IT -> this.needItCount = (this.needItCount == null) ? 0 : this.needItCount - 1;
+            case NEED -> this.needItCount = (this.needItCount == null) ? 0 : this.needItCount - 1;
             case CHEERING -> this.cheeringCount = (this.cheeringCount == null) ? 0 : this.cheeringCount - 1;
             case AMAZING -> this.amazingCount = (this.amazingCount == null) ? 0 : this.amazingCount - 1;
         }

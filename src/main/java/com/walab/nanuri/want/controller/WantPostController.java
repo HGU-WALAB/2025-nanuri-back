@@ -67,25 +67,16 @@ public class WantPostController {
         return ResponseEntity.ok().body(null);
     }
 
-    //WantPost에 감정 표현 추가
+    //WantPost에 감정 표현 상태 저장
     @PostMapping("/{postId}/emotion")
-    public ResponseEntity<Void> addEmotion(@AuthenticationPrincipal String uniqueId,
-                                           @PathVariable Long postId,
-                                           @RequestBody WantPostEmotionRequestDto emotionRequestDto) {
-        wantPostService.addEmotion(uniqueId, postId, emotionRequestDto.getEmotionTypes());
+    public ResponseEntity<Void> saveEmotionStatus(@AuthenticationPrincipal String uniqueId,
+                                                    @PathVariable Long postId,
+                                                  @RequestBody WantPostEmotionRequestDto requestDto){
+        wantPostService.saveEmotionStatus(uniqueId, postId, requestDto);
         return ResponseEntity.ok().build();
     }
 
-    //WantPost에 감정 표현 삭제
-    @DeleteMapping("/{postId}/emotion")
-    public ResponseEntity<Void> deleteEmotion(@AuthenticationPrincipal String uniqueId,
-                                              @PathVariable Long postId,
-                                              @RequestParam("emotionType") EmotionType emotionType) {
-        wantPostService.deleteEmotion(uniqueId, postId, emotionType);
-        return ResponseEntity.ok().build();
-    }
-
-    //WantPost에 감정 표현 조회
+    //WantPost에 감정 표현 (자신이 누른 emotion만 조회됨)
     @GetMapping("/{postId}/emotion")
     public ResponseEntity<List<WantPostEmotionResponseDto>> getEmotionCount(@AuthenticationPrincipal String uniqueId,
                                                                             @PathVariable Long postId) {
