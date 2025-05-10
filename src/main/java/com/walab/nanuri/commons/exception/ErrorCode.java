@@ -52,7 +52,8 @@ public enum ErrorCode {
 
     /* 500 : */
     UNSUCCESSFUL_HISNET_LOGIN(INTERNAL_SERVER_ERROR,"히즈넷 로그인에 실패했습니다."),
-    UNSUCCESSFUL_FIREBASE_INITIALIZER(INTERNAL_SERVER_ERROR,"파이어베이스 초기화에 실패했습니다.");
+    UNSUCCESSFUL_FIREBASE_INITIALIZER(INTERNAL_SERVER_ERROR,"파이어베이스 초기화에 실패했습니다."),
+    FCM_SEND_FAIL(INTERNAL_SERVER_ERROR,"FCM 메시지 전송에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String detail;
