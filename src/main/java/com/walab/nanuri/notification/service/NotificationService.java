@@ -2,7 +2,9 @@ package com.walab.nanuri.notification.service;
 
 import com.walab.nanuri.notification.dto.request.NotificationRequestDto;
 import com.walab.nanuri.notification.dto.response.NotificationResponseDto;
+import com.walab.nanuri.notification.entity.FcmToken;
 import com.walab.nanuri.notification.entity.Notification;
+import com.walab.nanuri.notification.repository.FcmTokenRepository;
 import com.walab.nanuri.notification.repository.NotificationRepository;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.exception.ErrorCode;
@@ -24,33 +26,36 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
-    // User에게 알림 전송 및 알림 저장
+    // 알림 전송 및 알림 저장
     public void sendNotification(NotificationRequestDto notificationRequestDto) {
-        User user = userRepository.findById(notificationRequestDto.getReceiverId()) //알림 받을 유저 찾기
+        //알림 받을 유저 찾기
+        User user = userRepository.findById(notificationRequestDto.getReceiverId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        String token = user.getFcmToken();
-        if (token == null || token.isBlank()) throw new CustomException(ErrorCode.FCM_TOKEN_NOT_FOUND);
+        //user의 fcmToken들 가져오기
+        List<String> fcmTokens = fcmService.getFcmTokens(user.getUniqueId());
+        if (fcmTokens.isEmpty()) throw new CustomException(ErrorCode.FCM_TOKEN_NOT_FOUND);
 
-        fcmService.sendMessageTo(token, notificationRequestDto.getTitle(), notificationRequestDto.getBody());
+        // 해당 유저의 모든 디바이스에 FCM 메시지 전송
+        for(String token: fcmTokens) {
+            fcmService.sendMessageTo(token, notificationRequestDto.getTitle(), notificationRequestDto.getBody());
 
-        Notification notification = Notification.builder()
-                .receiverId(notificationRequestDto.getReceiverId())
-                .title(notificationRequestDto.getTitle())
-                .body(notificationRequestDto.getBody())
-                .itemId(notificationRequestDto.getItemId())
-                .isRead(false)
-                .fcmToken(token)
-                .relatedUrl(notificationRequestDto.getRelatedUrl())
-                .build();
+            Notification notification = Notification.builder()
+                    .receiver(user)
+                    .title(notificationRequestDto.getTitle())
+                    .body(notificationRequestDto.getBody())
+                    .itemId(notificationRequestDto.getItemId())
+                    .isRead(false)
+                    .build();
 
-        notificationRepository.save(notification);
+            notificationRepository.save(notification);
+        }
     }
 
 
     // 알림 리스트 조회
     public List<NotificationResponseDto> getMyAlarmList(String uniqueId) {
-        return notificationRepository.findByReceiverIdOrderByCreatedTimeDesc(uniqueId)
+        return notificationRepository.findByReceiver_UniqueIdOrderByCreatedTimeDesc(uniqueId)
                 .stream()
                 .map(NotificationResponseDto::from)
                 .toList();

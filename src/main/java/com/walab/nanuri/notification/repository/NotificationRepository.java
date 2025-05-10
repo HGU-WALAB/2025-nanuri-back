@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findByReceiverIdOrderByCreatedTimeDesc(String receiverId);
+    //uniqueId로 유저 찾은 후 최신 알림을 위로 정렬하여 반환
+    List<Notification> findByReceiver_UniqueIdOrderByCreatedTimeDesc(String uniqueId);
 }

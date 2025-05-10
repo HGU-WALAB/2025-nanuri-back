@@ -17,7 +17,7 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    //알림 보내기
+    // 알림 전송 및 알림 저장
     @PostMapping
     public ResponseEntity<Void> sendNotification(@RequestBody NotificationRequestDto notificationRequestDto) {
         notificationService.sendNotification(notificationRequestDto);
@@ -36,5 +36,4 @@ public class NotificationController {
         notificationService.markNotification(notificationId);
         return ResponseEntity.ok().build();
     }
-
 }
