@@ -3,10 +3,13 @@ package com.walab.nanuri.user.entity;
 import com.walab.nanuri.auth.dto.AuthDto;
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.commons.util.ItemCategory;
+import com.walab.nanuri.notification.entity.FcmToken;
+import com.walab.nanuri.notification.entity.Notification;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -61,6 +64,13 @@ public class User extends BaseTimeEntity {
     @Column(name = "introduction", length = 300)
     private String introduction;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FcmToken> fcmTokens;
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications;
+
+
     public static User from(AuthDto dto) {
         return User.builder()
                 .uniqueId(dto.getUniqueId())
@@ -76,6 +86,8 @@ public class User extends BaseTimeEntity {
                 .mbti(dto.getMbti())
                 .interestItemCategory(dto.getInterestItemCategory())
                 .introduction(dto.getIntroduction())
+                .fcmTokens(new ArrayList<>())
+                .notifications(new ArrayList<>())
                 .build();
     }
 
@@ -86,5 +98,6 @@ public class User extends BaseTimeEntity {
         this.interestItemCategory = interestItemCategory;
         this.introduction = introduction;
     }
+
 
 }
