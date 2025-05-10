@@ -25,7 +25,7 @@ public class WantPostEmotion {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
-    @Column(name = "emotion_type", nullable = false)
+    @Column(name = "emotion_type", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private EmotionType emotionType;
 }

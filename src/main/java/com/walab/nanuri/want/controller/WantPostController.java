@@ -1,5 +1,6 @@
 package com.walab.nanuri.want.controller;
 
+import com.walab.nanuri.commons.util.EmotionType;
 import com.walab.nanuri.want.dto.request.WantPostEmotionRequestDto;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
 import com.walab.nanuri.want.dto.response.WantPostEmotionResponseDto;
@@ -20,9 +21,9 @@ public class WantPostController {
 
     //WantPost 등록
     @PostMapping
-    public ResponseEntity<String> createPost(@AuthenticationPrincipal String uniqueId, @RequestBody WantPostRequestDto wantPost) {
-        wantPostService.createPost(wantPost, uniqueId);
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<Long> createPost(@AuthenticationPrincipal String uniqueId,
+                                           @RequestBody WantPostRequestDto wantPost) {
+        return ResponseEntity.ok().body(wantPostService.createPost(uniqueId, wantPost));
     }
 
     //나눔자가 WantPost글에 나눔 해준다는 신청
@@ -66,24 +67,16 @@ public class WantPostController {
         return ResponseEntity.ok().body(null);
     }
 
-    //WantPost에 감정 표현 추가
+    //WantPost에 감정 표현 상태 저장
     @PostMapping("/{postId}/emotion")
-    public ResponseEntity<Void> addEmotion(@AuthenticationPrincipal String uniqueId,
-                                           @PathVariable Long postId,
-                                           @RequestBody WantPostEmotionRequestDto emotionRequestDto) {
-        wantPostService.addEmotion(uniqueId, postId, emotionRequestDto.getEmotionType());
+    public ResponseEntity<Void> saveEmotionStatus(@AuthenticationPrincipal String uniqueId,
+                                                    @PathVariable Long postId,
+                                                  @RequestBody WantPostEmotionRequestDto requestDto){
+        wantPostService.saveEmotionStatus(uniqueId, postId, requestDto);
         return ResponseEntity.ok().build();
     }
 
-    //WantPost에 감정 표현 삭제
-    @DeleteMapping("/{postId}/emotion")
-    public ResponseEntity<Void> deleteEmotion(@AuthenticationPrincipal String uniqueId,
-                                              @PathVariable Long postId) {
-        wantPostService.deleteEmotion(uniqueId, postId);
-        return ResponseEntity.ok().build();
-    }
-
-    //WantPost에 감정 표현 조회
+    //WantPost에 감정 표현 (자신이 누른 emotion만 조회됨)
     @GetMapping("/{postId}/emotion")
     public ResponseEntity<List<WantPostEmotionResponseDto>> getEmotionCount(@AuthenticationPrincipal String uniqueId,
                                                                             @PathVariable Long postId) {

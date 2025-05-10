@@ -10,14 +10,18 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface WantPostEmotionRepository extends JpaRepository<WantPostEmotion, Long> {
-    boolean existsByUserIdAndWantPostId(String userId, Long postId);
-    Optional<WantPostEmotion> findByUserIdAndWantPostId(String userId, Long postId);
+    boolean existsByUserIdAndWantPostIdAndEmotionType(String userId, Long postId, EmotionType emotionType);
 
+    //post에 달린 emotion들 가져오기
+    Optional<WantPostEmotion> findByUserIdAndWantPostIdAndEmotionType(String userId, Long postId, EmotionType emotionType);
+
+    // emotion type별 갯수 count
     @Query("SELECT w.emotionType AS emotionType, COUNT(w) AS count " +
             "FROM WantPostEmotion w WHERE w.wantPost.id = :postId " +
             "GROUP BY w.emotionType")
     List<Object[]>  countEmotionsByPostId(Long postId);
 
+    // emotion type 가져오기
     @Query("SELECT w.emotionType FROM WantPostEmotion w " +
             "WHERE w.wantPost.id = :postId AND w.userId = :userId")
     Set<EmotionType> findEmotionTypesByUserIdAndPostId(String userId, Long postId);
