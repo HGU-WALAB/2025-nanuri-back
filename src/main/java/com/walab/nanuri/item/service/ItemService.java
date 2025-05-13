@@ -1,6 +1,5 @@
 package com.walab.nanuri.item.service;
 
-import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.chat.service.ChatRoomService;
 import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
@@ -130,6 +127,7 @@ public class ItemService {
                 .toList();
     }
 
+    //검색 기능
     public List<ItemListResponseDto> getSearchTitleItems(String uniqueId, String title, String category) {
         List<Item> items = category.isEmpty() ?
             itemRepository.findByTitleContaining(title) : itemRepository.findByTitleContainingAndCategoryOrdered(title, ItemCategory.valueOf(category));
