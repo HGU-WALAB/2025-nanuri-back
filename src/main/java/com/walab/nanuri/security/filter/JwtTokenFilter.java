@@ -54,14 +54,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
         log.debug("🚀 JwtTokenFilter: 요청 URI: {}", requestURI);
-        Cookie[] cookies = request.getCookies();
 
-        if (isExcludedPath(request) && cookies == null) {
+        if (isExcludedPath(request)) {
             log.debug("🔸 JwtTokenFilter: 제외된 경로입니다. 필터 체인 계속 진행.");
             filterChain.doFilter(request, response);
             return;
         }
 
+        Cookie[] cookies = request.getCookies();
         String accessToken = null;
         String refreshToken = null;
 
