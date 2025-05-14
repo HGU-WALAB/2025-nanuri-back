@@ -4,6 +4,7 @@ import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.entity.Item;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class ItemResponseDto {
     private Integer chatCount;
     private List<String> images;
     private Boolean isOwner;
+    private LocalDateTime deadline;
 
     public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname, Boolean wishStatus) {
         return ItemResponseDto.builder()
@@ -41,6 +43,7 @@ public class ItemResponseDto {
                 .wishStatus(wishStatus != null && wishStatus)
                 .images(images)
                 .isOwner(isOwner)
+                .deadline(item.getDeadline())
                 .build();
     }
 }
