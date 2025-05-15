@@ -40,7 +40,6 @@ public class ItemController {
         return itemService.getItemsByUserNickname(userNickname);
     }
 
-
     //Item 단건 조회
     @GetMapping("/item/{itemId}")
     public ResponseEntity<ItemResponseDto> getItemById(@AuthenticationPrincipal String uniqueId,
@@ -100,10 +99,14 @@ public class ItemController {
     public ResponseEntity<List<ItemListResponseDto>> getSearchNicknameItems(@AuthenticationPrincipal String uniqueId,
                                                                              @PathVariable String nickname,
                                                                              @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchNicknameItems(uniqueId, nickname));
+        return ResponseEntity.ok(itemService.getSearchNicknameItems(uniqueId, nickname, category));
     }
 
     //내일 나눔 마감인 아이템 조회
+    @GetMapping("/items/deadline")
+    public ResponseEntity<List<ItemListResponseDto>> getDeadlineItems(@AuthenticationPrincipal String uniqueId) {
+        return ResponseEntity.ok(itemService.getDeadlineItems(uniqueId));
+    }
 
 
 

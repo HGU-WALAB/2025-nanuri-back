@@ -99,4 +99,18 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "WHERE i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE CONCAT('%', :nickname, '%')) " +
             "ORDER BY i.id DESC")
     List<Item> findByNicknameContaining(@Param("nickname") String nickname);
+
+    // 닉네임과 카테고리로 아이템 검색
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE CONCAT('%', :nickname, '%')) " +
+            "AND i.category = :category " +
+            "ORDER BY i.id DESC")
+    List<Item> findByNicknameContainingAndCategoryOrdered(@Param("nickname") String nickname, @Param("category") ItemCategory category);
+
+    // 내일 나눔 마감인 아이템 검색
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE DATE(i.deadline) = CURRENT_DATE + 1 ")
+    List<Item> findAllByDeadline();
 }
