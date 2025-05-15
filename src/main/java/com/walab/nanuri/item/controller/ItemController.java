@@ -55,14 +55,6 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getOngoingMyItems(uniqueId, done));
     }
 
-    //나눔 물품 검색 조회
-    @GetMapping("/items/search/{title}")
-    public ResponseEntity<List<ItemListResponseDto>> getSearchTitleItems(@AuthenticationPrincipal String uniqueId,
-                                                                         @PathVariable String title,
-                                                                         @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchTitleItems(uniqueId, title, category));
-    }
-
     //Item 수정
     @PatchMapping("/item/{itemId}")
     public ResponseEntity<Void> updateItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId, @RequestBody ItemRequestDto request) {
@@ -77,4 +69,44 @@ public class ItemController {
         itemService.deleteItem(uniqueId, itemId);
         return ResponseEntity.ok().body(null);
     }
+
+    //제목으로 아이템 검색
+    @GetMapping("/items/search/{title}")
+    public ResponseEntity<List<ItemListResponseDto>> getSearchTitleItems(@AuthenticationPrincipal String uniqueId,
+                                                                         @PathVariable String title,
+                                                                         @RequestParam(required = false, defaultValue = "") String category) {
+        return ResponseEntity.ok(itemService.getSearchTitleItems(uniqueId, title, category));
+    }
+
+    //내용으로 아이템 검색
+    @GetMapping("/items/search/{description}")
+    public ResponseEntity<List<ItemListResponseDto>> getSearchDescriptionItems(@AuthenticationPrincipal String uniqueId,
+                                                                                @PathVariable String description,
+                                                                                @RequestParam(required = false, defaultValue = "") String category) {
+        return ResponseEntity.ok(itemService.getSearchDescriptionItems(uniqueId, description, category));
+    }
+
+    //제목과 내용으로 아이템 검색
+    @GetMapping("/items/search/{title}/{description}")
+    public ResponseEntity<List<ItemListResponseDto>> getSearchTitleAndDescriptionItems(@AuthenticationPrincipal String uniqueId,
+                                                                                         @PathVariable String title,
+                                                                                         @PathVariable String description,
+                                                                                         @RequestParam(required = false, defaultValue = "") String category) {
+        return ResponseEntity.ok(itemService.getSearchTitleAndDescriptionItems(uniqueId, title, description, category));
+    }
+
+    //닉네임으로 아이템 검색
+    @GetMapping("/items/search/{nickname}")
+    public ResponseEntity<List<ItemListResponseDto>> getSearchNicknameItems(@AuthenticationPrincipal String uniqueId,
+                                                                             @PathVariable String nickname,
+                                                                             @RequestParam(required = false, defaultValue = "") String category) {
+        return ResponseEntity.ok(itemService.getSearchNicknameItems(uniqueId, nickname));
+    }
+
+    //내일 나눔 마감인 아이템 조회
+
+
+
+
+
 }

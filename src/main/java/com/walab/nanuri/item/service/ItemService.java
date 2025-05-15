@@ -127,26 +127,6 @@ public class ItemService {
                 .toList();
     }
 
-    //제목으로 아이템 검색
-    public List<ItemListResponseDto> getSearchTitleItems(String uniqueId, String title, String category) {
-        List<Item> items = category.isEmpty() ?
-            itemRepository.findByTitleContaining(title) : itemRepository.findByTitleContainingAndCategoryOrdered(title, ItemCategory.valueOf(category));
-
-        return items.stream()
-                .map(item -> {
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    boolean wishStatus = false;
-                    if (uniqueId != null && !uniqueId.isEmpty()) {
-                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-                    }
-                    String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
-                })
-                .toList();
-    }
-
-
     //Item 수정
     @Transactional
     public void updateItem(String uniqueId, Long updateId, ItemRequestDto itemDto) {
@@ -177,5 +157,79 @@ public class ItemService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND))
                 .getNickname();
+    }
+
+    //제목으로 아이템 검색
+    public List<ItemListResponseDto> getSearchTitleItems(String uniqueId, String title, String category) {
+        List<Item> items = category.isEmpty() ?
+                itemRepository.findByTitleContaining(title) : itemRepository.findByTitleContainingAndCategoryOrdered(title, ItemCategory.valueOf(category));
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    boolean wishStatus = false;
+                    if (uniqueId != null && !uniqueId.isEmpty()) {
+                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    }
+                    String nickname = getUserNicknameById(item.getUserId());
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                })
+                .toList();
+    }
+
+    //내용으로 아이템 검색
+    public List<ItemListResponseDto> getSearchDescriptionItems(String uniqueId, String description, String category) {
+        List<Item> items = category.isEmpty() ?
+                itemRepository.findByDescriptionContaining(description) : itemRepository.findByDescriptionContainingAndCategoryOrdered(description, ItemCategory.valueOf(category));
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    boolean wishStatus = false;
+                    if (uniqueId != null && !uniqueId.isEmpty()) {
+                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    }
+                    String nickname = getUserNicknameById(item.getUserId());
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                })
+                .toList();
+    }
+
+    //제목과 내용으로 아이템 검색
+    public List<ItemListResponseDto> getSearchTitleAndDescriptionItems(String uniqueId, String title, String description, String category) {
+        List<Item> items = category.isEmpty() ?
+                itemRepository.findByTitleAndDescriptionContaining(title, description) : itemRepository.findByTitleAndDescriptionContainingAndCategoryOrdered(title, description, ItemCategory.valueOf(category));
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    boolean wishStatus = false;
+                    if (uniqueId != null && !uniqueId.isEmpty()) {
+                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    }
+                    String nickname = getUserNicknameById(item.getUserId());
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                })
+                .toList();
+    }
+
+    //닉네임으로 아이템 검색
+    public List<ItemListResponseDto> getSearchNicknameItems(String uniqueId, String nickname) {
+        List<Item> items = itemRepository.findByNicknameContaining(nickname);
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    boolean wishStatus = false;
+                    if (uniqueId != null && !uniqueId.isEmpty()) {
+                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    }
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                })
+                .toList();
     }
 }
