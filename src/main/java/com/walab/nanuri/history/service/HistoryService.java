@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
@@ -39,9 +38,6 @@ public class HistoryService {
     @Transactional
     public void applicationItem(String receiverId, Long itemId){
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
-        //마감기한 지난 물건인지 확인
-        validateItemNotExpired(item);
 
         //본인의 물건인지 확인
         if(receiverId.equals(item.getUserId())){
@@ -74,14 +70,6 @@ public class HistoryService {
             chatParticipantService.enterRoom(chatRoom, sellerId);
 
             item.setChatCount(item.getChatCount() + 1);
-        }
-    }
-
-    //마감기한 지난 물건인지 확인 -> 마감기한 지난 물건시 신청 불가
-    private void validateItemNotExpired(Item item) {
-        if (item.getDeadline() != null && item.getDeadline().isBefore(LocalDateTime.now())) {
-            item.setShareStatus(ShareStatus.EXPIRED);
-            throw new CustomException(ITEM_DEADLINE_EXPIRED);
         }
     }
 

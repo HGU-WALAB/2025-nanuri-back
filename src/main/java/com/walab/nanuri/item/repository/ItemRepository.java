@@ -45,10 +45,4 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "AND i.title LIKE CONCAT('%', :title, '%') " +
             "ORDER BY i.id DESC")
     List<Item> findByTitleContainingAndCategoryOrdered(@Param("title") String title, @Param("category") ItemCategory category);
-
-    // 내일 나눔 마감인 아이템 조회
-    @Query("SELECT i " +
-            "FROM Item i " +
-            "WHERE DATE(i.deadline) = CURRENT_DATE + 1")
-    List<Item> findItemsDueTomorrow();
 }
