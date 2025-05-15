@@ -70,7 +70,7 @@ public class ItemController {
     }
 
     //제목으로 아이템 검색
-    @GetMapping("/items/search/{title}")
+    @GetMapping("/items/search/title/{title}")
     public ResponseEntity<List<ItemListResponseDto>> getSearchTitleItems(@AuthenticationPrincipal String uniqueId,
                                                                          @PathVariable String title,
                                                                          @RequestParam(required = false, defaultValue = "") String category) {
@@ -78,7 +78,7 @@ public class ItemController {
     }
 
     //내용으로 아이템 검색
-    @GetMapping("/items/search/{description}")
+    @GetMapping("/items/search/description/{description}")
     public ResponseEntity<List<ItemListResponseDto>> getSearchDescriptionItems(@AuthenticationPrincipal String uniqueId,
                                                                                 @PathVariable String description,
                                                                                 @RequestParam(required = false, defaultValue = "") String category) {
@@ -95,7 +95,7 @@ public class ItemController {
     }
 
     //닉네임으로 아이템 검색
-    @GetMapping("/items/search/{nickname}")
+    @GetMapping("/items/search/nickname/{nickname}")
     public ResponseEntity<List<ItemListResponseDto>> getSearchNicknameItems(@AuthenticationPrincipal String uniqueId,
                                                                              @PathVariable String nickname,
                                                                              @RequestParam(required = false, defaultValue = "") String category) {
