@@ -29,6 +29,7 @@ public enum ErrorCode {
     VALID_ALREADY_APPLIED_POST(FORBIDDEN, "이미 신청한 게시글입니다."),
     VALID_TOKEN(FORBIDDEN, "만료된 토큰입니다."),
     ALREADY_REACTED_POST(FORBIDDEN, "이미 감정표현한 게시글입니다."),
+    ITEM_DEADLINE_EXPIRED(FORBIDDEN, "마감된 게시물입니다. 채팅을 시작할 수 없습니다."),
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     USER_NOT_FOUND(NOT_FOUND, "해당 회원 정보를 찾을 수 없습니다."),
