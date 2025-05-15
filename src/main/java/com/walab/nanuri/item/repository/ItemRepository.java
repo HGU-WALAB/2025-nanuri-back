@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
@@ -45,4 +46,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "AND i.title LIKE CONCAT('%', :title, '%') " +
             "ORDER BY i.id DESC")
     List<Item> findByTitleContainingAndCategoryOrdered(@Param("title") String title, @Param("category") ItemCategory category);
+
+    // 내일 나눔 마감인 아이템 조회
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE DATE(i.deadline) = :tomorrow")
+    List<Item> findItemsDueTomorrow(@Param("tomorrow")Date tomorrow);
 }

@@ -155,7 +155,7 @@ public class ItemService {
         Item findItem = itemRepository.findById(updateId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 
         if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
-            findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory());
+            findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory(), itemDto.getDeadline());
         } else {
             throw new CustomException(VALID_ITEM);
         }
