@@ -1,5 +1,6 @@
 package com.walab.nanuri.item.service;
 
+import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.chat.service.ChatRoomService;
 import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
@@ -127,7 +130,6 @@ public class ItemService {
                 .toList();
     }
 
-    //제목으로 아이템 검색
     public List<ItemListResponseDto> getSearchTitleItems(String uniqueId, String title, String category) {
         List<Item> items = category.isEmpty() ?
             itemRepository.findByTitleContaining(title) : itemRepository.findByTitleContainingAndCategoryOrdered(title, ItemCategory.valueOf(category));
@@ -153,7 +155,7 @@ public class ItemService {
         Item findItem = itemRepository.findById(updateId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 
         if(findItem.getUserId().equals(uniqueId)) { // 아이템 주인이 맞을 경우
-            findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory(), itemDto.getDeadline());
+            findItem.update(itemDto.getTitle(), itemDto.getDescription(), itemDto.getPlace(), itemDto.getCategory());
         } else {
             throw new CustomException(VALID_ITEM);
         }
