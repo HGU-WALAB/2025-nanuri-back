@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
@@ -37,12 +39,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "FROM Item i " +
             "ORDER BY i.id DESC")
     List<Item> findAllOrdered();
-
-    // 내일 나눔 마감인 아이템 검색
-    @Query("SELECT i " +
-            "FROM Item i " +
-            "WHERE DATE(i.deadline) = CURRENT_DATE + 1")
-    List<Item> findItemsDueTomorrow();
 
 
     // 제목으로 아이템 조회
@@ -108,9 +104,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "ORDER BY i.id DESC")
     List<Item> findByNicknameContainingAndCategoryOrdered(@Param("nickname") String nickname, @Param("category") ItemCategory category);
 
-    // 내일 나눔 마감인 아이템 검색
+    // 내일 나눔 마감인 아이템 조회
     @Query("SELECT i " +
             "FROM Item i " +
-            "WHERE DATE(i.deadline) = CURRENT_DATE + 1 ")
-    List<Item> findAllByDeadline();
+            "WHERE DATE(i.deadline) = :tomorrow")
+    List<Item> findItemsDueTomorrow(@Param("tomorrow") Date tomorrow);
 }

@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -236,7 +238,8 @@ public class ItemService {
 
     //내일 나눔 마감인 아이템 조회
     public List<ItemListResponseDto> getDeadlineItems(String uniqueId) {
-        List<Item> items = itemRepository.findAllByDeadline();
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        List<Item> items = itemRepository.findItemsDueTomorrow(Date.valueOf(tomorrow));
 
         return items.stream()
                 .map(item -> {
