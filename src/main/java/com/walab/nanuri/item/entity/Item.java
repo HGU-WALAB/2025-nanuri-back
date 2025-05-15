@@ -60,11 +60,12 @@ public class Item extends BaseTimeEntity {
     private LocalDateTime deadline;
 
 
-    public void update(String title, String description, String place, String category) {
+    public void update(String title, String description, String place, String category, LocalDateTime deadline) {
         this.title = title;
         this.description = description;
         this.place = place;
         this.category = ItemCategory.valueOf(category);
+        this.deadline = deadline;
     }
 
     public static Item toEntity(String userId, ItemRequestDto requestDto) {

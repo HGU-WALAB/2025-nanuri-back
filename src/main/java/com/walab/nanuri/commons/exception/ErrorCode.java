@@ -20,6 +20,7 @@ public enum ErrorCode {
     ALREADY_FINISHED_POST(BAD_REQUEST, "이미 마감된 게시글입니다."),
     INVALID_SHARE_STATUS(BAD_REQUEST, "유효하지 않는 공유 상태입니다."),
 
+
     /* 403 FORBIDDEN : 접근 권한 제한 */
     /* Valid : 유효한 */
     VALID_USER(FORBIDDEN, "해당 정보에 접근 권한이 존재하지 않습니다."),
@@ -29,6 +30,8 @@ public enum ErrorCode {
     VALID_ALREADY_APPLIED_POST(FORBIDDEN, "이미 신청한 게시글입니다."),
     VALID_TOKEN(FORBIDDEN, "만료된 토큰입니다."),
     ALREADY_REACTED_POST(FORBIDDEN, "이미 감정표현한 게시글입니다."),
+    ITEM_DEADLINE_EXPIRED(FORBIDDEN, "마감된 게시물입니다. 채팅을 시작할 수 없습니다."),
+
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     USER_NOT_FOUND(NOT_FOUND, "해당 회원 정보를 찾을 수 없습니다."),
