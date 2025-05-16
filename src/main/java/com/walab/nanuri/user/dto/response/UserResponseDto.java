@@ -15,7 +15,7 @@ public class UserResponseDto {
     private String department;
     private String nickname;
     private String mbti;
-    private List<ItemCategory> interestItemCategory;
+    private List<String> interestItemCategory;
     private String introduction;
 
     public static UserResponseDto from(User user) {
@@ -25,7 +25,9 @@ public class UserResponseDto {
                 .department(user.getDepartment())
                 .nickname(user.getNickname())
                 .mbti(user.getMbti())
-                .interestItemCategory(user.getInterestItemCategory())
+                .interestItemCategory(user.getInterestItemCategory().stream()
+                        .map(ItemCategory::getKoreanName)
+                        .toList())
                 .introduction(user.getIntroduction())
                 .build();
     }
