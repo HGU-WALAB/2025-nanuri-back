@@ -69,37 +69,12 @@ public class ItemController {
         return ResponseEntity.ok().body(null);
     }
 
-    //제목으로 아이템 검색
-    @GetMapping("/items/search/title/{title}")
-    public ResponseEntity<List<ItemListResponseDto>> getSearchTitleItems(@AuthenticationPrincipal String uniqueId,
-                                                                         @PathVariable String title,
-                                                                         @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchTitleItems(uniqueId, title, category));
-    }
-
-    //내용으로 아이템 검색
-    @GetMapping("/items/search/description/{description}")
-    public ResponseEntity<List<ItemListResponseDto>> getSearchDescriptionItems(@AuthenticationPrincipal String uniqueId,
-                                                                                @PathVariable String description,
-                                                                                @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchDescriptionItems(uniqueId, description, category));
-    }
-
-    //제목과 내용으로 아이템 검색
-    @GetMapping("/items/search/{title}/{description}")
-    public ResponseEntity<List<ItemListResponseDto>> getSearchTitleAndDescriptionItems(@AuthenticationPrincipal String uniqueId,
-                                                                                         @PathVariable String title,
-                                                                                         @PathVariable String description,
-                                                                                         @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchTitleAndDescriptionItems(uniqueId, title, description, category));
-    }
-
-    //닉네임으로 아이템 검색
-    @GetMapping("/items/search/nickname/{nickname}")
-    public ResponseEntity<List<ItemListResponseDto>> getSearchNicknameItems(@AuthenticationPrincipal String uniqueId,
-                                                                             @PathVariable String nickname,
-                                                                             @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchNicknameItems(uniqueId, nickname, category));
+    //keyword로 아이템 검색
+    @GetMapping("/items/search/{keyword}")
+    public ResponseEntity<List<ItemListResponseDto>> searchItems(@AuthenticationPrincipal String uniqueId,
+                                                                  @PathVariable String keyword,
+                                                                  @RequestParam(required = false, defaultValue = "") String category) {
+        return ResponseEntity.ok(itemService.getSearchItems(uniqueId, keyword, category));
     }
 
     //내일 나눔 마감인 아이템 조회
@@ -107,6 +82,7 @@ public class ItemController {
     public ResponseEntity<List<ItemListResponseDto>> getDeadlineItems(@AuthenticationPrincipal String uniqueId) {
         return ResponseEntity.ok(itemService.getDeadlineItems(uniqueId));
     }
+
 
 
 

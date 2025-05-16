@@ -161,10 +161,10 @@ public class ItemService {
                 .getNickname();
     }
 
-    //제목으로 아이템 검색
-    public List<ItemListResponseDto> getSearchTitleItems(String uniqueId, String title, String category) {
+    //keyword로 아이템 검색
+    public List<ItemListResponseDto> getSearchItems(String uniqueId, String keyword, String category) {
         List<Item> items = category.isEmpty() ?
-                itemRepository.findByTitleContaining(title) : itemRepository.findByTitleContainingAndCategoryOrdered(title, ItemCategory.valueOf(category));
+                itemRepository.searchByKeyword(keyword) : itemRepository.searchByKeywordAndCategory(keyword, ItemCategory.valueOf(category));
 
         return items.stream()
                 .map(item -> {
@@ -175,62 +175,6 @@ public class ItemService {
                         wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
                     }
                     String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
-                })
-                .toList();
-    }
-
-    //내용으로 아이템 검색
-    public List<ItemListResponseDto> getSearchDescriptionItems(String uniqueId, String description, String category) {
-        List<Item> items = category.isEmpty() ?
-                itemRepository.findByDescriptionContaining(description) : itemRepository.findByDescriptionContainingAndCategoryOrdered(description, ItemCategory.valueOf(category));
-
-        return items.stream()
-                .map(item -> {
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    boolean wishStatus = false;
-                    if (uniqueId != null && !uniqueId.isEmpty()) {
-                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-                    }
-                    String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
-                })
-                .toList();
-    }
-
-    //제목과 내용으로 아이템 검색
-    public List<ItemListResponseDto> getSearchTitleAndDescriptionItems(String uniqueId, String title, String description, String category) {
-        List<Item> items = category.isEmpty() ?
-                itemRepository.findByTitleAndDescriptionContaining(title, description) : itemRepository.findByTitleAndDescriptionContainingAndCategoryOrdered(title, description, ItemCategory.valueOf(category));
-
-        return items.stream()
-                .map(item -> {
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    boolean wishStatus = false;
-                    if (uniqueId != null && !uniqueId.isEmpty()) {
-                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-                    }
-                    String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
-                })
-                .toList();
-    }
-
-    //닉네임으로 아이템 검색
-    public List<ItemListResponseDto> getSearchNicknameItems(String uniqueId, String nickname, String category) {
-        List<Item> items = category.isEmpty() ?
-                itemRepository.findByNicknameContaining(nickname) : itemRepository.findByNicknameContainingAndCategoryOrdered(nickname, ItemCategory.valueOf(category));
-
-        return items.stream()
-                .map(item -> {
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    boolean wishStatus = false;
-                    if (uniqueId != null && !uniqueId.isEmpty()) {
-                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-                    }
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
                 .toList();
