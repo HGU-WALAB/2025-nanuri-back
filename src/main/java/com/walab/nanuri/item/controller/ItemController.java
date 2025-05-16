@@ -40,7 +40,6 @@ public class ItemController {
         return itemService.getItemsByUserNickname(userNickname);
     }
 
-
     //Item 단건 조회
     @GetMapping("/item/{itemId}")
     public ResponseEntity<ItemResponseDto> getItemById(@AuthenticationPrincipal String uniqueId,
@@ -53,14 +52,6 @@ public class ItemController {
     public ResponseEntity<List<ItemListResponseDto>> getOngoingMyItems(@AuthenticationPrincipal String uniqueId,
                                                                        @RequestParam String done) {
         return ResponseEntity.ok(itemService.getOngoingMyItems(uniqueId, done));
-    }
-
-    //나눔 물품 검색 조회
-    @GetMapping("/items/search/{title}")
-    public ResponseEntity<List<ItemListResponseDto>> getSearchTitleItems(@AuthenticationPrincipal String uniqueId,
-                                                                         @PathVariable String title,
-                                                                         @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchTitleItems(uniqueId, title, category));
     }
 
     //Item 수정
@@ -77,4 +68,24 @@ public class ItemController {
         itemService.deleteItem(uniqueId, itemId);
         return ResponseEntity.ok().body(null);
     }
+
+    //keyword로 아이템 검색
+    @GetMapping("/items/search/{keyword}")
+    public ResponseEntity<List<ItemListResponseDto>> searchItems(@AuthenticationPrincipal String uniqueId,
+                                                                  @PathVariable String keyword,
+                                                                  @RequestParam(required = false, defaultValue = "") String category) {
+        return ResponseEntity.ok(itemService.getSearchItems(uniqueId, keyword, category));
+    }
+
+    //내일 나눔 마감인 아이템 조회
+    @GetMapping("/items/deadline")
+    public ResponseEntity<List<ItemListResponseDto>> getDeadlineItems(@AuthenticationPrincipal String uniqueId) {
+        return ResponseEntity.ok(itemService.getDeadlineItems(uniqueId));
+    }
+
+
+
+
+
+
 }

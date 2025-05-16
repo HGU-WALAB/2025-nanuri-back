@@ -1,6 +1,5 @@
 package com.walab.nanuri.item.service;
 
-import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.chat.service.ChatRoomService;
 import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
@@ -21,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
@@ -130,25 +129,6 @@ public class ItemService {
                 .toList();
     }
 
-    public List<ItemListResponseDto> getSearchTitleItems(String uniqueId, String title, String category) {
-        List<Item> items = category.isEmpty() ?
-            itemRepository.findByTitleContaining(title) : itemRepository.findByTitleContainingAndCategoryOrdered(title, ItemCategory.valueOf(category));
-
-        return items.stream()
-                .map(item -> {
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    boolean wishStatus = false;
-                    if (uniqueId != null && !uniqueId.isEmpty()) {
-                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-                    }
-                    String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
-                })
-                .toList();
-    }
-
-
     //Item 수정
     @Transactional
     public void updateItem(String uniqueId, Long updateId, ItemRequestDto itemDto) {
@@ -179,5 +159,43 @@ public class ItemService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND))
                 .getNickname();
+    }
+
+    //keyword로 아이템 검색
+    public List<ItemListResponseDto> getSearchItems(String uniqueId, String keyword, String category) {
+        List<Item> items = category.isEmpty() ?
+                itemRepository.searchByKeyword(keyword) : itemRepository.searchByKeywordAndCategory(keyword, ItemCategory.valueOf(category));
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    boolean wishStatus = false;
+                    if (uniqueId != null && !uniqueId.isEmpty()) {
+                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    }
+                    String nickname = getUserNicknameById(item.getUserId());
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                })
+                .toList();
+    }
+
+    //내일 나눔 마감인 아이템 조회
+    public List<ItemListResponseDto> getDeadlineItems(String uniqueId) {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        List<Item> items = itemRepository.findItemsDueTomorrow(Date.valueOf(tomorrow));
+
+        return items.stream()
+                .map(item -> {
+                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+                            .getFileUrl();
+                    boolean wishStatus = false;
+                    if (uniqueId != null && !uniqueId.isEmpty()) {
+                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+                    }
+                    String nickname = getUserNicknameById(item.getUserId());
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                })
+                .toList();
     }
 }
