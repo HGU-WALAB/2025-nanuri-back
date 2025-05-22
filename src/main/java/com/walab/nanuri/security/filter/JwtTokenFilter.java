@@ -43,7 +43,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
                         uri.equals("/api/nanuri/auth/login") ||
                         uri.equals("/api/nanuri/auth/signup") ||
-                        uri.equals("/api/nanuri/auth/logout")
+                        uri.equals("/api/nanuri/auth/logout") ||
+                        uri.matches("^/assets(/.*)?$")
         );
     }
     @Override
