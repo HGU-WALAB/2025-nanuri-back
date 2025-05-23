@@ -35,8 +35,8 @@ public class AuthController {
 
         // ✅ 쿠키 설정
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken + "; HttpOnly; Path=/; Max-Age=7200; SameSite=Lax;");
-        headers.add(HttpHeaders.SET_COOKIE, "refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=604800; SameSite=Lax;");
+        headers.add(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken + "; HttpOnly; Secure; Path=/handful; Max-Age=7200; SameSite=Lax;");
+        headers.add(HttpHeaders.SET_COOKIE, "refreshToken=" + refreshToken + "; HttpOnly; Secure; Path=/handful; Max-Age=604800; SameSite=Lax;");
 
         return ResponseEntity.ok()
                 .headers(headers)
