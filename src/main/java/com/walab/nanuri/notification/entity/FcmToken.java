@@ -1,7 +1,7 @@
 package com.walab.nanuri.notification.entity;
 
 import com.walab.nanuri.user.entity.User;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok. *;
 
 @Entity

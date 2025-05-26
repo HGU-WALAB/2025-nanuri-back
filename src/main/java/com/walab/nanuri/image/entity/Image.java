@@ -2,7 +2,7 @@ package com.walab.nanuri.image.entity;
 
 import com.walab.nanuri.image.common.ImageExtension;
 import com.walab.nanuri.item.entity.Item;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
