@@ -6,8 +6,8 @@ import com.walab.nanuri.auth.dto.response.LoginResponse;
 import com.walab.nanuri.auth.service.AuthService;
 import com.walab.nanuri.auth.dto.AuthDto;
 import com.walab.nanuri.auth.service.HisnetLoginService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +35,8 @@ public class AuthController {
 
         // ✅ 쿠키 설정
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken + "; HttpOnly; Path=/; Max-Age=7200; SameSite=Lax;");
-        headers.add(HttpHeaders.SET_COOKIE, "refreshToken=" + refreshToken + "; HttpOnly; Path=/; Max-Age=604800; SameSite=Lax;");
+        headers.add(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken + "; HttpOnly; Secure; Path=/; Max-Age=7200; SameSite=Strict;");
+        headers.add(HttpHeaders.SET_COOKIE, "refreshToken=" + refreshToken + "; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict;");
 
         return ResponseEntity.ok()
                 .headers(headers)
