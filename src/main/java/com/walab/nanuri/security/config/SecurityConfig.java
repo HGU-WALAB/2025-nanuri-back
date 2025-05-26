@@ -57,12 +57,11 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                .authorizeHttpRequests((request) -> request
-                        .requestMatchers(HttpMethod.GET, "/api/items/**", "/api/item/**", "/api/want/**").permitAll()
-                        .requestMatchers(imageUrl + "**").permitAll()
-                        .requestMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
-                        .requestMatchers("/api/nanuri/**", "/api/**", "/ws-stomp/**").authenticated()
-                );
+                .authorizeRequests()
+                        .antMatchers(HttpMethod.GET, "/api/items/**", "/api/item/**", "/api/want/**").permitAll()
+                        .antMatchers(imageUrl + "**").permitAll()
+                        .antMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
+                        .antMatchers("/api/nanuri/**", "/api/**", "/ws-stomp/**").authenticated();
 
         return http.build();
     }
@@ -71,7 +70,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "https://walab.info", "https://walab.info/handful", "https://walab.info:8443"));
         config.setAllowedMethods(Arrays.asList("POST", "GET", "PATCH", "DELETE", "PUT"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

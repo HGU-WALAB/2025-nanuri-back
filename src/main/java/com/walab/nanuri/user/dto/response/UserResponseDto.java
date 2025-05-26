@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -27,7 +28,7 @@ public class UserResponseDto {
                 .mbti(user.getMbti())
                 .interestItemCategory(user.getInterestItemCategory().stream()
                         .map(ItemCategory::getKoreanName)
-                        .toList())
+                        .collect(Collectors.toList()))
                 .introduction(user.getIntroduction())
                 .build();
     }

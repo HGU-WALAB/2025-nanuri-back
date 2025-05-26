@@ -1,7 +1,7 @@
 package com.walab.nanuri.history.entity;
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

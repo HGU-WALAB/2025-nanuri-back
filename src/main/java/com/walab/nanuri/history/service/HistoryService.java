@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
 
@@ -97,7 +98,7 @@ public class HistoryService {
                             .orElseThrow(()-> new CustomException(USER_NOT_FOUND));
                     return ApplicantDto.from(history, user);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //내가 대기 중인 Item 조회
@@ -112,7 +113,7 @@ public class HistoryService {
                             .getFileUrl();
                     return WaitingItemDto.from(item, history.getId(), image);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //내가 받은 Item 조회
@@ -127,7 +128,7 @@ public class HistoryService {
                             .getFileUrl();
                     return ReceivedItemDto.from(item, history.getId(), image);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //Item 나눔 완료

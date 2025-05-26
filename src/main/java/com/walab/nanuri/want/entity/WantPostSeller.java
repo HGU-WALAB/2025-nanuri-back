@@ -1,6 +1,6 @@
 package com.walab.nanuri.want.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 @Entity

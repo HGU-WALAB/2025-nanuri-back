@@ -4,11 +4,13 @@ import com.walab.nanuri.auth.service.AuthService;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.entity.User;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,32 +35,33 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final Key SECRET_KEY;
 
     private boolean isExcludedPath(HttpServletRequest request) {
-        String uri = request.getRequestURI();
+        String uri = request.getServletPath();
         String method = request.getMethod();
-        
-        return (
-                (method.equals("GET") && uri.matches("^/api/items(/.*)?$")) ||
-                        (method.equals("GET") && uri.matches("^/api/item(/.*)?$")) ||
-                        (method.equals("GET") && uri.matches("^/api/want(/.*)?$")) ||
 
-                        uri.equals("/api/nanuri/auth/login") ||
-                        uri.equals("/api/nanuri/auth/signup") ||
-                        uri.equals("/api/nanuri/auth/logout") ||
+        return (
+                ("GET".equals(method) && uri.matches("^/api/items(/.*)?$")) ||
+                        ("GET".equals(method) && uri.matches("^/api/item(/.*)?$")) ||
+                        ("GET".equals(method) && uri.matches("^/api/want(/.*)?$")) ||
+
+                        "/api/nanuri/auth/login".equals(uri) ||
+                        "/api/nanuri/auth/signup".equals(uri) ||
+                        "/api/nanuri/auth/logout".equals(uri) ||
                         uri.matches("^/assets(/.*)?$")
         );
     }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain)
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        log.debug("🚀 JwtTokenFilter: 요청 URI: {}", requestURI);
+        log.info("🚀 JwtTokenFilter: 요청 URI: {}", requestURI);
         Cookie[] cookies = request.getCookies();
 
         if (isExcludedPath(request) && cookies == null) {
-            log.debug("🔸 JwtTokenFilter: 제외된 경로입니다. 필터 체인 계속 진행.");
+            log.info("🔸 JwtTokenFilter: 제외된 경로입니다. 필터 체인 계속 진행.");
             filterChain.doFilter(request, response);
             return;
         }

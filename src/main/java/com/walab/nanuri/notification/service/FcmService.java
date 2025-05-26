@@ -14,6 +14,7 @@ import com.walab.nanuri.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.USER_NOT_FOUND;
 
@@ -62,6 +63,6 @@ public class FcmService {
     public List<String> getFcmTokens(String uniqueId) {
         return fcmTokenRepository.findByUser_UniqueId(uniqueId).stream()
                 .map(FcmToken::getToken)
-                .toList();
+                .collect(Collectors.toList());
     }
 }

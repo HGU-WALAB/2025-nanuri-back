@@ -36,6 +36,7 @@ out/
 
 ### .env ###
 .env
+.env.deploy
 
 ### NetBeans ###
 /nbproject/private/
@@ -49,3 +50,4 @@ out/
 
 static/**
 src/main/resources/key/**
+src/main/resources/application.properties
