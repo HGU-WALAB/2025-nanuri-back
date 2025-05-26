@@ -16,6 +16,7 @@ import com.walab.nanuri.want.entity.WantPost;
 import com.walab.nanuri.want.repository.WantPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +53,7 @@ public class ChatRoomService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteChatRoomsByItemId(Long itemId) {
         List<ChatRoom> chatRooms = chatRoomRepository.findByItemId(itemId);
 
