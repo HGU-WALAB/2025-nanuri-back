@@ -57,12 +57,11 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                .authorizeHttpRequests((request) -> request
-                        .requestMatchers(HttpMethod.GET, "/api/items/**", "/api/item/**", "/api/want/**").permitAll()
-                        .requestMatchers(imageUrl + "**").permitAll()
-                        .requestMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
-                        .requestMatchers("/api/nanuri/**", "/api/**", "/ws-stomp/**").authenticated()
-                );
+                .authorizeRequests()
+                        .antMatchers(HttpMethod.GET, "/api/items/**", "/api/item/**", "/api/want/**").permitAll()
+                        .antMatchers(imageUrl + "**").permitAll()
+                        .antMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
+                        .antMatchers("/api/nanuri/**", "/api/**", "/ws-stomp/**").authenticated();
 
         return http.build();
     }
