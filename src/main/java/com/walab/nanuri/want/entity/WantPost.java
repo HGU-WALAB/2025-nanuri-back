@@ -4,7 +4,7 @@ import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.commons.util.EmotionType;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.want.dto.request.WantPostRequestDto;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -78,22 +78,28 @@ public class WantPost extends BaseTimeEntity {
     }
 
     public void addViewCount() {
-        this.viewCount = (this.viewCount == null)? 1 : this.viewCount + 1;
+        this.viewCount = (this.viewCount == null) ? 1 : this.viewCount + 1;
     }
 
-    public void addEmotionCount(EmotionType emotionType){
+    public void addEmotionCount(EmotionType emotionType) {
         switch (emotionType) {
-            case NEED -> this.needItCount = (this.needItCount == null) ? 1 : this.needItCount + 1;
-            case CHEERING -> this.cheeringCount = (this.cheeringCount == null) ? 1 : this.cheeringCount + 1;
-            case AMAZING -> this.amazingCount = (this.amazingCount == null) ? 1 : this.amazingCount + 1;
+            case NEED:
+                this.needItCount = (this.needItCount == null) ? 1 : this.needItCount + 1;
+            case CHEERING:
+                this.cheeringCount = (this.cheeringCount == null) ? 1 : this.cheeringCount + 1;
+            case AMAZING:
+                this.amazingCount = (this.amazingCount == null) ? 1 : this.amazingCount + 1;
         }
     }
 
-    public void minusEmotionCount(EmotionType emotionType){
+    public void minusEmotionCount(EmotionType emotionType) {
         switch (emotionType) {
-            case NEED -> this.needItCount = (this.needItCount == null) ? 0 : this.needItCount - 1;
-            case CHEERING -> this.cheeringCount = (this.cheeringCount == null) ? 0 : this.cheeringCount - 1;
-            case AMAZING -> this.amazingCount = (this.amazingCount == null) ? 0 : this.amazingCount - 1;
+            case NEED:
+                this.needItCount = (this.needItCount == null) ? 0 : this.needItCount - 1;
+            case CHEERING:
+                this.cheeringCount = (this.cheeringCount == null) ? 0 : this.cheeringCount - 1;
+            case AMAZING:
+                this.amazingCount = (this.amazingCount == null) ? 0 : this.amazingCount - 1;
         }
     }
 }

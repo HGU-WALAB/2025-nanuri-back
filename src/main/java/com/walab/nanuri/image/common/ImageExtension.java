@@ -40,12 +40,18 @@ public enum ImageExtension {
         return ALLOWED_EXTENSIONS.contains(extension.toLowerCase());
     }
 
+
     public static String getMimeType(ImageExtension type) {
-        return switch (type) {
-            case PNG -> "image/png";
-            case JPG, JPEG -> "image/jpeg";
-            case SVG -> "image/svg+xml";
-            default -> "application/octet-stream"; // 기본값
-        };
+        switch (type) {
+            case PNG:
+                return "image/png";
+            case JPG:
+            case JPEG:
+                return "image/jpeg";
+            case SVG:
+                return "image/svg+xml";
+            default:
+                return "application/octet-stream"; // 기본값
+        }
     }
-}
+};
