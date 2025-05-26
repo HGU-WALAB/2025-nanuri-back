@@ -58,8 +58,7 @@ public class NotificationService {
     public List<NotificationResponseDto> getMyAlarmList(String uniqueId) {
         return notificationRepository.findByReceiver_UniqueIdOrderByCreatedTimeDesc(uniqueId)
                 .stream()
-                .map(NotificationResponseDto::from)
-                .toList();
+                .map(NotificationResponseDto::from).collect(Collectors.toList());
     }
 
 

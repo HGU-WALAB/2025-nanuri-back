@@ -113,7 +113,7 @@ public class WantPostService {
                     boolean isOwner = !uniqueId.isEmpty() && wp.getReceiverId().equals(uniqueId);
 
                     return WantPostFormalResponseDto.from(wp, nickName, isOwner);
-                }).toList();
+                }).collect(Collectors.toList());
     }
 
     // WantPost 글 수정
@@ -204,6 +204,6 @@ public class WantPostService {
                         (Long) result[1],
                         myEmotion.contains((EmotionType) result[0])
                 ))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

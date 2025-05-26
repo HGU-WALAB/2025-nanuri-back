@@ -69,7 +69,7 @@ public class UserService {
                         boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
                         return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         //나눔 완료 아이템 목록
         List<Item> completedItems = itemRepository.findAllByUserIdAndShareStatus(user.getUniqueId(), ShareStatus.COMPLETED);
@@ -79,7 +79,7 @@ public class UserService {
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
                     return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         return OtherUserInfoResponseDto.builder()
                 .nickname(user.getNickname())

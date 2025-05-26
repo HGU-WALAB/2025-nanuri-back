@@ -68,7 +68,7 @@ public class WishService {
     //관심 목록 전체 조회
     public List<WishResponseDto> getWishList(String uniqueId) {
         List<Wish> wishes = wishRepository.findAllByUniqueId(uniqueId);
-        List<Long> itemIds = wishes.stream().map(Wish::getItemId).toList();
+        List<Long> itemIds = wishes.stream().map(Wish::getItemId).collect(Collectors.toList());
         List<Item> items = itemRepository.findAllById(itemIds);
         Set<Long> wishItemIdSet = new HashSet<>(itemIds);
 
@@ -83,7 +83,7 @@ public class WishService {
                         Image::getFileUrl
                 ));
 
-        List<String> userIds = items.stream().map(Item::getUserId).distinct().toList();
+        List<String> userIds = items.stream().map(Item::getUserId).distinct().collect(Collectors.toList());
         Map<String, String> userNameMap = userRepository.findAllById(userIds).stream()
                 .collect(Collectors.toMap(
                         User::getUniqueId,
@@ -100,6 +100,6 @@ public class WishService {
                     ItemListResponseDto itemDto = ItemListResponseDto.from(item, image, nickname, wishStatus);
                     return WishResponseDto.from(wish, itemDto);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 }
