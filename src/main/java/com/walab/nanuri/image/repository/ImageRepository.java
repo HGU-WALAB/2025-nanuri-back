@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
-    @Query("SELECT i FROM images i WHERE i.item.id = :itemId ORDER BY i.id ASC LIMIT 1")
+    @Query(value = "SELECT * FROM images WHERE item_id = :itemId ORDER BY id ASC LIMIT 1", nativeQuery = true)
     Image findTopByItemIdOrderByIdAsc(@Param("itemId") Long itemId);
 
     List<Image> findByItemIdOrderByIdAsc(@Param("itemId") Long itemId);

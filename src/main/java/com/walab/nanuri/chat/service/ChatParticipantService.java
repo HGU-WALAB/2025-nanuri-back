@@ -7,7 +7,7 @@ import com.walab.nanuri.chat.repository.ChatParticipantRepository;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.chat.service.implement.ChatParticipantServiceImpl;
 import com.walab.nanuri.commons.exception.CustomException;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

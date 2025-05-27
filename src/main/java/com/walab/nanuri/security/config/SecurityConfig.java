@@ -4,22 +4,20 @@ import com.walab.nanuri.auth.service.AuthService;
 import com.walab.nanuri.commons.filter.ExceptionHandlerFilter;
 import com.walab.nanuri.security.filter.JwtTokenFilter;
 import com.walab.nanuri.security.util.JwtUtil;
-import com.walab.nanuri.user.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -37,6 +35,15 @@ public class SecurityConfig {
 
     @Value("${image.url}")
     private String imageUrl;
+
+    @Value("${front.base.url1}")
+    private String frontBaseUrl1;
+
+    @Value("${front.base.url2}")
+    private String frontBaseUrl2;
+
+    @Value("${front.base.url3}")
+    private String frontBaseUrl3;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,12 +64,11 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                .authorizeHttpRequests((request) -> request
-                        .requestMatchers(HttpMethod.GET, "/api/items/**", "/api/item/**", "/api/want/**").permitAll()
-                        .requestMatchers(imageUrl + "**").permitAll()
-                        .requestMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
-                        .requestMatchers("/api/nanuri/**", "/api/**", "/ws-stomp/**").authenticated()
-                );
+                .authorizeRequests()
+                    .antMatchers(HttpMethod.GET, "/api/items/**", "/api/item/**", "/api/want/**").permitAll()
+                    .antMatchers(imageUrl + "**").permitAll()
+                    .antMatchers("/api/nanuri/auth/**", "/error", "/file/**").permitAll()
+                    .antMatchers("/api/nanuri/**", "/api/**", "/ws-stomp/**").authenticated();
 
         return http.build();
     }
@@ -71,7 +77,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", frontBaseUrl1, frontBaseUrl2, frontBaseUrl3));
         config.setAllowedMethods(Arrays.asList("POST", "GET", "PATCH", "DELETE", "PUT"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

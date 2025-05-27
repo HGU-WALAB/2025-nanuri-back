@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.USER_NOT_FOUND;
 
@@ -57,8 +58,7 @@ public class NotificationService {
     public List<NotificationResponseDto> getMyAlarmList(String uniqueId) {
         return notificationRepository.findByReceiver_UniqueIdOrderByCreatedTimeDesc(uniqueId)
                 .stream()
-                .map(NotificationResponseDto::from)
-                .toList();
+                .map(NotificationResponseDto::from).collect(Collectors.toList());
     }
 
 

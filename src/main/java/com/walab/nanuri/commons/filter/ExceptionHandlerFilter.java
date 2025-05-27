@@ -1,9 +1,9 @@
 package com.walab.nanuri.commons.filter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletException;
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 

@@ -2,7 +2,7 @@ package com.walab.nanuri.chat.entity;
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.commons.util.PostType;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 @Getter

@@ -3,7 +3,7 @@ package com.walab.nanuri.notification.entity;
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.user.entity.User;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 @Entity
@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 public class Notification extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

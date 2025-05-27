@@ -5,10 +5,12 @@ import com.walab.nanuri.commons.entity.BaseTimeEntity;
 import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.notification.entity.FcmToken;
 import com.walab.nanuri.notification.entity.Notification;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import java.util.ArrayList;
 import java.util.List;
 

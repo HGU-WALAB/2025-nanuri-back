@@ -70,7 +70,7 @@ public class ItemService {
 
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //Item 단건 조회
@@ -101,7 +101,7 @@ public class ItemService {
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //나눔 중 혹은 완료된 나의 Item 조회
@@ -126,7 +126,7 @@ public class ItemService {
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //Item 수정
@@ -177,7 +177,7 @@ public class ItemService {
                     String nickname = getUserNicknameById(item.getUserId());
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //내일 나눔 마감인 아이템 조회
@@ -196,6 +196,6 @@ public class ItemService {
                     String nickname = getUserNicknameById(item.getUserId());
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 }
