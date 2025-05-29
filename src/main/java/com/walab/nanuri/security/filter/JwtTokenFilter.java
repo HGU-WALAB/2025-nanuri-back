@@ -35,7 +35,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final Key SECRET_KEY;
 
     private boolean isExcludedPath(HttpServletRequest request) {
-        String uri = request.getServletPath();
+//        String uri = request.getServletPath();
+
+        String uri = request.getRequestURI(); // /handful/api/items
+        String contextPath = request.getContextPath(); // /handful
+
+        if (uri.startsWith(contextPath)) {
+            uri = uri.substring(contextPath.length()); // → /api/items
+        }
+
         String method = request.getMethod();
 
         return (
