@@ -43,17 +43,17 @@ public class AuthService {
 
         Key key = JwtUtil.getSigningKey(SECRET_KEY);
 
-        String accessToken = JwtUtil.createToken(
+        String accessToken_handful = JwtUtil.createToken(
                 loggedInUser.getUniqueId(),
                 loggedInUser.getName(),
                 loggedInUser.getDepartment(),
                 key
         );
 
-        log.info("✅ Generated AccessToken: {}", accessToken);
+        log.info("✅ Generated AccessToken: {}", accessToken_handful);
 
         return AuthDto.builder()
-                .token(accessToken)
+                .token(accessToken_handful)
                 .uniqueId(loggedInUser.getUniqueId())
                 .name(loggedInUser.getName())
                 .department(loggedInUser.getDepartment())
