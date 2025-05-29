@@ -66,25 +66,25 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = null;
-        String refreshToken = null;
+        String accessToken_handful = null;
+        String refreshToken_handful = null;
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("accessToken".equals(cookie.getName())) {
-                    accessToken = cookie.getValue();
+                if ("accessToken_handful".equals(cookie.getName())) {
+                    accessToken_handful = cookie.getValue();
                 }
-                if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
+                if ("refreshToken_handful".equals(cookie.getName())) {
+                    refreshToken_handful = cookie.getValue();
                 }
             }
         }
 
-        log.info("accessToken={}", accessToken);
-        log.info("refreshToken={}", refreshToken);
+        log.info("accessToken_handful={}", accessToken_handful);
+        log.info("refreshToken_handful={}", refreshToken_handful);
 
         try {
-            String userId = JwtUtil.getUserId(accessToken, SECRET_KEY);
+            String userId = JwtUtil.getUserId(accessToken_handful, SECRET_KEY);
             User loginUser = authService.getLoginUser(userId);
 
             UsernamePasswordAuthenticationToken authenticationToken =
@@ -96,9 +96,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             // accessToken이 만료된 경우, refreshToken으로 재발급 시도
             // JwtTokenFilter.java에서 리프레시 토큰 처리 부분 수정:
-            if (refreshToken != null) {
+            if (refreshToken_handful != null) {
                 try {
-                    String userId = JwtUtil.getUserId(refreshToken, SECRET_KEY);
+                    String userId = JwtUtil.getUserId(refreshToken_handful, SECRET_KEY);
                     User loginUser = authService.getLoginUser(userId);
 
                     // 새로운 만료 시간으로 액세스 토큰 생성
@@ -109,7 +109,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     );
 
                     // 새 액세스 토큰을 쿠키로 설정
-                    Cookie newAccessTokenCookie = new Cookie("accessToken", newAccessToken);
+                    Cookie newAccessTokenCookie = new Cookie("accessToken_handful", newAccessToken);
                     newAccessTokenCookie.setHttpOnly(true);
                     newAccessTokenCookie.setPath("/");
                     newAccessTokenCookie.setMaxAge(7200); // 토큰 만료 시간과 일치 (2시간)

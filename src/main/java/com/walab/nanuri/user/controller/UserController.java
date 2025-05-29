@@ -38,13 +38,13 @@ public class UserController {
             @AuthenticationPrincipal String uniqueId, HttpServletResponse response) {
         userService.deleteUser(uniqueId);
 
-        Cookie accessCookie = new Cookie("accessToken", "");
+        Cookie accessCookie = new Cookie("accessToken_handful", "");
         accessCookie.setHttpOnly(true);
         accessCookie.setSecure(false);
         accessCookie.setPath("/");
         accessCookie.setMaxAge(0); // 쿠키 삭제
 
-        Cookie refreshCookie = new Cookie("refreshToken", "");
+        Cookie refreshCookie = new Cookie("refreshToken_handful", "");
         refreshCookie.setHttpOnly(true);
         refreshCookie.setSecure(false);
         refreshCookie.setPath("/");
