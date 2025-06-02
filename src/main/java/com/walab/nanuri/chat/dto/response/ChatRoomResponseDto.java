@@ -24,7 +24,7 @@ public class ChatRoomResponseDto {
                 .itemId(room.getItemId())
                 .postId(room.getPostId())
                 .opponentNickname(opponentNickname)
-                .title(item == null ? post.getTitle() : item.getTitle())
+                .title(room.getTitle())
                 .itemImage(ItemUrl)
                 .build();
     }
