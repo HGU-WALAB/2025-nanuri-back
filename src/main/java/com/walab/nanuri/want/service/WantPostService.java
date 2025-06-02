@@ -85,6 +85,7 @@ public class WantPostService {
                 .postId(postId)
                 .postType(PostType.POST)
                 .roomKey(roomKey)
+                .title(wp.getTitle())
                 .build();
         chatRoomRepository.save(room);
 
