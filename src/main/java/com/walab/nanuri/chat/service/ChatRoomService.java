@@ -82,14 +82,16 @@ public class ChatRoomService {
         String image = null;
         if (room.getItemId() != null) {
             item = itemRepository.findById(room.getItemId())
-                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-            image = imageRepository.findTopByItemIdOrderByIdAsc(room.getItemId()).getFileUrl();
+                    .orElse(null);
+            if (item != null) {
+                image = imageRepository.findTopByItemIdOrderByIdAsc(room.getItemId()).getFileUrl();
+            }
         }
 
         WantPost post = null;
         if (room.getPostId() != null) {
             post = wantPostRepository.findById(room.getPostId())
-                    .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
+                    .orElse(null);
         }
 
         return ChatRoomResponseDto.from(room, opponent.getNickname(), item, image, post);
