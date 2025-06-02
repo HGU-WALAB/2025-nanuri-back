@@ -147,7 +147,6 @@ public class ItemService {
     public void deleteItem(String uniqueId, Long itemId) {
         Item findItem = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         if(findItem.getUserId().equals(uniqueId)) {
-            chatRoomService.deleteChatRoomsByItemId(itemId);
             imageService.deleteImages(itemId);
             itemRepository.delete(findItem);
         } else {
