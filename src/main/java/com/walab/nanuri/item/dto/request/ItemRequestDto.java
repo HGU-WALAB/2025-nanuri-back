@@ -10,5 +10,6 @@ public class ItemRequestDto {
     private String description;
     private String place;
     private String category;
-    private LocalDateTime deadline;
+    private LocalDateTime deadline; //달력에서 직접 날짜 선택
+    private String deadlineOffsetType; // ex) "내일", "1주일 후", "한달 후" 등
 }
