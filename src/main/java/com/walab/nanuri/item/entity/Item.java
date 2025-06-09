@@ -84,7 +84,7 @@ public class Item extends BaseTimeEntity {
                 .shareStatus(ShareStatus.NONE)
                 .wishCount(0)
                 .chatCount(0)
-                .deadline(requestDto.getDeadline())
+                .deadline(calculateDeadline(requestDto))
                 .build();
     }
 
