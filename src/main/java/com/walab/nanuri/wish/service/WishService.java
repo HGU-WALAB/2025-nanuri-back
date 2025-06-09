@@ -87,7 +87,7 @@ public class WishService {
         Map<String, String> userNameMap = userRepository.findAllById(userIds).stream()
                 .collect(Collectors.toMap(
                         User::getUniqueId,
-                        User::getName
+                        User::getNickname
                 ));
 
         return wishes.stream()
