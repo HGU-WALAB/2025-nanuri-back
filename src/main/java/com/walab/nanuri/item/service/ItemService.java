@@ -4,6 +4,8 @@ import com.walab.nanuri.chat.service.ChatRoomService;
 import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
+import com.walab.nanuri.history.entity.History;
+import com.walab.nanuri.history.repository.HistoryRepository;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.image.service.ImageService;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
@@ -33,6 +36,7 @@ import static com.walab.nanuri.commons.exception.ErrorCode.*;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ImageRepository imageRepository;
+    private final HistoryRepository historyRepository;
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
     private final ImageService imageService;
@@ -74,7 +78,6 @@ public class ItemService {
     }
 
     //Item 단건 조회
-    @Transactional
     public ItemResponseDto getItemById(String uniqueId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         List<String> imageUrls = imageRepository.findByItemIdOrderByIdAsc(itemId).stream()
@@ -102,6 +105,19 @@ public class ItemService {
                     return ItemListResponseDto.from(item, image, nickname, wishStatus);
                 })
                 .collect(Collectors.toList());
+    }
+
+    // 나눔물품 거래완료
+    @Transactional
+    public void completeItem(String uniqueId, Long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+        if (Objects.equals(item.getUserId(), uniqueId)) {
+            item.setShareStatus(ShareStatus.COMPLETED);
+            List<History> completeComplete = historyRepository.findByItemId(item.getId());
+            completeComplete.forEach(History::markConfirmed);
+        } else {
+            throw new CustomException(USER_NOT_FOUND);
+        }
     }
 
     //나눔 중 혹은 완료된 나의 Item 조회
