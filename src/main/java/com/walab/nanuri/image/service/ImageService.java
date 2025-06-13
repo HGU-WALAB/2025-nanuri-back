@@ -27,10 +27,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.walab.nanuri.commons.exception.ErrorCode.ITEM_NOT_FOUND;
+import static com.walab.nanuri.commons.exception.ErrorCode.ITEM_OWNER_MISMATCH;
 
 @Service
 @RequiredArgsConstructor
@@ -85,6 +86,35 @@ public class ImageService {
                     .build();
 
             imageRepository.save(image);
+        }
+    }
+
+    private void deleteAllImages(List<Image> images) {
+        for (Image image : images) {
+            Path path = Paths.get(uploadDir, image.getFilePath());
+            try {
+                Files.deleteIfExists(path);
+            } catch (IOException e) {
+                log.warn("이미지 삭제 실패: {}", path);
+            }
+            imageRepository.delete(image);
+        }
+    }
+
+    public void deleteImageInItemId(String uniqueId, Long itemId, List<Long> imageIds) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+        if(Objects.equals(item.getUserId(), uniqueId)){
+            List<Image> images = imageRepository.findByItemIdOrderByIdAsc(itemId);
+            List<Image> deleteImages = images.stream()
+                    .filter(image -> imageIds.contains(image.getId()))
+                    .collect(Collectors.toList());
+            if (deleteImages.isEmpty()) {
+                return;
+            }
+
+            deleteAllImages(deleteImages);
+        } else {
+            throw new CustomException(ITEM_OWNER_MISMATCH);
         }
     }
 
