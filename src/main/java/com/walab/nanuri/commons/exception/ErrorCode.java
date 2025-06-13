@@ -20,6 +20,8 @@ public enum ErrorCode {
     ALREADY_FINISHED_POST(BAD_REQUEST, "이미 마감된 게시글입니다."),
     INVALID_SHARE_STATUS(BAD_REQUEST, "유효하지 않는 공유 상태입니다."),
     INVALID_DATETIME_STATUS(BAD_REQUEST,"유효하지 않은 마감일 선택입니다."),
+    ITEM_OWNER_MISMATCH(BAD_REQUEST, "당신은 나눔물품의 주인이 아닙니다.."),
+    POST_OWNER_MISMATCH(BAD_REQUEST, "당신은 게시물의 주인이 아닙니다.."),
 
     /* 403 FORBIDDEN : 접근 권한 제한 */
     /* Valid : 유효한 */
