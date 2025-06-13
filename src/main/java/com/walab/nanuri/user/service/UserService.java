@@ -85,6 +85,7 @@ public class UserService {
                 .nickname(user.getNickname())
                 .mbti(user.getMbti())
                 .introduction(user.getIntroduction())
+                .interestItemCategory(user.getInterestItemCategory())
                 .sharingItemList(sharingItemList)
                 .completedItemList(completedItemList)
                 .build();
