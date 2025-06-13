@@ -34,12 +34,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "ORDER BY i.id DESC")
     List<Item> findAllByUserId(@Param("userId") String userId);
 
-    // 최신순 정렬
-    @Query("SELECT i " +
-            "FROM Item i " +
-            "ORDER BY i.id DESC")
-    List<Item> findAllOrdered();
-
     // 내일 나눔 마감인 아이템 조회
     @Query("SELECT i " +
             "FROM Item i " +
@@ -65,4 +59,37 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "ORDER BY i.id DESC")
     List<Item> searchByKeywordAndCategory(@Param("keyword") String keyword, @Param("category") ItemCategory category);
 
+
+    // Item 정렬 Query
+
+    // 최신순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "ORDER BY i.id DESC")
+    List<Item> findAllOrderedByLatest();
+
+    // 오래된 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "ORDER BY i.id ASC")
+    List<Item> findAllOrderedByOldest();
+
+    // 마감임박 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.shareStatus = 'NONE' " +
+            "ORDER BY i.deadline ASC")
+    List<Item> findAllByDeadlineOrdered();
+
+    // 관심순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "ORDER BY i.wishCount DESC")
+    List<Item> findAllByWishCountOrdered();
+
+    // 조회순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "ORDER BY i.viewCount DESC")
+    List<Item> findAllByViewCountOrdered();
 }
