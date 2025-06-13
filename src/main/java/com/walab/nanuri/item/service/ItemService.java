@@ -6,6 +6,7 @@ import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.history.entity.History;
 import com.walab.nanuri.history.repository.HistoryRepository;
+import com.walab.nanuri.image.dto.response.ImageResponseDto;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.image.service.ImageService;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -80,16 +82,16 @@ public class ItemService {
     //Item 단건 조회
     public ItemResponseDto getItemById(String uniqueId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        List<String> imageUrls = imageRepository.findByItemIdOrderByIdAsc(itemId).stream()
-                .map(Image::getFileUrl)
-                .collect(Collectors.toList());
+        List<Image> images = new ArrayList<>(imageRepository.findByItemIdOrderByIdAsc(itemId));
+
+        List<ImageResponseDto.ImageReadResponse> imageReadResponses = ImageResponseDto.ImageReadResponse.fromList(images);
 
         String nickname = getUserNicknameById(item.getUserId());
         boolean isOwner = item.getUserId().equals(uniqueId);
         boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, itemId);
 
         item.addViewCount(); // 조회수 증가
-        return ItemResponseDto.from(item, imageUrls, isOwner, nickname, wishStatus);
+        return ItemResponseDto.from(item, imageReadResponses, isOwner, nickname, wishStatus);
     }
 
     //다른 User의 Item 전체 조회
