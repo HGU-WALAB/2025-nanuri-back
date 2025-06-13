@@ -19,7 +19,6 @@ public enum ErrorCode {
     CANNOT_APPLY_OWN_POST(BAD_REQUEST, "본인의 게시글에는 신청할 수 없습니다."),
     ALREADY_FINISHED_POST(BAD_REQUEST, "이미 마감된 게시글입니다."),
     INVALID_SHARE_STATUS(BAD_REQUEST, "유효하지 않는 공유 상태입니다."),
-    INVALID_DATETIME_STATUS(BAD_REQUEST,"유효하지 않은 마감일 선택입니다."),
 
     /* 403 FORBIDDEN : 접근 권한 제한 */
     /* Valid : 유효한 */
