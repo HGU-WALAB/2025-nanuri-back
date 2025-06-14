@@ -30,8 +30,9 @@ public class ItemController {
     //Item 전체 조회
     @GetMapping("/items")
     public List<ItemListResponseDto> getAllItems(@AuthenticationPrincipal String uniqueId,
-                                                 @RequestParam(required = false, defaultValue = "") String category) {
-        return itemService.getAllItems(uniqueId, category);
+                                                 @RequestParam(required = false, defaultValue = "") String category,
+                                                 @RequestParam(required = false, defaultValue = "latest") String sort){
+        return itemService.getAllItems(uniqueId, category, sort);
     }
 
     //다른 User의 Item 전체 조회

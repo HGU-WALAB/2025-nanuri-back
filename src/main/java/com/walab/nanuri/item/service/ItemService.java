@@ -54,9 +54,33 @@ public class ItemService {
     }
 
     //Item 전체 조회(일반 전체 조회, 카테고리 선택 후 전체 조회)
-    public List<ItemListResponseDto> getAllItems(String uniqueId, String category) {
-        List<Item> items = category.isEmpty() ?
-                itemRepository.findAllOrdered() : itemRepository.findAllByCategoryOrdered(ItemCategory.valueOf(category));
+    public List<ItemListResponseDto> getAllItems(String uniqueId, String category, String sort) {
+        List<Item> items;
+
+        if(category.isEmpty()){ // 카테고리 선택 안함
+            switch (sort) {
+                case "latest":
+                    items = itemRepository.findAllOrderedByLatest();
+                    break;
+                case "oldest" :
+                    items = itemRepository.findAllOrderedByOldest();
+                    break;
+                case "deadline":
+                    items = itemRepository.findAllByDeadlineOrdered();
+                    break;
+                case "viewCount":
+                    items = itemRepository.findAllByViewCountOrdered();
+                    break;
+                case "wishCount":
+                    items = itemRepository.findAllByWishCountOrdered();
+                    break;
+                default:
+                    throw new CustomException(INVALID_SORT_OPTION);
+            }
+        }
+        else { // 카테고리 선택한 후 정렬
+            items = itemRepository.findAllByCategoryOrdered(ItemCategory.valueOf(category));
+        }
 
         List<Long> wishItemIds;
         if (!uniqueId.isEmpty()) {

@@ -1,7 +1,6 @@
 package com.walab.nanuri.security.filter;
 
 import com.walab.nanuri.auth.service.AuthService;
-import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.security.util.JwtUtil;
 import com.walab.nanuri.user.entity.User;
 
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -22,10 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.security.Key;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.walab.nanuri.commons.exception.ErrorCode.MISSING_REFRESH_TOKEN;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,14 +33,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         return (
-                ("GET".equals(method) && uri.matches("^/api/items(/.*)?$")) ||
-                        ("GET".equals(method) && uri.matches("^/api/item(/.*)?$")) ||
-                        ("GET".equals(method) && uri.matches("^/api/want(/.*)?$")) ||
+                ("GET".equals(method) && uri.matches("/api/items(/.*)?$")) ||
+                        ("GET".equals(method) && uri.matches("/api/item(/.*)?$")) ||
+                        ("GET".equals(method) && uri.matches("/api/want(/.*)?$")) ||
 
                         "/api/nanuri/auth/login".equals(uri) ||
                         "/api/nanuri/auth/signup".equals(uri) ||
                         "/api/nanuri/auth/logout".equals(uri) ||
-                        uri.matches("^/assets(/.*)?$")
+                        uri.matches("/assets(/.*)?$")
         );
     }
 
@@ -126,14 +120,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 } catch (Exception refreshEx) {
                     // 더 상세한 로깅을 포함한 개선된 예외 처리
                     log.error("❌ 토큰 리프레시 실패: {}", refreshEx.getMessage());
-                    throw new CustomException(MISSING_REFRESH_TOKEN);
+                    respondUnauthorized(response);
+                    return;
                 }
             } else {
-                log.error("❌ refreshToken이 존재하지 않습니다. 로그인이 필요합니다.");
-                throw new CustomException(MISSING_REFRESH_TOKEN);
+                log.error("❌ refreshToken이 존재하지 않습니다.");
+                respondUnauthorized(response);
+                return;
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void respondUnauthorized(HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write("{\"message\": \"" + "refreshToken이 존재하지 않습니다. 로그인이 필요합니다." + "\"}");
     }
 }

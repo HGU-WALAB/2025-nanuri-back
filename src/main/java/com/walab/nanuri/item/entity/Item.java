@@ -1,8 +1,6 @@
 package com.walab.nanuri.item.entity;
 
 import com.walab.nanuri.commons.entity.BaseTimeEntity;
-import com.walab.nanuri.commons.exception.CustomException;
-import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.item.dto.request.ItemRequestDto;
@@ -11,10 +9,6 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-
-import static com.walab.nanuri.commons.exception.ErrorCode.INVALID_DATETIME_STATUS;
-import static com.walab.nanuri.commons.exception.ErrorCode.MISSING_REGISTER_BAD_REQUEST;
-
 
 @Entity
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
@@ -86,29 +80,6 @@ public class Item extends BaseTimeEntity {
                 .chatCount(0)
                 .deadline(requestDto.getDeadline())
                 .build();
-    }
-
-    private static LocalDateTime calculateDeadline(ItemRequestDto dto) {
-        if(dto.getDeadline() != null) { // 달력에서 직접 날짜 선택한 경우
-            return dto.getDeadline();
-        }
-        if(dto.getDeadlineOffsetType() != null) { // 버튼으로 날짜 선택한 경우
-            switch (dto.getDeadlineOffsetType()) {
-                case "TOMORROW":
-                    return LocalDateTime.now().plusDays(1);
-                case "2DAYS":
-                    return LocalDateTime.now().plusDays(2);
-                case "3DAYS":
-                    return LocalDateTime.now().plusDays(3);
-                case "7DAYS":
-                    return LocalDateTime.now().plusDays(7);
-                case "1MONTH":
-                    return LocalDateTime.now().plusMonths(1);
-                default:
-                    throw new CustomException(INVALID_DATETIME_STATUS);
-            }
-        }
-        return null;
     }
 
     //조회수 증가

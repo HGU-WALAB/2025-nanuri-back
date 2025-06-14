@@ -22,6 +22,8 @@ public enum ErrorCode {
     INVALID_DATETIME_STATUS(BAD_REQUEST,"유효하지 않은 마감일 선택입니다."),
     ITEM_OWNER_MISMATCH(BAD_REQUEST, "당신은 나눔물품의 주인이 아닙니다.."),
     POST_OWNER_MISMATCH(BAD_REQUEST, "당신은 게시물을 올린 사람이 아닙니다.."),
+    INVALID_SORT_OPTION(BAD_REQUEST, "유효하지 않은 정렬 옵션입니다."),
+
     /* 403 FORBIDDEN : 접근 권한 제한 */
     /* Valid : 유효한 */
     VALID_USER(FORBIDDEN, "해당 정보에 접근 권한이 존재하지 않습니다."),
