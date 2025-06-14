@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -65,21 +66,39 @@ public class ItemService {
                 case "oldest" :
                     items = itemRepository.findAllOrderedByOldest();
                     break;
-                case "deadline":
-                    items = itemRepository.findAllByDeadlineOrdered();
-                    break;
                 case "viewCount":
                     items = itemRepository.findAllByViewCountOrdered();
                     break;
                 case "wishCount":
                     items = itemRepository.findAllByWishCountOrdered();
                     break;
+                case "deadline":
+                    items = itemRepository.findAllByDeadlineOrdered();
+                    break;
                 default:
                     throw new CustomException(INVALID_SORT_OPTION);
             }
         }
         else { // 카테고리 선택한 후 정렬
-            items = itemRepository.findAllByCategoryOrdered(ItemCategory.valueOf(category));
+            switch (sort) {
+                case "latest":
+                    items = itemRepository.findAllByCategoryOrderedLatest(ItemCategory.valueOf(category));
+                    break;
+                case "oldest":
+                    items = itemRepository.findAllByCategoryOrderedOldest(ItemCategory.valueOf(category));
+                    break;
+                case "viewCount":
+                    items = itemRepository.findAllByCategoryOrderedByViewCount(ItemCategory.valueOf(category));
+                    break;
+                case "wishCount":
+                    items = itemRepository.findAllByCategoryOrderedByWishCount(ItemCategory.valueOf(category));
+                    break;
+                case "deadline":
+                    items = itemRepository.findAllByCategoryOrderedByDeadline(ItemCategory.valueOf(category));
+                    break;
+                default:
+                    throw new CustomException(INVALID_SORT_OPTION);
+            }
         }
 
         List<Long> wishItemIds;
@@ -93,12 +112,18 @@ public class ItemService {
 
         return items.stream()
                 .map(item -> {
+                    // 마감기한 지난 아이템이라면 -> shareStatus를 EXPIRED로 변경
+                    ShareStatus shareStatus = item.getShareStatus();
+                    if (item.getDeadline() != null && item.getDeadline().isBefore(LocalDateTime.now())
+                            && !shareStatus.equals(ShareStatus.EXPIRED)) {
+                        shareStatus = ShareStatus.EXPIRED;
+                    }
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
                     boolean wishStatus = wishItemIds.contains(item.getId());
 
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus, shareStatus);
                 })
                 .collect(Collectors.toList());
     }
@@ -114,9 +139,13 @@ public class ItemService {
         String nickname = getUserNicknameById(item.getUserId());
         boolean isOwner = item.getUserId().equals(uniqueId);
         boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, itemId);
-
+        ShareStatus shareStatus = item.getShareStatus();
+        if (item.getDeadline() != null && item.getDeadline().isBefore(LocalDateTime.now())
+                && !shareStatus.equals(ShareStatus.EXPIRED)) {
+            shareStatus = ShareStatus.EXPIRED;
+        }
         item.addViewCount(); // 조회수 증가
-        return ItemResponseDto.from(item, imageReadResponses, isOwner, nickname, wishStatus);
+        return ItemResponseDto.from(item, imageReadResponses, isOwner, nickname, wishStatus, shareStatus);
     }
 
     //다른 User의 Item 전체 조회
@@ -126,10 +155,15 @@ public class ItemService {
 
         return items.stream()
                 .map(item -> {
+                    ShareStatus shareStatus = item.getShareStatus();
+                    if (item.getDeadline() != null && item.getDeadline().isBefore(LocalDateTime.now())
+                            && !shareStatus.equals(ShareStatus.EXPIRED)) {
+                        shareStatus = ShareStatus.EXPIRED;
+                    }
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus, shareStatus);
                 })
                 .collect(Collectors.toList());
     }
@@ -163,11 +197,16 @@ public class ItemService {
 
         return items.stream()
                 .map(item -> {
+                    ShareStatus shareStatus = item.getShareStatus();
+                    if (item.getDeadline() != null && item.getDeadline().isBefore(LocalDateTime.now())
+                            && !shareStatus.equals(ShareStatus.EXPIRED)) {
+                        shareStatus = ShareStatus.EXPIRED;
+                    }
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     String nickname = getUserNicknameById(item.getUserId());
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus, shareStatus);
                 })
                 .collect(Collectors.toList());
     }
@@ -211,6 +250,11 @@ public class ItemService {
 
         return items.stream()
                 .map(item -> {
+                    ShareStatus shareStatus = item.getShareStatus();
+                    if (item.getDeadline() != null && item.getDeadline().isBefore(LocalDateTime.now())
+                            && !shareStatus.equals(ShareStatus.EXPIRED)) {
+                        shareStatus = ShareStatus.EXPIRED;
+                    }
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     boolean wishStatus = false;
@@ -218,7 +262,7 @@ public class ItemService {
                         wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
                     }
                     String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus, shareStatus);
                 })
                 .collect(Collectors.toList());
     }
@@ -230,6 +274,7 @@ public class ItemService {
 
         return items.stream()
                 .map(item -> {
+                    ShareStatus shareStatus = item.getShareStatus();
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     boolean wishStatus = false;
@@ -237,7 +282,7 @@ public class ItemService {
                         wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
                     }
                     String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+                    return ItemListResponseDto.from(item, image, nickname, wishStatus, shareStatus);
                 })
                 .collect(Collectors.toList());
     }

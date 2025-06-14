@@ -26,7 +26,7 @@ public class ItemListResponseDto {
     private Integer viewCount;
     private LocalDateTime deadline;
 
-    public static ItemListResponseDto from(Item item, String image, String nickname, Boolean wishStatus) {
+    public static ItemListResponseDto from(Item item, String image, String nickname, Boolean wishStatus, ShareStatus shareStatus){
         return ItemListResponseDto.builder()
                 .itemId(item.getId())
                 .nickname(nickname)
@@ -34,7 +34,7 @@ public class ItemListResponseDto {
                 .description(item.getDescription())
                 .category(item.getCategory().getKoreanName())
                 .image(image)
-                .shareStatus(item.getShareStatus())
+                .shareStatus(shareStatus)
                 .wishStatus(wishStatus)
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedTime(item.getModifiedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))

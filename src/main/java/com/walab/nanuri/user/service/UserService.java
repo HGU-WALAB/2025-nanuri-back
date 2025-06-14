@@ -67,7 +67,12 @@ public class UserService {
                 .map(item -> {
                         String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
                         boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
-                        return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
+                        ShareStatus shareStatus = item.getShareStatus();
+                        if (item.getDeadline() != null && item.getDeadline().isBefore(java.time.LocalDateTime.now())
+                                && !shareStatus.equals(ShareStatus.EXPIRED)) {
+                            shareStatus = ShareStatus.EXPIRED;
+                        }
+                        return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus, shareStatus);
                 })
                 .collect(Collectors.toList());
 
@@ -77,7 +82,13 @@ public class UserService {
                 .map(item -> {
                     String imageUrl = imageRepository.findTopByItemIdOrderByIdAsc(item.getId()).getFileUrl();
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(user.getUniqueId(), item.getId());
-                    return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus);
+                    ShareStatus shareStatus = item.getShareStatus();
+                    if (item.getDeadline() != null && item.getDeadline().isBefore(java.time.LocalDateTime.now())
+                            && !shareStatus.equals(ShareStatus.EXPIRED)) {
+                        shareStatus = ShareStatus.EXPIRED;
+                    }
+
+                    return ItemListResponseDto.from(item, imageUrl, nickname, wishStatus, shareStatus);
                 })
                 .collect(Collectors.toList());
 
