@@ -1,6 +1,7 @@
 package com.walab.nanuri.chat.dto.response;
 
 import com.walab.nanuri.chat.entity.ChatRoom;
+import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.want.entity.WantPost;
@@ -16,6 +17,7 @@ public class ChatRoomResponseDto {
     private String title;
     private String itemImage;
     private String opponentNickname;
+    private PostType postType;
 
     public static ChatRoomResponseDto from(ChatRoom room, String opponentNickname, Item item, String ItemUrl, WantPost post) {
 
@@ -26,6 +28,7 @@ public class ChatRoomResponseDto {
                 .opponentNickname(opponentNickname)
                 .title(item == null ? post.getTitle() : item.getTitle())
                 .itemImage(ItemUrl)
+                .postType(room.getPostType())
                 .build();
     }
 }

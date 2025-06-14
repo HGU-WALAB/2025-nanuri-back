@@ -19,6 +19,9 @@ public enum ErrorCode {
     CANNOT_APPLY_OWN_POST(BAD_REQUEST, "본인의 게시글에는 신청할 수 없습니다."),
     ALREADY_FINISHED_POST(BAD_REQUEST, "이미 마감된 게시글입니다."),
     INVALID_SHARE_STATUS(BAD_REQUEST, "유효하지 않는 공유 상태입니다."),
+    INVALID_DATETIME_STATUS(BAD_REQUEST,"유효하지 않은 마감일 선택입니다."),
+    ITEM_OWNER_MISMATCH(BAD_REQUEST, "당신은 나눔물품의 주인이 아닙니다.."),
+    POST_OWNER_MISMATCH(BAD_REQUEST, "당신은 게시물을 올린 사람이 아닙니다.."),
     INVALID_SORT_OPTION(BAD_REQUEST, "유효하지 않은 정렬 옵션입니다."),
 
     /* 403 FORBIDDEN : 접근 권한 제한 */
@@ -45,6 +48,7 @@ public enum ErrorCode {
     FCM_TOKEN_NOT_FOUND(NOT_FOUND,"FCM 토큰이 존재하지 않습니다."),
     NOTIFICATION_NOT_FOUND(NOT_FOUND,"해당 알림을 찾을 수 없습니다."),
     EMOTION_NOT_FOUND(NOT_FOUND,"해당 감정표현을 찾을 수 없습니다."),
+    CHAT_TYPE_INVALID(NOT_FOUND, "해당 타입과 동일한 타입이 없습니다."),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     /* DUPLICATE : (다른 무엇과) 똑같은 */

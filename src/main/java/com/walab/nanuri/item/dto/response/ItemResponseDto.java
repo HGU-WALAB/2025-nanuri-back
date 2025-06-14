@@ -1,6 +1,7 @@
 package com.walab.nanuri.item.dto.response;
 
 import com.walab.nanuri.commons.util.ShareStatus;
+import com.walab.nanuri.image.dto.response.ImageResponseDto;
 import com.walab.nanuri.item.entity.Item;
 import lombok.*;
 
@@ -24,11 +25,11 @@ public class ItemResponseDto {
     private String createdTime;
     private Integer wishCount;
     private Integer chatCount;
-    private List<String> images;
+    private List<ImageResponseDto.ImageReadResponse> images;
     private Boolean isOwner;
     private LocalDateTime deadline;
 
-    public static ItemResponseDto from(Item item, List<String> images, Boolean isOwner, String nickname, Boolean wishStatus) {
+    public static ItemResponseDto from(Item item, List<ImageResponseDto.ImageReadResponse> images, Boolean isOwner, String nickname, Boolean wishStatus) {
         return ItemResponseDto.builder()
                 .id(item.getId())
                 .nickname(nickname)

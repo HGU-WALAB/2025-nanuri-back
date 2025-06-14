@@ -62,6 +62,13 @@ public class ItemController {
         return ResponseEntity.ok().body(null);
     }
 
+    //Item 거래 완료
+    @PatchMapping("/item/complete/{itemId}")
+    public ResponseEntity<Void> completeItem(@AuthenticationPrincipal String uniqueId, @PathVariable Long itemId) {
+        itemService.completeItem(uniqueId, itemId);
+        return ResponseEntity.ok().body(null);
+    }
+
 
     //Item 삭제
     @DeleteMapping("/item/{itemId}")

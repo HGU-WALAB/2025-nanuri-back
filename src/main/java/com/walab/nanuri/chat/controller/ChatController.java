@@ -28,6 +28,11 @@ public class ChatController {
         return ResponseEntity.ok().body(chatRoomService.getChatRooms(uniqueId));
     }
 
+    @GetMapping("/rooms/type")
+    public ResponseEntity<List<ChatRoomResponseDto>> getRoomTypes(@AuthenticationPrincipal String uniqueId, @RequestParam String roomType){
+        return ResponseEntity.ok().body(chatRoomService.getChatRoomsByOption(uniqueId, roomType));
+    }
+
     @GetMapping("/room/{roomId}")
     public ResponseEntity<ChatRoomResponseDto> getRoom(@AuthenticationPrincipal String uniqueId, @PathVariable Long roomId){
         return ResponseEntity.ok().body(chatRoomService.getChatRoom(uniqueId, roomId));
