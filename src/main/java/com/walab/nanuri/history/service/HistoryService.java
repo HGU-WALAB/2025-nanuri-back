@@ -16,6 +16,7 @@ import com.walab.nanuri.history.entity.History;
 import com.walab.nanuri.history.repository.HistoryRepository;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
+import com.walab.nanuri.wish.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class HistoryService {
     private final ImageRepository imageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatParticipantService chatParticipantService;
+    private final WishRepository wishRepository;
 
     //Item 신청 (아이템 나눔 받고 싶다고 신청)
     @Transactional
@@ -126,7 +128,8 @@ public class HistoryService {
                             orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
-                    return ReceivedItemDto.from(item, history.getId(), image);
+                    boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(receiverId, item.getId());
+                    return ReceivedItemDto.from(item, history.getId(), image, wishStatus);
                 })
                 .collect(Collectors.toList());
     }
