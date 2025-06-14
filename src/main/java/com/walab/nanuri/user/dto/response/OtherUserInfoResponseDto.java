@@ -1,5 +1,6 @@
 package com.walab.nanuri.user.dto.response;
 
+import com.walab.nanuri.commons.util.ItemCategory;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
 import com.walab.nanuri.user.entity.User;
 import lombok.Builder;
@@ -13,6 +14,7 @@ public class OtherUserInfoResponseDto {
     private String nickname;
     private String mbti;
     private String introduction;
+    private List<ItemCategory> interestItemCategory;
     private List<ItemListResponseDto> sharingItemList;
     private List<ItemListResponseDto> completedItemList;
 }
