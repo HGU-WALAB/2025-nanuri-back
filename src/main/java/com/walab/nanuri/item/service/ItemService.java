@@ -55,37 +55,65 @@ public class ItemService {
     }
 
     //Item 전체 조회(일반 전체 조회, 카테고리 선택 후 전체 조회)
-    public List<ItemListResponseDto> getAllItems(String uniqueId, String category, String sort) {
+    public List<ItemListResponseDto> getAllItems(String uniqueId, String keyword, String category, String sort) {
         List<Item> items;
 
-        if(category.isEmpty()){ // 카테고리 선택 안함
+        boolean hasKeyword = !keyword.isEmpty();
+        boolean hasCategory = !category.isEmpty();
+
+        if (hasKeyword && hasCategory) { // 키워드와 카테고리 둘 다 선택
             switch (sort) {
                 case "latest":
-                    items = itemRepository.findAllOrderedByLatest();
+                    items = itemRepository.findAllByKeywordAndCategoryOrderedByLatest(keyword, ItemCategory.valueOf(category));
                     break;
-                case "oldest" :
-                    items = itemRepository.findAllOrderedByOldest();
+                case "oldest":
+                    items = itemRepository.findAllByKeywordAndCategoryOrderedByOldest(keyword, ItemCategory.valueOf(category));
                     break;
                 case "viewCount":
-                    items = itemRepository.findAllByViewCountOrdered();
+                    items = itemRepository.findAllByKeywordAndCategoryOrderedByViewCount(keyword, ItemCategory.valueOf(category));
                     break;
                 case "wishCount":
-                    items = itemRepository.findAllByWishCountOrdered();
+                    items = itemRepository.findAllByKeywordAndCategoryOrderedByWishCount(keyword, ItemCategory.valueOf(category));
+                    break;
+
+                case "deadline":
+                    items = itemRepository.findAllByKeywordAndCategoryOrderedByDeadline(keyword, ItemCategory.valueOf(category));
+                    break;
+
+                default:
+                    throw new CustomException(INVALID_SORT_OPTION);
+            }
+        }
+
+        else if(hasKeyword) { // 키워드만 선택
+            switch (sort) {
+                case "latest":
+                    items = itemRepository.findAllByKeywordOrderedByLatest(keyword);
+                    break;
+                case "oldest":
+                    items = itemRepository.findAllByKeywordOrderedByOldest(keyword);
+                    break;
+                case "viewCount":
+                    items = itemRepository.findAllByKeywordOrderedByViewCount(keyword);
+                    break;
+                case "wishCount":
+                    items = itemRepository.findAllByKeywordOrderedByWishCount(keyword);
                     break;
                 case "deadline":
-                    items = itemRepository.findAllByDeadlineOrdered();
+                    items = itemRepository.findAllByKeywordOrderedByDeadline(keyword);
                     break;
                 default:
                     throw new CustomException(INVALID_SORT_OPTION);
             }
         }
-        else { // 카테고리 선택한 후 정렬
+
+        else if(hasCategory) { // 카테고리만 선택
             switch (sort) {
                 case "latest":
-                    items = itemRepository.findAllByCategoryOrderedLatest(ItemCategory.valueOf(category));
+                    items = itemRepository.findAllByCategoryOrderedByLatest(ItemCategory.valueOf(category));
                     break;
                 case "oldest":
-                    items = itemRepository.findAllByCategoryOrderedOldest(ItemCategory.valueOf(category));
+                    items = itemRepository.findAllByCategoryOrderedByOldest(ItemCategory.valueOf(category));
                     break;
                 case "viewCount":
                     items = itemRepository.findAllByCategoryOrderedByViewCount(ItemCategory.valueOf(category));
@@ -101,6 +129,29 @@ public class ItemService {
             }
         }
 
+        else { // 키워드와 카테고리 둘 다 선택하지 않은 경우
+            switch (sort) {
+                case "latest":
+                    items = itemRepository.findAllOrderedByLatest();
+                    break;
+                case "oldest":
+                    items = itemRepository.findAllOrderedByOldest();
+                    break;
+                case "viewCount":
+                    items = itemRepository.findAllByViewCountOrdered();
+                    break;
+                case "wishCount":
+                    items = itemRepository.findAllByWishCountOrdered();
+                    break;
+                case "deadline":
+                    items = itemRepository.findAllByDeadlineOrdered();
+                    break;
+                default:
+                    throw new CustomException(INVALID_SORT_OPTION);
+            }
+        }
+      
+      
         List<Long> wishItemIds;
         if (!uniqueId.isEmpty()) {
             wishItemIds = wishRepository.findAllByUniqueId(uniqueId).stream()
@@ -244,28 +295,23 @@ public class ItemService {
     }
 
     //keyword로 아이템 검색
-    public List<ItemListResponseDto> getSearchItems(String uniqueId, String keyword, String category) {
-        List<Item> items = category.isEmpty() ?
-                itemRepository.searchByKeyword(keyword) : itemRepository.searchByKeywordAndCategory(keyword, ItemCategory.valueOf(category));
-
-        return items.stream()
-                .map(item -> {
-                    ShareStatus shareStatus = item.getShareStatus();
-                    if (item.getDeadline() != null && item.getDeadline().isBefore(LocalDateTime.now())
-                            && !shareStatus.equals(ShareStatus.EXPIRED)) {
-                        shareStatus = ShareStatus.EXPIRED;
-                    }
-                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-                            .getFileUrl();
-                    boolean wishStatus = false;
-                    if (uniqueId != null && !uniqueId.isEmpty()) {
-                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-                    }
-                    String nickname = getUserNicknameById(item.getUserId());
-                    return ItemListResponseDto.from(item, image, nickname, wishStatus, shareStatus);
-                })
-                .collect(Collectors.toList());
-    }
+//    public List<ItemListResponseDto> getSearchItems(String uniqueId, String keyword, String category) {
+//        List<Item> items = category.isEmpty() ?
+//                itemRepository.searchByKeyword(keyword) : itemRepository.searchByKeywordAndCategory(keyword, ItemCategory.valueOf(category));
+//
+//        return items.stream()
+//                .map(item -> {
+//                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
+//                            .getFileUrl();
+//                    boolean wishStatus = false;
+//                    if (uniqueId != null && !uniqueId.isEmpty()) {
+//                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
+//                    }
+//                    String nickname = getUserNicknameById(item.getUserId());
+//                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
+//                })
+//                .collect(Collectors.toList());
+//    }
 
     //내일 나눔 마감인 아이템 조회
     public List<ItemListResponseDto> getDeadlineItems(String uniqueId) {

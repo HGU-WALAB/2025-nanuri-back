@@ -30,9 +30,10 @@ public class ItemController {
     //Item 전체 조회
     @GetMapping("/items")
     public List<ItemListResponseDto> getAllItems(@AuthenticationPrincipal String uniqueId,
+                                                 @RequestParam(required = false, defaultValue = "") String keyword,
                                                  @RequestParam(required = false, defaultValue = "") String category,
-                                                 @RequestParam(required = false, defaultValue = "latest") String sort){
-        return itemService.getAllItems(uniqueId, category, sort);
+                                                 @RequestParam(required = false, defaultValue = "latest") String sort) {
+        return itemService.getAllItems(uniqueId, keyword, category, sort);
     }
 
     //다른 User의 Item 전체 조회
@@ -78,12 +79,12 @@ public class ItemController {
     }
 
     //keyword로 아이템 검색
-    @GetMapping("/items/search/{keyword}")
-    public ResponseEntity<List<ItemListResponseDto>> searchItems(@AuthenticationPrincipal String uniqueId,
-                                                                  @PathVariable String keyword,
-                                                                  @RequestParam(required = false, defaultValue = "") String category) {
-        return ResponseEntity.ok(itemService.getSearchItems(uniqueId, keyword, category));
-    }
+//    @GetMapping("/items/search/{keyword}")
+//    public ResponseEntity<List<ItemListResponseDto>> searchItems(@AuthenticationPrincipal String uniqueId,
+//                                                                  @PathVariable String keyword,
+//                                                                  @RequestParam(required = false, defaultValue = "") String category) {
+//        return ResponseEntity.ok(itemService.getSearchItems(uniqueId, keyword, category));
+//    }
 
     //내일 나눔 마감인 아이템 조회
     @GetMapping("/items/deadline")

@@ -42,18 +42,144 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "ORDER BY i.id DESC")
     List<Item> searchByKeyword(@Param("keyword") String keyword);
 
-    // keyword로 제목, 내용, 닉네임 검색 + 카테고리 검색
+
+    //-----------------------------------
+    // keyword + category 정렬
+    // 최신순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE (i.title LIKE %:keyword% OR i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%)) " +
+            "AND i.category = :category " +
+            "ORDER BY i.id DESC")
+    List<Item> findAllByKeywordAndCategoryOrderedByLatest(@Param("keyword") String keyword, @Param("category") ItemCategory category);
+
+    // 오래된 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE (i.title LIKE %:keyword% OR i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%)) " +
+            "AND i.category = :category " +
+            "ORDER BY i.id ASC")
+    List<Item> findAllByKeywordAndCategoryOrderedByOldest(@Param("keyword") String keyword, @Param("category") ItemCategory category);
+
+    // 조회순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE (i.title LIKE %:keyword% OR " +
+            "i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%)) " +
+            "AND i.category = :category " +
+            "ORDER BY i.viewCount DESC")
+    List<Item> findAllByKeywordAndCategoryOrderedByViewCount(@Param("keyword") String keyword, @Param("category") ItemCategory category);
+
+    // 관심순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE (i.title LIKE %:keyword% OR " +
+            "i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%)) " +
+            "AND i.category = :category " +
+            "ORDER BY i.wishCount DESC")
+    List<Item> findAllByKeywordAndCategoryOrderedByWishCount(@Param("keyword") String keyword, @Param("category") ItemCategory category);
+
+    // 마감임박 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE (i.title LIKE %:keyword% OR " +
+            "i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%)) " +
+            "AND i.category = :category " +
+            "ORDER BY i.deadline ASC")
+    List<Item> findAllByKeywordAndCategoryOrderedByDeadline(@Param("keyword") String keyword, @Param("category") ItemCategory category);
+
+
+    // ----------------------------------
+    // keyword 포함시 정렬
+    // 최신 순 정렬
     @Query("SELECT i " +
             "FROM Item i " +
             "WHERE i.title LIKE %:keyword% OR " +
             "i.description LIKE %:keyword% OR " +
-            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%)" +
-            "AND i.category = :category " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%) " +
             "ORDER BY i.id DESC")
-    List<Item> searchByKeywordAndCategory(@Param("keyword") String keyword, @Param("category") ItemCategory category);
+    List<Item> findAllByKeywordOrderedByLatest(@Param("keyword") String keyword);
 
+    // 오래된 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.title LIKE %:keyword% OR " +
+            "i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%) " +
+            "ORDER BY i.id ASC")
+    List<Item> findAllByKeywordOrderedByOldest(@Param("keyword") String keyword);
 
-    // Item 정렬 Query
+    // 조회순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.title LIKE %:keyword% OR " +
+            "i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%) " +
+            "ORDER BY i.viewCount DESC")
+    List<Item> findAllByKeywordOrderedByViewCount(@Param("keyword") String keyword);
+
+    // 관심순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.title LIKE %:keyword% OR " +
+            "i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%) " +
+            "ORDER BY i.wishCount DESC")
+    List<Item> findAllByKeywordOrderedByWishCount(@Param("keyword") String keyword);
+
+    // 마감임박 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.title LIKE %:keyword% OR " +
+            "i.description LIKE %:keyword% OR " +
+            "i.userId IN (SELECT u.uniqueId FROM User u WHERE u.nickname LIKE %:keyword%) " +
+            "ORDER BY i.deadline ASC")
+    List<Item> findAllByKeywordOrderedByDeadline(@Param("keyword") String keyword);
+
+    // ----------------------------------
+    // category 포함시 정렬
+    // 최신순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.id DESC")
+    List<Item> findAllByCategoryOrderedByLatest(@Param("category") ItemCategory category);
+
+    // 오래된 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.id ASC")
+    List<Item> findAllByCategoryOrderedByOldest(@Param("category") ItemCategory category);
+
+    // 조회순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.viewCount DESC")
+    List<Item> findAllByCategoryOrderedByViewCount(@Param("category") ItemCategory category);
+
+    // 관심순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.wishCount DESC")
+    List<Item> findAllByCategoryOrderedByWishCount(@Param("category") ItemCategory category);
+
+    // 마감임박 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.deadline ASC")
+    List<Item> findAllByCategoryOrderedByDeadline(@Param("category") ItemCategory category);
+
+    // ----------------------------------
+    // 기본 정렬 Query
 
     // 최신순 정렬
     @Query("SELECT i " +
