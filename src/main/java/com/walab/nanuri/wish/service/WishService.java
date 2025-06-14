@@ -1,6 +1,7 @@
 package com.walab.nanuri.wish.service;
 
 import com.walab.nanuri.commons.exception.CustomException;
+import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.item.dto.response.ItemListResponseDto;
@@ -96,8 +97,12 @@ public class WishService {
                     String image = imageMap.get(item.getId());
                     String nickname = userNameMap.get(item.getUserId());
                     boolean wishStatus = wishItemIdSet.contains(item.getId());
-
-                    ItemListResponseDto itemDto = ItemListResponseDto.from(item, image, nickname, wishStatus);
+                    ShareStatus shareStatus = item.getShareStatus();
+                    if (item.getDeadline() != null && item.getDeadline().isBefore(java.time.LocalDateTime.now())
+                            && !shareStatus.equals(ShareStatus.EXPIRED)) {
+                        shareStatus = ShareStatus.EXPIRED;
+                    }
+                    ItemListResponseDto itemDto = ItemListResponseDto.from(item, image, nickname, wishStatus, shareStatus);
                     return WishResponseDto.from(wish, itemDto);
                 })
                 .collect(Collectors.toList());

@@ -29,7 +29,8 @@ public class ItemResponseDto {
     private Boolean isOwner;
     private LocalDateTime deadline;
 
-    public static ItemResponseDto from(Item item, List<ImageResponseDto.ImageReadResponse> images, Boolean isOwner, String nickname, Boolean wishStatus) {
+    public static ItemResponseDto from(Item item, List<ImageResponseDto.ImageReadResponse> images, Boolean isOwner,
+                                       String nickname, Boolean wishStatus, ShareStatus shareStatus) {
         return ItemResponseDto.builder()
                 .id(item.getId())
                 .nickname(nickname)
@@ -40,7 +41,7 @@ public class ItemResponseDto {
                 .createdTime(item.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .wishCount(item.getWishCount())
                 .chatCount(item.getChatCount())
-                .shareStatus(item.getShareStatus())
+                .shareStatus(shareStatus)
                 .wishStatus(wishStatus != null && wishStatus)
                 .images(images)
                 .isOwner(isOwner)
