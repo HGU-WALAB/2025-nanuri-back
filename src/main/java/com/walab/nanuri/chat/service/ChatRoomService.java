@@ -7,6 +7,7 @@ import com.walab.nanuri.chat.repository.ChatMessageRepository;
 import com.walab.nanuri.chat.repository.ChatParticipantRepository;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.exception.CustomException;
+import com.walab.nanuri.commons.util.PostType;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,6 +52,19 @@ public class ChatRoomService {
 
         return chatParticipants.stream()
                 .map(participant -> toChatRoomResponse(participant, myId))
+                .collect(Collectors.toList());
+    }
+
+    public List<ChatRoomResponseDto> getChatRoomsByOption(String myId, String option){
+        List<ChatParticipant> chatParticipants = chatParticipantRepository.findByUserIdAndHasLeftFalse(myId);
+        if (Arrays.stream(PostType.values()).noneMatch(e -> e.name().equals(option))) {
+            throw new CustomException(CHAT_TYPE_INVALID);
+        }
+        PostType postType = PostType.valueOf(option);
+
+        return chatParticipants.stream()
+                .map(participant -> toChatRoomResponse(participant, myId))
+                .filter(chatRoomResponseDto -> chatRoomResponseDto.getPostType() == postType)
                 .collect(Collectors.toList());
     }
 
