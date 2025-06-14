@@ -66,21 +66,39 @@ public class ItemService {
                 case "oldest" :
                     items = itemRepository.findAllOrderedByOldest();
                     break;
-                case "deadline":
-                    items = itemRepository.findAllByDeadlineOrdered();
-                    break;
                 case "viewCount":
                     items = itemRepository.findAllByViewCountOrdered();
                     break;
                 case "wishCount":
                     items = itemRepository.findAllByWishCountOrdered();
                     break;
+                case "deadline":
+                    items = itemRepository.findAllByDeadlineOrdered();
+                    break;
                 default:
                     throw new CustomException(INVALID_SORT_OPTION);
             }
         }
         else { // 카테고리 선택한 후 정렬
-            items = itemRepository.findAllByCategoryOrdered(ItemCategory.valueOf(category));
+            switch (sort) {
+                case "latest":
+                    items = itemRepository.findAllByCategoryOrderedLatest(ItemCategory.valueOf(category));
+                    break;
+                case "oldest":
+                    items = itemRepository.findAllByCategoryOrderedOldest(ItemCategory.valueOf(category));
+                    break;
+                case "viewCount":
+                    items = itemRepository.findAllByCategoryOrderedByViewCount(ItemCategory.valueOf(category));
+                    break;
+                case "wishCount":
+                    items = itemRepository.findAllByCategoryOrderedByWishCount(ItemCategory.valueOf(category));
+                    break;
+                case "deadline":
+                    items = itemRepository.findAllByCategoryOrderedByDeadline(ItemCategory.valueOf(category));
+                    break;
+                default:
+                    throw new CustomException(INVALID_SORT_OPTION);
+            }
         }
 
         List<Long> wishItemIds;
