@@ -104,6 +104,7 @@ public class ItemService {
     }
 
     //Item 단건 조회
+    @Transactional
     public ItemResponseDto getItemById(String uniqueId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         List<Image> images = new ArrayList<>(imageRepository.findByItemIdOrderByIdAsc(itemId));
