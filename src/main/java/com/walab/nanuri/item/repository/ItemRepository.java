@@ -193,12 +193,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "ORDER BY i.id ASC")
     List<Item> findAllOrderedByOldest();
 
-    // 마감임박 순 정렬
+    // 조회순 정렬
     @Query("SELECT i " +
             "FROM Item i " +
-            "WHERE i.shareStatus = 'NONE' " +
-            "ORDER BY i.deadline ASC")
-    List<Item> findAllByDeadlineOrdered();
+            "ORDER BY i.viewCount DESC")
+    List<Item> findAllByViewCountOrdered();
 
     // 관심순 정렬
     @Query("SELECT i " +
@@ -206,9 +205,47 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "ORDER BY i.wishCount DESC")
     List<Item> findAllByWishCountOrdered();
 
-    // 조회순 정렬
+
+
+    // 마감임박 순 정렬
     @Query("SELECT i " +
             "FROM Item i " +
+            "WHERE i.shareStatus = 'NONE' " +
+            "ORDER BY i.deadline ASC")
+    List<Item> findAllByDeadlineOrdered();
+
+    // 카테고리 + 최신순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.id DESC")
+    List<Item> findAllByCategoryOrderedLatest(@Param("category") ItemCategory category);
+
+    // 카테고리 + 오래된 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.id ASC")
+    List<Item> findAllByCategoryOrderedOldest(@Param("category") ItemCategory category);
+
+    // 카테고리 + 조회순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
             "ORDER BY i.viewCount DESC")
-    List<Item> findAllByViewCountOrdered();
+    List<Item> findAllByCategoryOrderedByViewCount(@Param("category") ItemCategory category);
+
+    // 카테고리 + 관심순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category " +
+            "ORDER BY i.wishCount DESC")
+    List<Item> findAllByCategoryOrderedByWishCount(@Param("category") ItemCategory category);
+
+    // 카테고리 + 마감임박 순 정렬
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE i.category = :category AND i.shareStatus = 'NONE' " +
+            "ORDER BY i.deadline ASC")
+    List<Item> findAllByCategoryOrderedByDeadline(@Param("category") ItemCategory category);
 }
