@@ -20,6 +20,7 @@ public class ReceivedItemDto {
     private Long historyId;
     private Long itemId;
     private String title;
+    private String nickname;
     private String description;
     private String category;
     private String image;
@@ -32,10 +33,11 @@ public class ReceivedItemDto {
     private Integer viewCount;
     private LocalDateTime deadline;
 
-    public static ReceivedItemDto from(Item item, Long historyId, String image, Boolean wishStatus) {
+    public static ReceivedItemDto from(Item item, Long historyId, String image, String nickname, Boolean wishStatus) {
         return ReceivedItemDto.builder()
                 .historyId(historyId)
                 .itemId(item.getId())
+                .nickname(nickname)
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .category(item.getCategory().getKoreanName())
