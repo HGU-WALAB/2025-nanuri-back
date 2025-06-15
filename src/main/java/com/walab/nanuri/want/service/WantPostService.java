@@ -3,6 +3,7 @@ package com.walab.nanuri.want.service;
 import com.walab.nanuri.chat.entity.ChatParticipant;
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
+import com.walab.nanuri.chat.service.ChatMessageService;
 import com.walab.nanuri.chat.service.ChatParticipantService;
 import com.walab.nanuri.commons.util.EmotionType;
 import com.walab.nanuri.commons.util.ShareStatus;
@@ -39,6 +40,7 @@ public class WantPostService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
     private final ChatParticipantService chatParticipantService;
+    private final ChatMessageService chatMessageService;
 
     //WantPost 등록
     public Long createPost( String receiverId, WantPostRequestDto dto) {
@@ -95,8 +97,12 @@ public class WantPostService {
             ChatParticipant chatParticipant = chatParticipantService.getChatParticipant(roomKey, sellerId);
             if (chatParticipant == null) {
                 chatParticipantService.enterRoom(chatRoom, sellerId);
+                return;
+            } else if (chatParticipant.getHasLeft() == Boolean.FALSE) {
+                throw new CustomException(DUPLICATE_APPLICATION_ITEM);
             }
             chatParticipant.setHasLeft(Boolean.FALSE);
+            chatMessageService.handleEnter(chatRoom, sellerId);
         }
     }
 
