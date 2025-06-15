@@ -22,6 +22,7 @@ public class ChatParticipantService implements ChatParticipantServiceImpl {
     private final ChatParticipantRepository chatParticipantRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ChatMessageService chatMessageService;
 
     public void enterRoom(ChatRoom chatRoom, String userId){
         chatParticipantRepository.save(ChatParticipant.of(chatRoom, userId));
@@ -45,13 +46,14 @@ public class ChatParticipantService implements ChatParticipantServiceImpl {
                 .findByRoomKeyAndHasLeftFalse(roomKey)
                 .isEmpty();
 
+        ChatRoom chatRoom = chatRoomRepository
+                .findByRoomKey(roomKey);
         if (allLeft) {
-            ChatRoom chatRoom = chatRoomRepository
-                    .findByRoomKey(roomKey);
-
             chatMessageRepository.deleteByRoomKey(roomKey);
             chatParticipantRepository.deleteAllByRoomKey(roomKey);
             chatRoomRepository.delete(chatRoom);
+        } else {
+            chatMessageService.handleExit(chatRoom, userId);
         }
     }
 
