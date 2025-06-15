@@ -1,6 +1,8 @@
 package com.walab.nanuri.history.service;
 
+import com.walab.nanuri.chat.entity.ChatParticipant;
 import com.walab.nanuri.chat.entity.ChatRoom;
+import com.walab.nanuri.chat.repository.ChatParticipantRepository;
 import com.walab.nanuri.chat.service.ChatParticipantService;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.util.PostType;
@@ -34,6 +36,7 @@ public class HistoryService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatParticipantRepository chatParticipantRepository;
     private final ChatParticipantService chatParticipantService;
 
     //Item 신청 (아이템 나눔 받고 싶다고 신청)
@@ -46,11 +49,6 @@ public class HistoryService {
         //본인의 물건인지 확인
         if(receiverId.equals(item.getUserId())){
             throw new CustomException(VALID_ITEM);
-        }
-
-        //이미 나눔 신청한 물건인지 확인
-        if(historyRepository.existsByItemIdAndReceivedId(itemId, receiverId)){
-            throw new CustomException(DUPLICATE_APPLICATION_ITEM);
         }
 
         History history = History.toEntity(receiverId, itemId);
@@ -75,6 +73,14 @@ public class HistoryService {
             chatParticipantService.enterRoom(chatRoom, sellerId);
 
             item.setChatCount(item.getChatCount() + 1);
+        } else {
+            if(historyRepository.existsByItemIdAndReceivedId(itemId, receiverId)){
+                ChatParticipant chatParticipant = chatParticipantService.getChatParticipant(roomKey, receiverId);
+                if (chatParticipant == null) {
+                    chatParticipantService.enterRoom(chatRoom, receiverId);
+                }
+                chatParticipant.setHasLeft(Boolean.FALSE);
+            }
         }
     }
 
