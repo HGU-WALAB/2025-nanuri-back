@@ -8,6 +8,7 @@ import com.walab.nanuri.chat.repository.ChatParticipantRepository;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.commons.exception.CustomException;
 import com.walab.nanuri.commons.util.PostType;
+import com.walab.nanuri.image.entity.Image;
 import com.walab.nanuri.image.repository.ImageRepository;
 import com.walab.nanuri.item.entity.Item;
 import com.walab.nanuri.item.repository.ItemRepository;
@@ -34,7 +35,6 @@ public class ChatRoomService {
     private final ChatParticipantRepository chatParticipantRepository;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
-    private final ItemRepository itemRepository;
     private final WantPostRepository wantPostRepository;
 
     public ChatRoomResponseDto getChatRoom(String myId, Long chatRoomId) {
@@ -93,20 +93,14 @@ public class ChatRoomService {
         User opponent = userRepository.findById(opponentId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        Item item = null;
         String image = null;
         if (room.getItemId() != null) {
-            item = itemRepository.findById(room.getItemId())
-                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-            image = imageRepository.findTopByItemIdOrderByIdAsc(room.getItemId()).getFileUrl();
+            Image imageEntity = imageRepository.findTopByItemIdOrderByIdAsc(room.getItemId());
+            if (imageEntity != null) {
+                image = imageEntity.getFileUrl();
+            }
         }
 
-        WantPost post = null;
-        if (room.getPostId() != null) {
-            post = wantPostRepository.findById(room.getPostId())
-                    .orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
-        }
-
-        return ChatRoomResponseDto.from(room, opponent.getNickname(), item, image, post);
+        return ChatRoomResponseDto.from(room, opponent.getNickname(), image);
     }
 }
