@@ -50,4 +50,4 @@ out/
 
 static/**
 src/main/resources/key/**
-src/main/resources/application.properties
+src/main/resources/*.properties
