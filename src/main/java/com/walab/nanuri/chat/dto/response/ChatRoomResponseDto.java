@@ -19,14 +19,14 @@ public class ChatRoomResponseDto {
     private String opponentNickname;
     private PostType postType;
 
-    public static ChatRoomResponseDto from(ChatRoom room, String opponentNickname, Item item, String ItemUrl, WantPost post) {
+    public static ChatRoomResponseDto from(ChatRoom room, String opponentNickname, String ItemUrl) {
 
         return ChatRoomResponseDto.builder()
                 .roomId(room.getId())
                 .itemId(room.getItemId())
                 .postId(room.getPostId())
                 .opponentNickname(opponentNickname)
-                .title(item == null ? post.getTitle() : item.getTitle())
+                .title(room.getTitle())
                 .itemImage(ItemUrl)
                 .postType(room.getPostType())
                 .build();
