@@ -3,6 +3,7 @@ package com.walab.nanuri.history.service;
 import com.walab.nanuri.chat.entity.ChatParticipant;
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatParticipantRepository;
+import com.walab.nanuri.chat.service.ChatMessageService;
 import com.walab.nanuri.chat.service.ChatParticipantService;
 import com.walab.nanuri.commons.util.ShareStatus;
 import com.walab.nanuri.commons.util.PostType;
@@ -37,7 +38,7 @@ public class HistoryService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final ChatParticipantRepository chatParticipantRepository;
+    private final ChatMessageService chatMessageService;
     private final ChatParticipantService chatParticipantService;
     private final WishRepository wishRepository;
 
@@ -80,8 +81,12 @@ public class HistoryService {
                 ChatParticipant chatParticipant = chatParticipantService.getChatParticipant(roomKey, receiverId);
                 if (chatParticipant == null) {
                     chatParticipantService.enterRoom(chatRoom, receiverId);
+                    return;
+                } else if (chatParticipant.getHasLeft() == Boolean.FALSE) {
+                    throw new CustomException(DUPLICATE_APPLICATION_ITEM);
                 }
                 chatParticipant.setHasLeft(Boolean.FALSE);
+                chatMessageService.handleEnter(chatRoom, receiverId);
             }
         }
     }

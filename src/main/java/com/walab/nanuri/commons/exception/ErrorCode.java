@@ -37,6 +37,7 @@ public enum ErrorCode {
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     USER_NOT_FOUND(NOT_FOUND, "해당 회원 정보를 찾을 수 없습니다."),
+    PARTICIPANT_NOT_POUND(NOT_FOUND, "참여자를 찾을 수 없습니다."),
     IMAGE_NOT_FOUND(NOT_FOUND,"해당 이미지를 찾을 수 없습니다."),
     ITEM_NOT_FOUND(NOT_FOUND,"해당 아이템을 찾을 수 없습니다."),
     HISTORY_NOT_FOUND(NOT_FOUND, "해당 히스토리를 찾을 수 없습니다."),
@@ -54,7 +55,7 @@ public enum ErrorCode {
     /* DUPLICATE : (다른 무엇과) 똑같은 */
     DUPLICATE_EMAIL(CONFLICT, "이메일이 이미 존재합니다."),
     DUPLICATE_DIFFERENT_USER(CONFLICT, "해당 글의 작성자와 정보가 일치하지 않습니다."),
-    DUPLICATE_APPLICATION_ITEM(CONFLICT, "이미 나눔 신청한 물건입니다."),
+    DUPLICATE_APPLICATION_ITEM(CONFLICT, "이미 나눔 신청한 게시물입니다."),
 
     /* 500 : */
     UNSUCCESSFUL_HISNET_LOGIN(INTERNAL_SERVER_ERROR,"히즈넷 로그인에 실패했습니다."),
