@@ -19,6 +19,7 @@ import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.wish.entity.Wish;
 import com.walab.nanuri.wish.repository.WishRepository;
+import com.walab.nanuri.wish.service.WishService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +42,9 @@ public class ItemService {
     private final ImageRepository imageRepository;
     private final HistoryRepository historyRepository;
     private final UserRepository userRepository;
-    private final ChatRoomService chatRoomService;
-    private final ImageService imageService;
     private final WishRepository wishRepository;
+    private final ImageService imageService;
+    private final WishService wishService;
 
     //Item 추가
     @Transactional
@@ -279,9 +280,11 @@ public class ItemService {
     @Transactional
     public void deleteItem(String uniqueId, Long itemId) {
         Item findItem = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+
         if(findItem.getUserId().equals(uniqueId)) {
 //            chatRoomService.deleteChatRoomsByItemId(itemId);
             imageService.deleteImages(itemId);
+            wishService.deleteWishItem(itemId);
             itemRepository.delete(findItem);
         } else {
             throw new CustomException(VALID_ITEM);
@@ -293,25 +296,6 @@ public class ItemService {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND))
                 .getNickname();
     }
-
-    //keyword로 아이템 검색
-//    public List<ItemListResponseDto> getSearchItems(String uniqueId, String keyword, String category) {
-//        List<Item> items = category.isEmpty() ?
-//                itemRepository.searchByKeyword(keyword) : itemRepository.searchByKeywordAndCategory(keyword, ItemCategory.valueOf(category));
-//
-//        return items.stream()
-//                .map(item -> {
-//                    String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
-//                            .getFileUrl();
-//                    boolean wishStatus = false;
-//                    if (uniqueId != null && !uniqueId.isEmpty()) {
-//                        wishStatus = wishRepository.existsByUniqueIdAndItemId(uniqueId, item.getId());
-//                    }
-//                    String nickname = getUserNicknameById(item.getUserId());
-//                    return ItemListResponseDto.from(item, image, nickname, wishStatus);
-//                })
-//                .collect(Collectors.toList());
-//    }
 
     //내일 나눔 마감인 아이템 조회
     public List<ItemListResponseDto> getDeadlineItems(String uniqueId) {
