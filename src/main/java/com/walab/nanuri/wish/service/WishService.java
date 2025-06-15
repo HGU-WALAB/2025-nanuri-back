@@ -107,4 +107,15 @@ public class WishService {
                 })
                 .collect(Collectors.toList());
     }
+
+    // 관심 목록에서 아이템 삭제
+    // 아이템 삭제시 -> 관심 목록에 해당 아이템 추가해놓은 사람들에게도 해당 아이템 삭제
+    @Transactional
+    public void deleteWishItem(Long itemId) {
+        List<Wish> wishes = wishRepository.findAllByItemId(itemId);
+        if (wishes.isEmpty()) return;
+
+        // 아이템 삭제
+        wishRepository.deleteAll(wishes);
+    }
 }
