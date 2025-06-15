@@ -43,13 +43,13 @@ public class HistoryService {
 
     //Item 신청 (아이템 나눔 받고 싶다고 신청)
     @Transactional
-    public void applicationItem(String receiverId, Long itemId){
+    public void applicationItem(String receiverId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         //마감기한 지난 물건인지 확인
         validateItemNotExpired(item);
 
         //본인의 물건인지 확인
-        if(receiverId.equals(item.getUserId())){
+        if (receiverId.equals(item.getUserId())) {
             throw new CustomException(VALID_ITEM);
         }
 
@@ -76,7 +76,7 @@ public class HistoryService {
 
             item.setChatCount(item.getChatCount() + 1);
         } else {
-            if(historyRepository.existsByItemIdAndReceivedId(itemId, receiverId)){
+            if (historyRepository.existsByItemIdAndReceivedId(itemId, receiverId)) {
                 ChatParticipant chatParticipant = chatParticipantService.getChatParticipant(roomKey, receiverId);
                 if (chatParticipant == null) {
                     chatParticipantService.enterRoom(chatRoom, receiverId);
@@ -95,23 +95,23 @@ public class HistoryService {
     }
 
     //Item-신청자 리스트 조회
-    public List<ApplicantDto> getAllApplicants(String sellerId, Long itemId){
+    public List<ApplicantDto> getAllApplicants(String sellerId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        if(!sellerId.equals(item.getUserId())){ //판매자가 아닐경우 -> 접근 권한 없음
+        if (!sellerId.equals(item.getUserId())) { //판매자가 아닐경우 -> 접근 권한 없음
             throw new CustomException(VALID_ITEM);
         }
         return historyRepository.findByItemId(itemId)
                 .stream()
                 .map(history -> {
                     User user = userRepository.findById(history.getReceivedId())
-                            .orElseThrow(()-> new CustomException(USER_NOT_FOUND));
+                            .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
                     return ApplicantDto.from(history, user);
                 })
                 .collect(Collectors.toList());
     }
 
     //내가 대기 중인 Item 조회
-    public List<WaitingItemDto> getAllWaitingItems(String receiverId){
+    public List<WaitingItemDto> getAllWaitingItems(String receiverId) {
         List<History> waitingList = historyRepository.findAllByReceivedIdAndIsConfirmedFalse(receiverId);
 
         return waitingList.stream()
@@ -126,28 +126,32 @@ public class HistoryService {
     }
 
     //내가 받은 Item 조회
-    public List<ReceivedItemDto> getAllReceivedItems(String receiverId){
+    public List<ReceivedItemDto> getAllReceivedItems(String receiverId) {
         List<History> receivedList = historyRepository.findAllByReceivedIdAndIsConfirmedTrue(receiverId);
 
         return receivedList.stream()
                 .map(history -> {
-                    Item item = itemRepository.findById(history.getItemId()).
-                            orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+                    Item item = itemRepository.findById(history.getItemId())
+                            .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
                     String image = imageRepository.findTopByItemIdOrderByIdAsc(item.getId())
                             .getFileUrl();
                     boolean wishStatus = wishRepository.existsByUniqueIdAndItemId(receiverId, item.getId());
-                    return ReceivedItemDto.from(item, history.getId(), image, wishStatus);
+                    String nickname = userRepository.findById(item.getUserId())
+                            .orElseThrow(() -> new CustomException(USER_NOT_FOUND))
+                            .getNickname();
+
+                    return ReceivedItemDto.from(item, history.getId(), image, nickname, wishStatus);
                 })
                 .collect(Collectors.toList());
     }
 
     //Item 나눔 완료
     @Transactional
-    public void completeItemApplication(String uniqueId, Long historyId){
+    public void completeItemApplication(String uniqueId, Long historyId) {
         History history = historyRepository.findById(historyId).orElseThrow(() -> new CustomException(HISTORY_NOT_FOUND));
         Item item = itemRepository.findById(history.getItemId()).orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 
-        if(isNotOwner(uniqueId, item) || !uniqueId.equals(history.getReceivedId())){
+        if (isNotOwner(uniqueId, item) || !uniqueId.equals(history.getReceivedId())) {
             throw new CustomException(VALID_USER);
         }
 
@@ -165,8 +169,8 @@ public class HistoryService {
 
     //Item 나눔 신청 취소
     @Transactional
-    public void cancelItemApplication(String receiverId, Long historyId){
-        if(!historyRepository.existsByIdAndReceivedId(historyId, receiverId)){
+    public void cancelItemApplication(String receiverId, Long historyId) {
+        if (!historyRepository.existsByIdAndReceivedId(historyId, receiverId)) {
             throw new CustomException(VALID_ITEM);
         }
         historyRepository.deleteById(historyId);
