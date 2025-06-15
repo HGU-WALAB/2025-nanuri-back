@@ -16,6 +16,7 @@ public class ChatRoom extends BaseTimeEntity {
     private Long id;
     private Long itemId;
     private Long historyId;
+    private String title;
     private Long postId;
 
     @Enumerated(EnumType.STRING)

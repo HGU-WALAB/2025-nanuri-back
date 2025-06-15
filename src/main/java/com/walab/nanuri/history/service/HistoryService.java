@@ -65,6 +65,7 @@ public class HistoryService {
             chatRoom = ChatRoom.builder()
                     .itemId(item.getId())
                     .historyId(history.getId())
+                    .title(item.getTitle())
                     .postType(PostType.ITEM)
                     .roomKey(roomKey)
                     .build();
