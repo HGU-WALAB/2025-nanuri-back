@@ -12,6 +12,7 @@ import com.walab.nanuri.commons.exception.ErrorCode;
 import com.walab.nanuri.user.entity.User;
 import com.walab.nanuri.user.repository.UserRepository;
 import com.walab.nanuri.chat.entity.ChatParticipant;
+import com.walab.nanuri.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
+    private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatParticipantRepository chatParticipantRepository;
     private final ChatMessageRepository chatMessageRepository;
@@ -57,7 +59,7 @@ public class ChatMessageService {
                 .findFirst()
                 .orElseThrow(() -> new CustomException(ErrorCode.PARTICIPANT_NOT_FOUND));
 
-        ChatMessage message = ChatMessage.fromDto(request, sender.getUniqueId(), receiverId, roomKey);
+        ChatMessage message = ChatMessage.fromDto(request, sender.getUniqueId(), receiverId, roomKey, ChatMessage.MessageType.TALK);
         chatMessageRepository.save(message);
 
         User receiver = userRepository.findById(receiverId)
@@ -101,12 +103,36 @@ public class ChatMessageService {
                     User sender = userMap.get(message.getSenderId());
                     User receiver = userMap.get(message.getReceiverId());
 
-                    if (sender == null || receiver == null) {
+                    if (sender == null) {
                         throw new CustomException(ErrorCode.USER_NOT_FOUND);
                     }
 
                     return ChatMessageResponseDto.from(message, sender, receiver);
                 })
                 .collect(Collectors.toList());
+    }
+
+    public void handleEnter(ChatRoom room, String userId) {
+        ChatMessage message = ChatMessage.builder()
+                .type(ChatMessage.MessageType.ENTER)
+                .roomId(room.getId().toString())
+                .roomKey(room.getRoomKey())
+                .senderId(userId)
+                .message(userService.getUser(userId).getNickname() + "님이 입장하셨습니다.")
+                .timestamp(LocalDateTime.now())
+                .build();
+        chatMessageRepository.save(message);
+    }
+
+    public void handleExit(ChatRoom room, String userId) {
+        ChatMessage message = ChatMessage.builder()
+                .type(ChatMessage.MessageType.LEAVE)
+                .roomId(room.getId().toString())
+                .roomKey(room.getRoomKey())
+                .senderId(userId)
+                .message(userService.getUser(userId).getNickname() + "님이 퇴장하셨습니다.")
+                .timestamp(LocalDateTime.now())
+                .build();
+        chatMessageRepository.save(message);
     }
 }
