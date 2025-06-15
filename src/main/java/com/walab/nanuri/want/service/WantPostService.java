@@ -1,5 +1,6 @@
 package com.walab.nanuri.want.service;
 
+import com.walab.nanuri.chat.entity.ChatParticipant;
 import com.walab.nanuri.chat.entity.ChatRoom;
 import com.walab.nanuri.chat.repository.ChatRoomRepository;
 import com.walab.nanuri.chat.service.ChatParticipantService;
@@ -21,8 +22,6 @@ import com.walab.nanuri.want.repository.WantPostEmotionRepository;
 import com.walab.nanuri.want.repository.WantPostRepository;
 import com.walab.nanuri.want.repository.WantPostSellerRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,6 @@ import java.util.*;
 import static com.walab.nanuri.commons.exception.ErrorCode.*;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class WantPostService {
     private final WantPostRepository wantPostRepository;
@@ -51,9 +49,10 @@ public class WantPostService {
     }
 
     //나눔자가 WantPost글에 나눔 해준다는 신청
+    @Transactional
     public void selectPost(String sellerId, Long postId) {
         WantPost wp = wantPostRepository.findById(postId).orElseThrow(() -> new CustomException(WANT_POST_NOT_FOUND));
-
+        String receiverId = wp.getReceiverId();
         if (wp.getReceiverId().equals(sellerId)) {
             throw new CustomException(ErrorCode.CANNOT_APPLY_OWN_POST);
         }
@@ -67,30 +66,38 @@ public class WantPostService {
         boolean exists = sellers.stream()
                 .anyMatch(seller -> seller.getSellerId().equals(sellerId));
 
-        if (exists) {
-            throw new CustomException(ErrorCode.VALID_ALREADY_APPLIED_POST);
+        if (!exists) {
+            WantPostSeller seller = WantPostSeller.builder()
+                    .sellerId(sellerId)
+                    .wantPost(wp)
+                    .build();
+
+            wp.setStatus(ShareStatus.IN_PROGRESS);
+            wantPostSellerRepository.save(seller);
+            wantPostRepository.save(wp);
         }
 
-        WantPostSeller seller = WantPostSeller.builder()
-                .sellerId(sellerId)
-                .wantPost(wp)
-                .build();
+        String roomKey = ChatRoom.createRoomKey("want-" + wp.getId(), sellerId, receiverId);
+        ChatRoom chatRoom = chatRoomRepository.findByRoomKey(roomKey);
 
-        wp.setStatus(ShareStatus.IN_PROGRESS);
-        wantPostSellerRepository.save(seller);
-        wantPostRepository.save(wp);
+        if (chatRoom == null) {
+            chatRoom = ChatRoom.builder()
+                    .postId(postId)
+                    .postType(PostType.POST)
+                    .title(wp.getTitle())
+                    .roomKey(roomKey)
+                    .build();
+            chatRoomRepository.save(chatRoom);
 
-        String roomKey = ChatRoom.createRoomKey("want-" + wp.getId(), sellerId, wp.getReceiverId());
-        ChatRoom room = ChatRoom.builder()
-                .postId(postId)
-                .postType(PostType.POST)
-                .title(wp.getTitle())
-                .roomKey(roomKey)
-                .build();
-        chatRoomRepository.save(room);
-
-        chatParticipantService.enterRoom(room, sellerId);
-        chatParticipantService.enterRoom(room, wp.getReceiverId());
+            chatParticipantService.enterRoom(chatRoom, receiverId);
+            chatParticipantService.enterRoom(chatRoom, sellerId);
+        } else {
+            ChatParticipant chatParticipant = chatParticipantService.getChatParticipant(roomKey, sellerId);
+            if (chatParticipant == null) {
+                chatParticipantService.enterRoom(chatRoom, sellerId);
+            }
+            chatParticipant.setHasLeft(Boolean.FALSE);
+        }
     }
 
     // WantPost 글 단건 조회

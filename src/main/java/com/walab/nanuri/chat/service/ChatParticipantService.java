@@ -54,4 +54,9 @@ public class ChatParticipantService implements ChatParticipantServiceImpl {
             chatRoomRepository.delete(chatRoom);
         }
     }
+
+    public ChatParticipant getChatParticipant(String roomKey , String userId) {
+        return chatParticipantRepository.findByRoomKeyAndUserId(roomKey, userId).orElse(null);
+    }
+
 }
