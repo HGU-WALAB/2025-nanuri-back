@@ -14,7 +14,7 @@ public class OtherUserInfoResponseDto {
     private String nickname;
     private String mbti;
     private String introduction;
-    private List<ItemCategory> interestItemCategory;
+    private List<String> interestItemCategory;
     private List<ItemListResponseDto> sharingItemList;
     private List<ItemListResponseDto> completedItemList;
 }

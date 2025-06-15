@@ -96,7 +96,9 @@ public class UserService {
                 .nickname(user.getNickname())
                 .mbti(user.getMbti())
                 .introduction(user.getIntroduction())
-                .interestItemCategory(user.getInterestItemCategory())
+                .interestItemCategory(user.getInterestItemCategory().stream()
+                        .map(ItemCategory::getKoreanName)
+                        .collect(Collectors.toList()))
                 .sharingItemList(sharingItemList)
                 .completedItemList(completedItemList)
                 .build();
