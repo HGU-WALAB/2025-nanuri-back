@@ -51,11 +51,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        log.info("🚀 JwtTokenFilter: 요청 URI: {}", requestURI);
         Cookie[] cookies = request.getCookies();
 
         if (isExcludedPath(request) && cookies == null) {
-            log.info("🔸 JwtTokenFilter: 제외된 경로입니다. 필터 체인 계속 진행.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -73,9 +71,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 }
             }
         }
-
-        log.info("accessToken_handful={}", accessToken_handful);
-        log.info("refreshToken_handful={}", refreshToken_handful);
 
         try {
             String userId = JwtUtil.getUserId(accessToken_handful, SECRET_KEY);
@@ -109,9 +104,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     newAccessTokenCookie.setMaxAge(7200); // 토큰 만료 시간과 일치 (2시간)
                     response.addCookie(newAccessTokenCookie);
 
-                    // 토큰 리프레시 확인용 로깅 추가
-                    log.info("🔄 사용자 {} 액세스 토큰 리프레시 성공", loginUser.getName());
-
                     // 인증 설정
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(loginUser.getUniqueId(), null, null);
@@ -124,8 +116,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     return;
                 }
             } else {
-                log.error("❌ refreshToken이 존재하지 않습니다.");
-                respondUnauthorized(response);
+                filterChain.doFilter(request, response);
                 return;
             }
         }
