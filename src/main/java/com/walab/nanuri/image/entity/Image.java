@@ -19,7 +19,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_name", nullable = false, length = 50)
+    @Column(name = "file_name", nullable = false, length = 250)
     private String fileName;
 
     @Column(name = "file_path", nullable = false, unique = true, length = 500)
