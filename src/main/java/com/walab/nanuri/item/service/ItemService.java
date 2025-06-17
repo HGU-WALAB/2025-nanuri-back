@@ -283,6 +283,7 @@ public class ItemService {
 
         if(findItem.getUserId().equals(uniqueId)) {
 //            chatRoomService.deleteChatRoomsByItemId(itemId);
+            historyRepository.deleteAllByItemId(itemId);
             imageService.deleteImages(itemId);
             wishService.deleteWishItem(itemId);
             itemRepository.delete(findItem);

@@ -133,7 +133,6 @@ public class HistoryService {
     //내가 받은 Item 조회
     public List<ReceivedItemDto> getAllReceivedItems(String receiverId) {
         List<History> receivedList = historyRepository.findAllByReceivedIdAndIsConfirmedTrue(receiverId);
-
         return receivedList.stream()
                 .map(history -> {
                     Item item = itemRepository.findById(history.getItemId())
